@@ -1,0 +1,26 @@
+From 7fc93be6c1eabd466bd2789a4c52700094f0db33 Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Tue, 4 Aug 2015 10:36:19 +0800
+Subject: [PATCH] edm-cf-imx6: put SPL into raw eMMC instead of 1st FAT
+ partition. To follow the rule in image_types_fsl.bbcleass
+ in yocto, put SPL in offset of 69K
+
+---
+ include/configs/edm-cf-imx6.h |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/configs/edm-cf-imx6.h b/include/configs/edm-cf-imx6.h
+index bcdf5c9..4a60e79 100644
+--- a/include/configs/edm-cf-imx6.h
++++ b/include/configs/edm-cf-imx6.h
+@@ -16,7 +16,6 @@
+ 
+ /* SPL */
+ #define CONFIG_SPL_MMC_SUPPORT
+-#define CONFIG_SPL_FAT_SUPPORT
+ 
+ #include "imx6_spl.h"
+ 
+-- 
+1.7.9.5
+
