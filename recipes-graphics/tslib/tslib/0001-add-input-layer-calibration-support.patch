@@ -1,0 +1,294 @@
+From 6916cef22e2590f511ed9b655721652aee331ded Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Thu, 13 Aug 2015 15:52:05 +0800
+Subject: [PATCH] add input layer calibration support
+
+---
+ tests/fbutils.c      |   14 ++---
+ tests/ts_calibrate.c |  142 ++++++++++++++++++++++++++++++++++++++------------
+ 2 files changed, 116 insertions(+), 40 deletions(-)
+
+diff --git a/tests/fbutils.c b/tests/fbutils.c
+index fd7a0ed..05e9977 100644
+--- a/tests/fbutils.c
++++ b/tests/fbutils.c
+@@ -191,13 +191,15 @@ void put_cross(int x, int y, unsigned colidx)
+ #endif
+ }
+ 
++static const struct fbcon_font_desc *font = &font_vga_8x16;
++
+ void put_char(int x, int y, int c, int colidx)
+ {
+ 	int i,j,bits;
+ 
+-	for (i = 0; i < font_vga_8x8.height; i++) {
+-		bits = font_vga_8x8.data [font_vga_8x8.height * c + i];
+-		for (j = 0; j < font_vga_8x8.width; j++, bits <<= 1)
++	for (i = 0; i < font->height; i++) {
++		bits = font->data [font->height * c + i];
++		for (j = 0; j < font->width; j++, bits <<= 1)
+ 			if (bits & 0x80)
+ 				pixel (x + j, y + i, colidx);
+ 	}
+@@ -206,15 +208,15 @@ void put_char(int x, int y, int c, int colidx)
+ void put_string(int x, int y, char *s, unsigned colidx)
+ {
+ 	int i;
+-	for (i = 0; *s; i++, x += font_vga_8x8.width, s++)
++	for (i = 0; *s; i++, x += font->width, s++)
+ 		put_char (x, y, *s, colidx);
+ }
+ 
+ void put_string_center(int x, int y, char *s, unsigned colidx)
+ {
+ 	size_t sl = strlen (s);
+-        put_string (x - (sl / 2) * font_vga_8x8.width,
+-                    y - font_vga_8x8.height / 2, s, colidx);
++        put_string (x - (sl / 2) * font->width,
++                    y - font->height / 2, s, colidx);
+ }
+ 
+ void setcolor(unsigned colidx, unsigned value)
+diff --git a/tests/ts_calibrate.c b/tests/ts_calibrate.c
+index eb0aca3..054d4c7 100644
+--- a/tests/ts_calibrate.c
++++ b/tests/ts_calibrate.c
+@@ -30,6 +30,9 @@
+ #include "fbutils.h"
+ #include "testutils.h"
+ 
++#define FALSE 0
++#define TRUE (!FALSE)
++
+ static int palette [] =
+ {
+ 	0x000000, 0xffe080, 0xffffff, 0xe0c0a0
+@@ -51,21 +54,36 @@ static void sig(int sig)
+ 	exit (1);
+ }
+ 
++int magnitude(double vorg) {
++        double v = vorg>0?vorg:-vorg;
++        int d = 0;
++        while (v > (double)(1 << d)) d++;
++        return d;
++}
++
+ int perform_calibration(calibration *cal) {
+ 	int j;
+-	float n, x, y, x2, y2, xy, z, zx, zy;
+-	float det, a, b, c, e, f, i;
+-	float scaling = 65536.0;
++	double n, x, y, x2, y2, xy, z, zx, zy;
++        double det, a, b, c, e, f, i;
++        double scaling = 65536.0;
++        double raw_c[7];
++        int maxx, maxy, xmag, ymag;
+ 
+ // Get sums for matrix
+ 	n = x = y = x2 = y2 = xy = 0;
++        maxx = cal->x[0];
++        maxy = cal->y[0];
+ 	for(j=0;j<5;j++) {
+ 		n += 1.0;
+-		x += (float)cal->x[j];
+-		y += (float)cal->y[j];
+-		x2 += (float)(cal->x[j]*cal->x[j]);
+-		y2 += (float)(cal->y[j]*cal->y[j]);
+-		xy += (float)(cal->x[j]*cal->y[j]);
++		x += (double)cal->x[j];
++		y += (double)cal->y[j];
++		x2 += (double)(cal->x[j]*cal->x[j]);
++		y2 += (double)(cal->y[j]*cal->y[j]);
++		xy += (double)(cal->x[j]*cal->y[j]);
++                if (cal->x[j] > maxx) maxx = cal->x[j];
++                if (cal->y[j] > maxy) maxy = cal->y[j];
++                if (-cal->x[j] > maxx) maxx = -cal->x[j];
++                if (-cal->y[j] > maxy) maxy = -cal->y[j];
+ 	}
+ 
+ // Get determinant of matrix -- check if determinant is too small
+@@ -86,39 +104,63 @@ int perform_calibration(calibration *cal) {
+ // Get sums for x calibration
+ 	z = zx = zy = 0;
+ 	for(j=0;j<5;j++) {
+-		z += (float)cal->xfb[j];
+-		zx += (float)(cal->xfb[j]*cal->x[j]);
+-		zy += (float)(cal->xfb[j]*cal->y[j]);
++		z += (double)cal->xfb[j];
++		zx += (double)(cal->xfb[j]*cal->x[j]);
++		zy += (double)(cal->xfb[j]*cal->y[j]);
+ 	}
+ 
+ // Now multiply out to get the calibration for framebuffer x coord
+-	cal->a[0] = (int)((a*z + b*zx + c*zy)*(scaling));
+-	cal->a[1] = (int)((b*z + e*zx + f*zy)*(scaling));
+-	cal->a[2] = (int)((c*z + f*zx + i*zy)*(scaling));
++        raw_c[0] = a*z + b*zx + c*zy;
++        raw_c[1] = b*z + e*zx + f*zy;
++        raw_c[2] = c*z + f*zx + i*zy;
+ 
+-	printf("%f %f %f\n",(a*z + b*zx + c*zy),
+-				(b*z + e*zx + f*zy),
+-				(c*z + f*zx + i*zy));
++	printf("%lf %lf %lf\n", raw_c[0], raw_c[1], raw_c[2]);
+ 
+ // Get sums for y calibration
+ 	z = zx = zy = 0;
+ 	for(j=0;j<5;j++) {
+-		z += (float)cal->yfb[j];
+-		zx += (float)(cal->yfb[j]*cal->x[j]);
+-		zy += (float)(cal->yfb[j]*cal->y[j]);
++		z += (double)cal->yfb[j];
++		zx += (double)(cal->yfb[j]*cal->x[j]);
++		zy += (double)(cal->yfb[j]*cal->y[j]);
+ 	}
+ 
+ // Now multiply out to get the calibration for framebuffer y coord
+-	cal->a[3] = (int)((a*z + b*zx + c*zy)*(scaling));
+-	cal->a[4] = (int)((b*z + e*zx + f*zy)*(scaling));
+-	cal->a[5] = (int)((c*z + f*zx + i*zy)*(scaling));
++        raw_c[3] = a*z + b*zx + c*zy;
++        raw_c[4] = b*z + e*zx + f*zy;
++        raw_c[5] = c*z + f*zx + i*zy;
+ 
+-	printf("%f %f %f\n",(a*z + b*zx + c*zy),
+-				(b*z + e*zx + f*zy),
+-				(c*z + f*zx + i*zy));
++	printf("%lf %lf %lf\n", raw_c[3], raw_c[4], raw_c[5]);
+ 
+ // If we got here, we're OK, so assign scaling to a[6] and return
+-	cal->a[6] = (int)scaling;
++
++        /* make sure all calculations can be done with datatype int */
++        /* *mag  are magnitudes of numbers (base 2) */
++#define MAGMAX 28
++        xmag = magnitude(maxx) + magnitude(raw_c[1]) + 2;
++        if (magnitude(maxy)*magnitude(raw_c[2]) + 2 > xmag) xmag = magnitude(maxy)*magnitude(raw_c[2]) + 2;
++        if (magnitude(raw_c[0]) + 2 > xmag) xmag = magnitude(raw_c[0]) + 2;
++
++        ymag = magnitude(maxx) + magnitude(raw_c[4]) + 2;
++        if (magnitude(maxy)*magnitude(raw_c[5]) + 2 > ymag) ymag = magnitude(maxy)*magnitude(raw_c[5]) + 2;
++        if (magnitude(raw_c[3]) + 2 > ymag) ymag = magnitude(raw_c[3]) + 2;
++
++        printf("x magnitude : %i, y magnitude : %i\n", xmag, ymag);
++
++        while (scaling >= 2.0 && xmag + magnitude(scaling) > MAGMAX) scaling *= 0.5;
++        while (scaling >= 2.0 && ymag + magnitude(scaling) > MAGMAX) scaling *= 0.5;
++        printf("Adjusted scaling = %lf, (xmag + mag(scaling) = %i, ymag + mag(scaling) = %i)\n", scaling, xmag + magnitude(scaling), ymag + magnitude(scaling));
++
++        /* Still no good!? Panic! */
++        while (xmag + magnitude(scaling) > MAGMAX || ymag + magnitude(scaling) > MAGMAX) {
++                for (j=0; j<6; j++) raw_c[j] *= 0.5;
++                xmag --;
++                ymag --;
++        }
++
++        raw_c[6] = scaling;
++        for (j=0; j<6; j++) cal->a[j] = (int)(raw_c[j] * scaling);
++        cal->a[6] = (int)scaling;
++
+ 	return 1;
+ /*	
+ // This code was here originally to just insert default values
+@@ -137,7 +179,7 @@ static void get_sample (struct tsdev *ts, calibration *cal,
+ 	static int last_x = -1, last_y;
+ 
+ 	if (last_x != -1) {
+-#define NR_STEPS 10
++#define NR_STEPS 384
+ 		int dx = ((x - last_x) << 16) / NR_STEPS;
+ 		int dy = ((y - last_y) << 16) / NR_STEPS;
+ 		int i;
+@@ -153,7 +195,11 @@ static void get_sample (struct tsdev *ts, calibration *cal,
+ 	}
+ 
+ 	put_cross(x, y, 2 | XORMODE);
++        printf("+++ cross drawn %i\n", index);
++        ts_flush(ts);
++        printf("+++ flushed %i\n", index);
+ 	getxy (ts, &cal->x [index], &cal->y [index]);
++        printf("+++ cross erased %i\n", index);
+ 	put_cross(x, y, 2 | XORMODE);
+ 
+ 	last_x = cal->xfb [index] = x;
+@@ -187,6 +233,24 @@ static void clearbuf(struct tsdev *ts)
+ 	}
+ }
+ 
++int calibration_exists() {
++        char *calfile;
++        FILE *calf;
++        int ret = FALSE;
++
++        if ((calfile = getenv("TSLIB_CALIBFILE")) != NULL)
++                calf = fopen(calfile, "r");
++        else
++                calf = fopen(TS_POINTERCAL, "r");
++        if (calf != NULL) {
++                fclose(calf);
++                ret = TRUE;
++        } else
++                ret = FALSE;
++
++        return ret;
++}
++
+ int main()
+ {
+ 	struct tsdev *ts;
+@@ -205,14 +269,15 @@ int main()
+ 		ts = ts_open(tsdevice,0);
+ 	} else {
+ 		if (!(ts = ts_open("/dev/input/event0", 0)))
+-			ts = ts_open("/dev/touchscreen/ucb1x00", 0);
++			ts = ts_open("/dev/input/touchscreen0", 0);
+ 	}
+ 
+ 	if (!ts) {
+ 		perror("ts_open");
+ 		exit(1);
+ 	}
+-	if (ts_config(ts)) {
++
++        if (ts_config(ts)) {
+ 		perror("ts_config");
+ 		exit(1);
+ 	}
+@@ -225,10 +290,17 @@ int main()
+ 	for (i = 0; i < NR_COLORS; i++)
+ 		setcolor (i, palette [i]);
+ 
+-	put_string_center (xres / 2, yres / 4,
++        if ( calibration_exists() ) {
++	       put_string_center (xres / 2, yres / 4,
++			   "Calibration stored! In case of an error", 1);
++               put_string_center (xres / 2, yres / 4 + 30,
++			   "touch crosshairs to redo the calibration", 2);
++        } else {
++	       put_string_center (xres / 2, yres / 4,
+ 			   "TSLIB calibration utility", 1);
+-	put_string_center (xres / 2, yres / 4 + 20,
++               put_string_center (xres / 2, yres / 4 + 30,
+ 			   "Touch crosshair to calibrate", 2);
++        }
+ 
+ 	printf("xres = %d, yres = %d\n", xres, yres);
+ 
+@@ -247,8 +319,10 @@ int main()
+ 
+ 	if (perform_calibration (&cal)) {
+ 		printf ("Calibration constants: ");
+-		for (i = 0; i < 7; i++) printf("%d ", cal.a [i]);
+-		printf("\n");
++		printf("%d %d %d %d %d %d %d %d %d\n",
++		              cal.a[1], cal.a[2], cal.a[0],
++		              cal.a[4], cal.a[5], cal.a[3], cal.a[6],
++		              xres, yres);
+ 		if ((calfile = getenv("TSLIB_CALIBFILE")) != NULL) {
+ 			cal_fd = open (calfile, O_CREAT | O_TRUNC | O_RDWR,
+ 			               S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+-- 
+1.7.9.5
+
