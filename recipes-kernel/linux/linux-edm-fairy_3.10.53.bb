@@ -11,9 +11,10 @@ SRCBRANCH = "tn-mx6-3.10.53-1.1.0_ga-update1"
 
 SRC_URI = "git://github.com/TechNexion/linux.git;branch=${SRCBRANCH} \
            file://defconfig \
+           file://0001-fix-imxplayer-no-picture-issue.patch \
 "
 
-SRCREV = "4b9e5dc866ef29565cec6ee2a1e7b6997e2d68e4"
+SRCREV = "3da4a80540ecc639dd4a6e93946ef541dffd7830"
 LOCALVERSION = "-1.1.1-edm_fairy"
 
 
