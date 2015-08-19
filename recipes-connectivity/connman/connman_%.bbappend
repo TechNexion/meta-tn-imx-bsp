@@ -10,3 +10,4 @@ do_install_append() {
 }
 
 COMPATIBLE_MACHINE_edm-fairy-imx6 = "(edm-fairy-imx6)"
+COMPATIBLE_MACHINE_edm-toucan-imx6 = "(edm-toucan-imx6)"
