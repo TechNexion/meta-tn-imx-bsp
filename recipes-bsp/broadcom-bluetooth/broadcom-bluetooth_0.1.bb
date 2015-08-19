@@ -3,7 +3,8 @@ SECTION = "base"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-SRC_URI = "file://brcm_patchram_plus.c"
+SRC_URI = "file://brcm_patchram_plus.c \
+           file://bcm4330.hcd"
 
 S = "${WORKDIR}"
 
@@ -14,4 +15,9 @@ do_compile() {
 do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 brcm_patchram_plus ${D}${bindir}
+	install -d ${D}/lib/firmware/brcm
+	cp ${S}/bcm4330.hcd ${D}/lib/firmware/brcm
 }
+
+FILES_${PN}-dbg += "/lib/firmware/brcm.debug"
+FILES_${PN} += "/lib/firmware/brcm"
