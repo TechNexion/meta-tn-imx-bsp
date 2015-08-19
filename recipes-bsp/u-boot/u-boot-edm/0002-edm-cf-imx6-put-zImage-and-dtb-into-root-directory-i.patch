@@ -1,9 +1,9 @@
-From e0ca91175caab9031321fa441f440fdc3ad3d4f5 Mon Sep 17 00:00:00 2001
+From 1cf0ef6e69eee77552dedbcf753d7dd52124bdc7 Mon Sep 17 00:00:00 2001
 From: Richard Hu <richard.hu@technexion.com>
-Date: Tue, 4 Aug 2015 11:10:32 +0800
-Subject: [PATCH] edm-cf-imx6: put zImage and dtb into root directory instead
- of /boot in 1st FAT partition to follow the rule in
- image_types_fsl.bbcleass in yocto.
+Date: Wed, 19 Aug 2015 11:04:21 +0800
+Subject: [PATCH 2/3] edm-cf-imx6: put zImage and dtb into root directory
+ instead of /boot in 1st FAT partition to follow the
+ rule in image_types_fsl.bbcleass in yocto
 
 ---
  board/technexion/edm-cf-imx6/edm-cf-imx6.c |    8 ++++----
@@ -11,10 +11,10 @@ Subject: [PATCH] edm-cf-imx6: put zImage and dtb into root directory instead
  2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/board/technexion/edm-cf-imx6/edm-cf-imx6.c b/board/technexion/edm-cf-imx6/edm-cf-imx6.c
-index 536adb1..2c2f8f0 100644
+index a0d8f03..7529be6 100644
 --- a/board/technexion/edm-cf-imx6/edm-cf-imx6.c
 +++ b/board/technexion/edm-cf-imx6/edm-cf-imx6.c
-@@ -596,16 +596,16 @@ int misc_init_r(void)
+@@ -666,16 +666,16 @@ int misc_init_r(void)
  			case EDM1_CF_IMX6_SOM:
  			case EDM2_CF_IMX6_SOM:
  				if (is_cpu_type(MXC_CPU_MX6Q) || is_cpu_type(MXC_CPU_MX6D))
@@ -36,16 +36,16 @@ index 536adb1..2c2f8f0 100644
  			}
  		}
 diff --git a/include/configs/edm-cf-imx6.h b/include/configs/edm-cf-imx6.h
-index 4a60e79..85b9ba0 100644
+index bc3a2be..666ed40 100644
 --- a/include/configs/edm-cf-imx6.h
 +++ b/include/configs/edm-cf-imx6.h
-@@ -142,7 +142,7 @@
- #ifdef CONFIG_DEBUG_CONSOLE
+@@ -140,7 +140,7 @@
+ 
  #define CONFIG_EXTRA_ENV_SETTINGS \
  "script=boot.scr\0" \
 -"image=boot/zImage\0" \
 +"image=zImage\0" \
- "console=ttymxc0\0" \
+ "console=" __stringify(CONFIG_DEBUG_TTY) "\0" \
  "splashpos=m,m\0" \
  "fdt_high=0xffffffff\0" \
 -- 
