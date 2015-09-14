@@ -4,3 +4,4 @@ SRC_URI += " \
 "
 COMPATIBLE_MACHINE_edm-fairy-imx6 = "(edm-fairy-imx6)"
 COMPATIBLE_MACHINE_edm-toucan-imx6 = "(edm-toucan-imx6)"
+COMPATIBLE_MACHINE_edm-goblin-imx6sx = "(edm-goblin-imx6sx)"
