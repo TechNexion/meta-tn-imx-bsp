@@ -164,12 +164,16 @@ if [ "$BACKEND" = "fb" ] || [ "$BACKEND" = "wayland" ] || [ "$BACKEND" = "dfb" ]
     echo >> $BUILD_DIR/conf/local.conf
 fi
 
-if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
+if [ "$MACHINE" == "edm-goblin-imx6sx" ] ; then
+	echo "setting to default display lvds7"
+	DISPLAY="lvds7"
+elif [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
 && [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ] ; then
 	echo "Display is wrong. Please assign DISPLAY as one of lvds7, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
 	echo "setting to default display hdmi720p"
 	DISPLAY="hdmi720p"
 fi
+
 echo "display type is $DISPLAY"
 echo "DISPLAY_TYPE = \"$DISPLAY\"" >> $BUILD_DIR/conf/local.conf
 unset DISPLAY
