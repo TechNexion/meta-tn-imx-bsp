@@ -1,12 +1,13 @@
-From 4bcf068dac3f8589719a1f0a95af2a13ccb40644 Mon Sep 17 00:00:00 2001
+From 6290d07344249174c641ee74309b5fadc32f344b Mon Sep 17 00:00:00 2001
 From: Richard Hu <richard.hu@technexion.com>
-Date: Wed, 19 Aug 2015 11:12:25 +0800
+Date: Thu, 5 Nov 2015 15:14:02 +0800
 Subject: [PATCH 3/3] edm-cf-imx6: put uEnv.txt into root directory instead of
- /boot in 1st FAT partition
+  /boot in 1st FAT partition
 
 ---
- include/configs/edm-cf-imx6.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/configs/edm-cf-imx6.h  |    2 +-
+ include/configs/picosom-imx6.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/include/configs/edm-cf-imx6.h b/include/configs/edm-cf-imx6.h
 index 666ed40..4af60e5 100644
@@ -21,6 +22,19 @@ index 666ed40..4af60e5 100644
  "loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
  "importbootenv=echo Importing environment from mmc ...; " \
  	"env import -t -r $loadaddr $filesize\0" \
+diff --git a/include/configs/picosom-imx6.h b/include/configs/picosom-imx6.h
+index f2734df..cfc56e1 100644
+--- a/include/configs/picosom-imx6.h
++++ b/include/configs/picosom-imx6.h
+@@ -250,7 +250,7 @@
+ 		"else " \
+ 			"bootz; " \
+ 		"fi;\0" \
+-	"bootenv=/boot/uEnv.txt\0" \
++	"bootenv=uEnv.txt\0" \
+ 	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
+ 	"importbootenv=echo Importing environment from mmc ...; " \
+ 		"env import -t -r $loadaddr $filesize\0" \
 -- 
 1.7.9.5
 
