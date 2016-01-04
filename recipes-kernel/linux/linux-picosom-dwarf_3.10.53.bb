@@ -14,7 +14,7 @@ SRC_URI = "git://github.com/TechNexion/linux.git;branch=${SRCBRANCH} \
            file://0001-picosom-imx6-yocto-fix-imxplayer-no-picture-issue.patch \
 "
 
-SRCREV = "1173c4ef301fe7ef54c86b53bb121ae3ee35712d"
+SRCREV = "86b7a97db686699e762b027b4ce1898498add191"
 LOCALVERSION = "-1.1.1-picosom_dwarf"
 
 COMPATIBLE_MACHINE = "(picosom-dwarf-imx6)"
