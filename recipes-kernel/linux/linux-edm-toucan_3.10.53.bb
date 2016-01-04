@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/TechNexion/linux.git;branch=${SRCBRANCH} \
            file://0002-edm1-cf-imx6-Toucan-audio-route-using-Line-Out.patch \
 "
 
-SRCREV = "3da4a80540ecc639dd4a6e93946ef541dffd7830"
+SRCREV = "86b7a97db686699e762b027b4ce1898498add191"
 LOCALVERSION = "-1.1.1-edm_toucan"
 
 
