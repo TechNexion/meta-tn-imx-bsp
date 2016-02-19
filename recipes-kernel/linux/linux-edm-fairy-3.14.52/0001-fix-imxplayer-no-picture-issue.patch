@@ -1,0 +1,42 @@
+From 113bd514062c5abec601577e85571af303c7182c Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Wed, 17 Feb 2016 18:23:11 +0800
+Subject: [PATCH] edm-cf-imx6: yocto - fix imxplayer no picture issue
+
+---
+ arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi b/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi
+index 3561472..73cf784 100644
+--- a/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi
+@@ -154,10 +154,9 @@
+ 
+ 	mxcfb1: fb@0 {
+ 		compatible = "fsl,mxc_sdc_fb";
+-		disp_dev = "hdmi";
+-		interface_pix_fmt = "RGB24";
+-		mode_str ="1920x1080M@60";
+-		default_bpp = <32>;
++		disp_dev = "ldb";
++		interface_pix_fmt = "RGB666";
++		default_bpp = <16>;
+ 		int_clk = <0>;
+ 		late_init = <0>;
+ 		status = "disabled";
+@@ -165,8 +164,9 @@
+ 
+ 	mxcfb2: fb@1 {
+ 		compatible = "fsl,mxc_sdc_fb";
+-		disp_dev = "ldb";
+-		interface_pix_fmt = "RGB666";
++		disp_dev = "hdmi";
++		interface_pix_fmt = "RGB24";
++		mode_str ="1920x1080M@60";
+ 		default_bpp = <24>;
+ 		int_clk = <0>;
+ 		late_init = <0>;
+-- 
+1.7.9.5
+
