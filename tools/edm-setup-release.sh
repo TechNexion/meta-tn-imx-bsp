@@ -174,6 +174,8 @@ elif [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" !
 	DISPLAY="hdmi720p"
 fi
 
+echo "LICENSE_FLAGS_WHITELIST=\"commercial\"" >> $BUILD_DIR/conf/local.conf
+
 echo "display type is $DISPLAY"
 echo "DISPLAY_TYPE = \"$DISPLAY\"" >> $BUILD_DIR/conf/local.conf
 unset DISPLAY
