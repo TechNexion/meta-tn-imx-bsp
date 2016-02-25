@@ -1,0 +1,38 @@
+From 3365361bc96aa99f2d5c93fdcacdde119794ae1d Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Wed, 24 Feb 2016 16:03:58 +0800
+Subject: [PATCH] picosom-imx6: yocto - fix imxplayer no picture issue
+
+---
+ arch/arm/boot/dts/imx6qdl-picosom.dtsi |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-picosom.dtsi b/arch/arm/boot/dts/imx6qdl-picosom.dtsi
+index e5cb81c..015d626 100644
+--- a/arch/arm/boot/dts/imx6qdl-picosom.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-picosom.dtsi
+@@ -138,10 +138,20 @@
+ 
+ 	mxcfb1: fb@0 {
+ 		compatible = "fsl,mxc_sdc_fb";
++		disp_dev = "ldb";
++		interface_pix_fmt = "RGB666";
++		default_bpp = <16>;
++		int_clk = <0>;
++		late_init = <0>;
++		status = "disabled";
++	};
++
++	mxcfb2: fb@1 {
++		compatible = "fsl,mxc_sdc_fb";
+ 		disp_dev = "hdmi";
+ 		interface_pix_fmt = "RGB24";
+ 		mode_str ="1920x1080M@60";
+-		default_bpp = <32>;
++		default_bpp = <24>;
+ 		int_clk = <0>;
+ 		late_init = <0>;
+ 		status = "disabled";
+-- 
+1.7.9.5
+
