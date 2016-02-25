@@ -1,0 +1,25 @@
+From 8ce59ce08419eab0a89c83767b6821a91d85b71b Mon Sep 17 00:00:00 2001
+From: Wig C <wig.cheng@technexion.com>
+Date: Thu, 28 May 2015 15:14:17 +0800
+Subject: [PATCH] edm1-cf-imx6: Toucan audio route using Line Out.
+
+---
+ arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi b/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi
+index 3561472..92a4192 100644
+--- a/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-edm1-cf.dtsi
+@@ -133,7 +133,7 @@
+ 		audio-routing =
+ 			"MIC_IN", "Mic Jack",
+ 			"Mic Jack", "Mic Bias",
+-			"Headphone Jack", "HP_OUT";
++			"Line Out Jack", "HP_OUT";
+ 		mux-int-port = <1>;
+ 		mux-ext-port = <3>;
+ 	};
+-- 
+1.7.9.5
+
