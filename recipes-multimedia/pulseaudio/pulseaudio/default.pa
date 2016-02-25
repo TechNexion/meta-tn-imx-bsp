@@ -176,7 +176,7 @@ set-default-sink alsa_output.platform-sound.23.analog-stereo
 
 #For picosom-dwarf-imx6:
 
-#set-default-sink alsa_output.platform-sound-hdmi.25.analog-stereo
-#set-default-sink alsa_output.platform-sound.23.analog-stereo
+#set-default-sink alsa_output.platform-sound-hdmi.26.analog-stereo
+#set-default-sink alsa_output.platform-sound.24.analog-stereo
 
 #set-default-source input
