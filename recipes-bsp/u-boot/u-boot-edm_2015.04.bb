@@ -30,4 +30,4 @@ deploy_uenv () {
 do_deploy[postfuncs] += "deploy_uenv"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "(edm-fairy-imx6|edm-toucan-imx6|picosom-dwarf-imx6)"
+COMPATIBLE_MACHINE = "(edm-fairy-imx6|edm-toucan-imx6|picosom-dwarf-imx6|edm-goblin-imx6sx)"
