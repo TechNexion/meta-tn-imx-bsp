@@ -1,0 +1,34 @@
+From 466cb48c3589902d634c33506347f11aeb0594cc Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Tue, 21 Jun 2016 14:28:48 +0800
+Subject: [PATCH] remove preferred provider for u-boot and kernel to let it can
+ be specified in machine.conf
+
+---
+ imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc b/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc
+index 085a956..626cc87 100644
+--- a/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc
++++ b/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc
+@@ -1,16 +1,5 @@
+ # Use i.MX Kernel, U-Boot and Gstreamer 1.0 providers
+ PREFERRED_PROVIDER_u-boot_mx5 = "u-boot-fslc"
+-PREFERRED_PROVIDER_u-boot_mx6 = "u-boot-imx"
+-PREFERRED_PROVIDER_u-boot_mx6ul = "u-boot-imx"
+-PREFERRED_PROVIDER_u-boot_mx7 = "u-boot-imx"
+-
+-PREFERRED_PROVIDER_virtual/bootloader_mx6 = "u-boot-imx"
+-PREFERRED_PROVIDER_virtual/bootloader_mx6ul = "u-boot-imx"
+-PREFERRED_PROVIDER_virtual/bootloader_mx7 = "u-boot-imx"
+-
+-PREFERRED_PROVIDER_virtual/kernel_mx6 = "linux-imx"
+-PREFERRED_PROVIDER_virtual/kernel_mx6ul = "linux-imx"
+-PREFERRED_PROVIDER_virtual/kernel_mx7 = "linux-imx"
+ 
+ MACHINE_GSTREAMER_1_0_PLUGIN_mx6 = "imx-gst1.0-plugin"
+ MACHINE_GSTREAMER_1_0_PLUGIN_mx6ul = "imx-gst1.0-plugin"
+-- 
+1.9.1
+
