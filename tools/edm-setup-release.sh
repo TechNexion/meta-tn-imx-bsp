@@ -49,6 +49,8 @@ clean_up()
     unset ARM_DIR META_FSL_BSP_RELEASE
     exit_message clean_up
 }
+# Patch recipes to fix bugs
+patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc < sources/meta-edm-bsp-release/patches/0001-remove-preferred-provider-for-u-boot-and-kernel-to-l.patch
 
 # get command line options
 OLD_OPTIND=$OPTIND
@@ -218,22 +220,39 @@ if [ -d ../sources/meta-freescale ]; then
     sed -e "s,\$.BSPDIR./sources/meta-fsl-arm-extra\s,,g" -i conf/bblayers.conf
 fi
 
+# Generate uEnv.txt for u-boot
+UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-edm"
 
-if [ "$MACHINE" == "edm-goblin-imx6sx" ] ; then
-	echo "setting to default display lvds7"
-	DISPLAY="lvds7"
-elif [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
+echo UENV_PATH=$UENV_PATH
+
+if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
 && [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ] ; then
 	echo "Display is wrong. Please assign DISPLAY as one of lvds7, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
-	echo "setting to default display hdmi720p"
+	echo "setting hdmi720p as default display"
 	DISPLAY="hdmi720p"
 fi
 
+if [ -f $UENV_PATH/uEnv.txt ] ; then
+	rm $UENV_PATH/uEnv.txt
+fi
+
+cp $UENV_PATH/uEnv_${DISPLAY}.txt $UENV_PATH/uEnv.txt
+
+if [ "$MACHINE" == "edm1-cf-imx6" ] ; then
+	if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "tc0700" ] ; then
+		echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, tc0700"
+		echo "setting fairy as default baseboard"
+		BASEBOARD="fairy"
+	fi
+	echo BASEBOARD=$BASEBOARD
+	sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+fi
+
+# allow to build commercial license
 echo "LICENSE_FLAGS_WHITELIST=\"commercial\"" >> $BUILD_DIR/conf/local.conf
 
-echo "display type is $DISPLAY"
-echo "DISPLAY_TYPE = \"$DISPLAY\"" >> $BUILD_DIR/conf/local.conf
 unset DISPLAY
+unset BASEBOARD
 
 cd  $BUILD_DIR
 clean_up
