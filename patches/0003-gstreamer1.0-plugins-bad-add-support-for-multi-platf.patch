@@ -1,0 +1,27 @@
+From 31f6ff723b297f02c17850cb72d1577a9133850c Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Wed, 22 Jun 2016 09:53:33 +0800
+Subject: [PATCH] gstreamer1.0-plugins-bad: add support for multi-platform
+
+---
+ .../recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_%.bbappend  | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/imx/meta-bsp/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_%.bbappend b/imx/meta-bsp/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_%.bbappend
+index 157f18a..843442f 100644
+--- a/imx/meta-bsp/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_%.bbappend
++++ b/imx/meta-bsp/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_%.bbappend
+@@ -54,9 +54,7 @@ GPU_PATCHES = " file://0008-Adding-some-fragment-shaders-for-glshader-plugin.pat
+                 file://0023-glplugin-glupload-crash-in-glupload-with-a-gst-launc.patch \
+ "
+ 
+-SRC_URI_append_mx6q  = "${GPU_PATCHES}"
+-SRC_URI_append_mx6dl = "${GPU_PATCHES}"
+-SRC_URI_append_mx6sx = "${GPU_PATCHES}"
++SRC_URI_append_mx6  = "${GPU_PATCHES}"
+ 
+ # include fragment shaders
+ FILES_${PN}-opengl += "/usr/share/*.fs"
+-- 
+1.9.1
+

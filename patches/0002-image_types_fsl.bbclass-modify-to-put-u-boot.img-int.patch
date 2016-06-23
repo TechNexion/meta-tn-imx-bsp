@@ -1,0 +1,38 @@
+From ffac42e5bfdf75c06885e9bafbe024ef41cd8b40 Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Tue, 21 Jun 2016 18:13:02 +0800
+Subject: [PATCH] image_types_fsl.bbclass: modify to put u-boot.img into first
+ FAT partition
+
+---
+ classes/image_types_fsl.bbclass | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/classes/image_types_fsl.bbclass b/classes/image_types_fsl.bbclass
+index d351348..7669107 100644
+--- a/classes/image_types_fsl.bbclass
++++ b/classes/image_types_fsl.bbclass
+@@ -124,6 +124,11 @@ _generate_boot_image() {
+ 		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/$src ::/$dst
+ 	done
+ 
++	# Copy u-boot.img
++	if [ -n "${SPL_BINARY}" ]; then
++		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} ::/u-boot.img
++	fi
++
+ 	# Copy device tree file
+ 	if test -n "${KERNEL_DEVICETREE}"; then
+ 		for DTS_FILE in ${KERNEL_DEVICETREE}; do
+@@ -182,7 +187,7 @@ generate_imx_sdcard () {
+ 		u-boot)
+ 		if [ -n "${SPL_BINARY}" ]; then
+ 			dd if=${DEPLOY_DIR_IMAGE}/${SPL_BINARY} of=${SDCARD} conv=notrunc seek=2 bs=512
+-			dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=69 bs=1K
++			# dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=69 bs=1K
+ 		else
+ 			dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=2 bs=512
+ 		fi
+-- 
+1.9.1
+
