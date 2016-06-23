@@ -49,8 +49,12 @@ clean_up()
     unset ARM_DIR META_FSL_BSP_RELEASE
     exit_message clean_up
 }
+
 # Patch recipes to fix bugs
 patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc < sources/meta-edm-bsp-release/patches/0001-remove-preferred-provider-for-u-boot-and-kernel-to-l.patch
+patch -Np1 -r - sources/meta-fsl-arm/classes/image_types_fsl.bbclass < sources/meta-edm-bsp-release/patches/0002-image_types_fsl.bbclass-modify-to-put-u-boot.img-int.patch
+patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-multimedia/gstreamer/gstreamer1.0-plugins-bad_%.bbappend < sources/meta-edm-bsp-release/patches/0003-gstreamer1.0-plugins-bad-add-support-for-multi-platf.patch
+patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-graphics/mesa/mesa-demos_%.bbappend < sources/meta-edm-bsp-release/patches/0004-mesa-demos-add-support-for-multi-platform.patch
 
 # get command line options
 OLD_OPTIND=$OPTIND
