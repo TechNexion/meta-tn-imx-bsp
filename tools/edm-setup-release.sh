@@ -236,6 +236,8 @@ if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != 
 	DISPLAY="hdmi720p"
 fi
 
+echo DISPLAY=$DISPLAY
+
 if [ -f $UENV_PATH/uEnv.txt ] ; then
 	rm $UENV_PATH/uEnv.txt
 fi
@@ -250,6 +252,22 @@ if [ "$MACHINE" == "edm1-cf-imx6" ] ; then
 	fi
 	echo BASEBOARD=$BASEBOARD
 	sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+fi
+
+# Set default audio output device by display type for pulseaudio
+PULSEAUDIO_PATH="../sources/meta-edm-bsp-release/recipes-multimedia/pulseaudio/pulseaudio"
+if [ -f $PULSEAUDIO_PATH/default.pa ] ; then
+	rm $PULSEAUDIO_PATH/default.pa
+fi
+
+cp $PULSEAUDIO_PATH/default_template.pa $PULSEAUDIO_PATH/default.pa
+
+if [ "$DISPLAY" == "hdmi720p" ] || [ "$DISPLAY" == "hdmi1080p" ]  || [ "$DISPLAY" == "lvds7_hdmi720p" ]; then
+	sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound-hdmi.analog-stereo/' $PULSEAUDIO_PATH/default.pa
+	echo default audio output device is hdmi
+else
+	sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound.analog-stereo/' $PULSEAUDIO_PATH/default.pa
+	echo default audio output device is audio codec
 fi
 
 # allow to build commercial license
