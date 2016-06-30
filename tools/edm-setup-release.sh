@@ -232,8 +232,13 @@ echo UENV_PATH=$UENV_PATH
 if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
 && [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ] ; then
 	echo "Display is wrong. Please assign DISPLAY as one of lvds7, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
-	echo "setting hdmi720p as default display"
-	DISPLAY="hdmi720p"
+	if [ "$BASEBOARD" == "tc0700" ]; then
+		echo "setting lvds7 as default display"
+		DISPLAY="lvds7"
+	else
+		echo "setting hdmi720p as default display"
+		DISPLAY="hdmi720p"
+	fi
 fi
 
 echo DISPLAY=$DISPLAY
@@ -244,15 +249,17 @@ fi
 
 cp $UENV_PATH/uEnv_${DISPLAY}.txt $UENV_PATH/uEnv.txt
 
-if [ "$MACHINE" == "edm1-cf-imx6" ] ; then
+if [ "$MACHINE" == "edm1-cf-imx6" ] || [ "$MACHINE" == "edm1-cf-imx6-no-console" ] ; then
 	if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "tc0700" ] ; then
 		echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, tc0700"
 		echo "setting fairy as default baseboard"
 		BASEBOARD="fairy"
 	fi
-	echo BASEBOARD=$BASEBOARD
+
 	sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
 fi
+
+echo BASEBOARD=$BASEBOARD
 
 # Set default audio output device by display type for pulseaudio
 PULSEAUDIO_PATH="../sources/meta-edm-bsp-release/recipes-multimedia/pulseaudio/pulseaudio"
