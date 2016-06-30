@@ -19,4 +19,4 @@ deploy_uenv () {
 do_deploy[postfuncs] += "deploy_uenv"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "(edm1-cf-imx6)"
+COMPATIBLE_MACHINE = "(edm1-cf-imx6|edm1-cf-imx6-no-console)"
