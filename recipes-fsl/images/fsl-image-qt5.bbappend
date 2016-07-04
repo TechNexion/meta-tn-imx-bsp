@@ -5,4 +5,6 @@ IMAGE_INSTALL += " \
     dnsmasq \
     haveged \
     create-ap \
+    chromium \
+    libexif \
     "
