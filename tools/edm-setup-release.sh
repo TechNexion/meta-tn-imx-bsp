@@ -257,9 +257,21 @@ if [ "$MACHINE" == "edm1-cf-imx6" ] || [ "$MACHINE" == "edm1-cf-imx6-no-console"
 	fi
 
 	sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+
+	echo BASEBOARD=$BASEBOARD
 fi
 
-echo BASEBOARD=$BASEBOARD
+if [ "$MACHINE" == "pico-imx6" ] ; then
+	if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] ; then
+		echo "BASEBOARD is wrong. Please assign BASEBOARD as one of dwarf, hobbit, nymph"
+		echo "setting dwarf as default baseboard"
+		BASEBOARD="dwarf"
+	fi
+
+	sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+
+	echo BASEBOARD=$BASEBOARD
+fi
 
 # Set default audio output device by display type for pulseaudio
 PULSEAUDIO_PATH="../sources/meta-edm-bsp-release/recipes-multimedia/pulseaudio/pulseaudio"
