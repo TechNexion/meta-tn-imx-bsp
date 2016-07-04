@@ -225,7 +225,7 @@ if [ -d ../sources/meta-freescale ]; then
 fi
 
 # Generate uEnv.txt for u-boot
-UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-edm"
+UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-uenv"
 
 echo UENV_PATH=$UENV_PATH
 
