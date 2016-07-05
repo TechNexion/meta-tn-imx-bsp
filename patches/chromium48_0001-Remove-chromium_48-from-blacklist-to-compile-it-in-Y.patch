@@ -1,0 +1,23 @@
+From 8978c30614711a839387cab90d77e5770b691783 Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Tue, 5 Jul 2016 17:22:03 +0800
+Subject: [PATCH] Remove chromium_48 from blacklist to compile it in Yocto 2.0
+ (gcc-5.2)
+
+---
+ recipes-browser/chromium/chromium_48.0.2548.0.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/recipes-browser/chromium/chromium_48.0.2548.0.bb b/recipes-browser/chromium/chromium_48.0.2548.0.bb
+index 2a52568..0898735 100644
+--- a/recipes-browser/chromium/chromium_48.0.2548.0.bb
++++ b/recipes-browser/chromium/chromium_48.0.2548.0.bb
+@@ -47,4 +47,4 @@ CHROMIUM_WAYLAND_GYP_DEFINES = "use_ash=1 use_aura=1 chromeos=0 use_ozone=1 use_
+ # | gen/protoc_out/components/enhanced_bookmarks/proto/cluster.pb.cc:257:3: error: this 'if' clause does not guard... [-Werror=misleading-indentation]
+ # |    if (!_extensions_.IsInitialized()) return false;  return true;
+ # |    ^~
+-PNBLACKLIST[chromium] ?= "BROKEN: fails to build with gcc-6"
++#PNBLACKLIST[chromium] ?= "BROKEN: fails to build with gcc-6"
+-- 
+1.9.1
+
