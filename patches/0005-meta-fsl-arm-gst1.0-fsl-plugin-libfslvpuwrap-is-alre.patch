@@ -1,0 +1,28 @@
+From a510e38253bdc4d0aaa0672802c8d5a700034de6 Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Sat, 9 Jul 2016 15:28:28 +0800
+Subject: [PATCH] meta-fsl-arm/gst1.0-fsl-plugin: libfslvpuwrap is already
+ renamed to imx-vpuwrap
+
+---
+ recipes-multimedia/gstreamer/gst1.0-fsl-plugin_4.0.7.bb | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/recipes-multimedia/gstreamer/gst1.0-fsl-plugin_4.0.7.bb b/recipes-multimedia/gstreamer/gst1.0-fsl-plugin_4.0.7.bb
+index 62b38c7..b2cfddd 100644
+--- a/recipes-multimedia/gstreamer/gst1.0-fsl-plugin_4.0.7.bb
++++ b/recipes-multimedia/gstreamer/gst1.0-fsl-plugin_4.0.7.bb
+@@ -7,8 +7,8 @@ LICENSE = "GPLv2 & LGPLv2 & LGPLv2.1"
+ SECTION = "multimedia"
+ 
+ DEPENDS = "libfslcodec libfslparser virtual/kernel gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad"
+-DEPENDS_append_mx6q = " imx-lib imx-vpu libfslvpuwrap"
+-DEPENDS_append_mx6dl = " imx-lib imx-vpu libfslvpuwrap"
++DEPENDS_append_mx6q = " imx-lib imx-vpu imx-vpuwrap"
++DEPENDS_append_mx6dl = " imx-lib imx-vpu imx-vpuwrap"
+ DEPENDS_append_mx6sl = " imx-lib"
+ DEPENDS_append_mx6sx = " imx-lib"
+ DEPENDS_append_mx6ul = " imx-lib"
+-- 
+1.9.1
+
