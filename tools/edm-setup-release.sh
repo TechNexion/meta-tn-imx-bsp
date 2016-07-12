@@ -59,8 +59,8 @@ patch -Np1 -r - sources/meta-fsl-arm/recipes-multimedia/gstreamer/gst1.0-fsl-plu
 
 ## Upgrde chromium from 40 to 48
 patch -Np1 -r - sources/meta-browser/recipes-browser/chromium/chromium_48.0.2548.0.bb < sources/meta-edm-bsp-release/patches/chromium48_0001-Remove-chromium_48-from-blacklist-to-compile-it-in-Y.patch
-patch -Np1 -r - sources/meta-fsl-arm/browser-layer/recipes-browser/chromium/chromium_48.0.2548.0.bbappend < sources/meta-edm-bsp-release/patches/chromium48_0002-meta-fsl-arm-replace-chromium-recipe-from-40-to-48.patch
-patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-browser/chromium/chromium_48.0.2548.0.bbappend < sources/meta-edm-bsp-release/patches/chromium48_0003-meta-fsl-bsp-release-replace-chromium-recipe-from-40.patch
+cp sources/meta-edm-bsp-release/patches/meta-fsl-arm_chromium_48.0.2548.0.bbappend sources/meta-fsl-arm/browser-layer/recipes-browser/chromium/chromium_48.0.2548.0.bbappend
+cp sources/meta-edm-bsp-release/patches/meta-fsl-bsp-release_chromium_48.0.2548.0.bbappend sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-browser/chromium/chromium_48.0.2548.0.bbappend
 rm sources/meta-fsl-arm/browser-layer/recipes-browser/chromium/chromium_40.0.2214.91.bbappend
 rm sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-browser/chromium/chromium_40.0.2214.91.bbappend
 
