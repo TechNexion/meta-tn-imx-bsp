@@ -13,9 +13,9 @@ SRC_URI = "git://github.com/TechNexion/linux.git;branch=${SRCBRANCH} \
            file://defconfig \
 "
 
-SRCREV = "c19c8d6c82205098d530d5a8a42a7ae8ff7c019c"
+SRCREV = "f1fa786c9f7348ad35ebfe88e0451187ad253d6d"
 LOCALVERSION = "-1.1.1-technexion"
 
 
-COMPATIBLE_MACHINE = "(edm1-cf-imx6|edm1-cf-imx6-no-console|pico-imx6|tek-imx6)"
+COMPATIBLE_MACHINE = "(mx6|mx6ul|mx7)"
 
