@@ -1,8 +1,8 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_mx6 += "file://pointercal.xinput.new"
+SRC_URI += "file://pointercal.xinput.new"
 
-do_install_append_mx6() {
+do_install_append() {
     install -d ${D}${sysconfdir}/
     install -m 0644 ${S}/pointercal.xinput.new ${D}${sysconfdir}/pointercal.xinput
 }
