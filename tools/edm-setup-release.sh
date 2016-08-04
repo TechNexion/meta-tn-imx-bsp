@@ -238,7 +238,8 @@ UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-uenv"
 echo UENV_PATH=$UENV_PATH
 
 if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "lvds10" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
-&& [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ] ; then
+&& [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ] \
+&& [ "$MACHINE" != "pico-imx6ul" ]; then
 	echo "Display is wrong. Please assign DISPLAY as one of lvds7, lvds10, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
 	if [ "$BASEBOARD" == "tc0700" ]; then
 		echo "setting lvds7 as default display"
@@ -247,6 +248,11 @@ if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "lvds10" ] && [ "$DISPLAY" != "h
 		echo "setting hdmi720p as default display"
 		DISPLAY="hdmi720p"
 	fi
+fi
+
+# i.mx6ul only has LCDIF interface and can't change display type by uEnv.txt
+if [ "$MACHINE" == "pico-imx6ul" ]; then
+		DISPLAY="lcd"
 fi
 
 echo DISPLAY=$DISPLAY
