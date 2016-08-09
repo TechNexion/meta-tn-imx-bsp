@@ -304,9 +304,6 @@ else
 	echo default audio output device is audio codec
 fi
 
-# allow to build commercial license
-echo "LICENSE_FLAGS_WHITELIST=\"commercial\"" >> $BUILD_DIR/conf/local.conf
-
 unset DISPLAY
 unset BASEBOARD
 
