@@ -47,7 +47,7 @@ MACHINE=pico-imx6 BASEBOARD=dwarf source edm-setup-release.sh -b build-x11-pico 
 bitbake fsl-image-qt5
 
 For Pico-imx6 dwarf LVDS 7 inch:
-MACHINE=pico-imx6 BASEBOARD=dwarf source edm-setup-release.sh -b build-x11-pico -e x11
+DISPLAY=lvds7 MACHINE=pico-imx6 BASEBOARD=dwarf source edm-setup-release.sh -b build-x11-pico -e x11
 bitbake fsl-image-qt5
 
 For Pico-imx6 dwarf TTL LCD 7 inch/5 inch:
@@ -55,7 +55,7 @@ DISPLAY=lcd MACHINE=pico-imx6 BASEBOARD=dwarf source edm-setup-release.sh -b bui
 bitbake fsl-image-qt5
 
 For Pico-imx6 hobbit LVDS 7 inch:
-MACHINE=pico-imx6 BASEBOARD=hobbit source edm-setup-release.sh -b build-x11-pico -e x11
+DISPLAY=lvds7 MACHINE=pico-imx6 BASEBOARD=hobbit source edm-setup-release.sh -b build-x11-pico -e x11
 bitbake fsl-image-qt5
 
 For Pico-imx6 hobbit TTL LCD 7 inch/5 inch :
@@ -66,8 +66,16 @@ For Pico-imx6 nymph:
 MACHINE=pico-imx6 BASEBOARD=nymph source edm-setup-release.sh -b build-x11-pico -e x11
 bitbake fsl-image-qt5
 
-For tek-imx6 HDMI:
+For Pico-imx6 nymph LVDS 7 inch :
+DISPLAY=lvds7 MACHINE=pico-imx6 BASEBOARD=nymph source edm-setup-release.sh -b build-x11-pico -e x11
+bitbake fsl-image-qt5
+
+For tek3-imx6 HDMI:
 MACHINE=tek-imx6 source edm-setup-release.sh -b build-x11-tek  -e x11
+bitbake fsl-image-qt5
+
+For tep5-imx6 HDMI:
+DISPLAY=lvds10 MACHINE=tek-imx6 source edm-setup-release.sh -b build-x11-tek  -e x11
 bitbake fsl-image-qt5
 
 For Pico-imx6UL hobbit:
