@@ -1,0 +1,24 @@
+From 0364ee89d40f0ca0ba76ac161fbc00b91d872efe Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Wed, 23 Nov 2016 17:35:11 +0800
+Subject: [PATCH] fsl-imx-base.inc: remove hard-coded IMAGE_FSTYPES
+
+---
+ imx/meta-sdk/conf/distro/include/fsl-imx-base.inc | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/imx/meta-sdk/conf/distro/include/fsl-imx-base.inc b/imx/meta-sdk/conf/distro/include/fsl-imx-base.inc
+index bd39a2b..8c78345 100644
+--- a/imx/meta-sdk/conf/distro/include/fsl-imx-base.inc
++++ b/imx/meta-sdk/conf/distro/include/fsl-imx-base.inc
+@@ -15,7 +15,6 @@ LOCALCONF_VERSION = "1"
+ IMX_DEFAULT_DISTRO_FEATURES = "largefile opengl ptest multiarch"
+ IMX_DEFAULT_EXTRA_RDEPENDS = "packagegroup-core-boot"
+ IMX_DEFAULT_EXTRA_RRECOMMENDS = "kernel-module-af-packet"
+-IMAGE_FSTYPES = "tar.bz2 ext4 sdcard"
+ 
+ BBMASK = "meta-fsl-arm/recipes-bsp/u-boot/u-boot-imx_2015.04.bb"
+ BBMASK .= "|meta-fsl-arm/recipes-bsp/u-boot/u-boot-imx-mfgtool_2015.04.bb"
+-- 
+1.9.1
+
