@@ -13,6 +13,10 @@ SRC_URI += " \
     https://github.com/OpenELEC/wlan-firmware/raw/master/firmware/brcm/fw_bcm4339a0_ag_apsta.bin;name=fw_bcm4339a0_ag_apsta.bin \
     https://raw.githubusercontent.com/OpenELEC/wlan-firmware/master/firmware/brcm/nvram_ap6335.txt;name=nvram_ap6335.txt \
     https://github.com/rockchip-linux/rk-rootfs-build/raw/master/overlay-firmware/system/vendor/firmware/bcm4339a0.hcd;name=bcm4339a0.hcd \
+    https://github.com/rockchip-linux/rk-rootfs-build/raw/master/overlay-firmware/system/etc/firmware/fw_bcm43438a0.bin;name=fw_bcm43438a0.bin \
+    https://github.com/rockchip-linux/rk-rootfs-build/raw/master/overlay-firmware/system/etc/firmware/fw_bcm43438a0_apsta.bin;name=fw_bcm43438a0_apsta.bin \
+    https://raw.githubusercontent.com/rockchip-linux/rk-rootfs-build/master/overlay-firmware/system/etc/firmware/nvram_ap6212.txt;name=nvram_ap6212.txt \
+    https://github.com/BPI-SINOVOIP/BPI_WiFi_Firmware/raw/master/ap6212/bcm43438a0.hcd \
 "
 
 SRC_URI[fw_bcm4330_bg.bin.md5sum] = "c98f3bc455f8c908edd5323ea9735aad"
@@ -31,23 +35,37 @@ SRC_URI[nvram_ap6335.txt.md5sum] = "d5cf323bde41f3568ef23ea1853a4f13"
 SRC_URI[nvram_ap6335.txt.sha256sum] = "faa46d92a3df86843e3ced55cfc064b1008f6f653837633c725505d3a341cc54"
 SRC_URI[bcm4339a0.hcd.md5sum] = "3537827c3b934cc986f5eb3e88633d8b"
 SRC_URI[bcm4339a0.hcd.sha256sum] = "5538cd96516729f7d35d7eecdedb0d8a0c441f9ce6d27aa873eb95d8adb59603"
+SRC_URI[fw_bcm43438a0.bin.md5sum] = "2f73baf6af29d51d788fb807bb2cbc5e"
+SRC_URI[fw_bcm43438a0.bin.sha256sum] = "0c7c8aaf153455130cec58c9a2df01783517d207675bca3c13f64b17eaa2d214"
+SRC_URI[fw_bcm43438a0_apsta.bin.md5sum] = "2f73baf6af29d51d788fb807bb2cbc5e"
+SRC_URI[fw_bcm43438a0_apsta.bin.sha256sum] = "0c7c8aaf153455130cec58c9a2df01783517d207675bca3c13f64b17eaa2d214"
+SRC_URI[nvram_ap6212.txt.md5sum] = "940ca42dc02c4051f6645c11e3d733cd"
+SRC_URI[nvram_ap6212.txt.sha256sum] = "29dd1ebb2f9691ae10acd1227e243528ebe32b95d6af4831a6f63ab5dafa47cd"
+SRC_URI[md5sum] = "6107f44f8244c23df368329c39513cab"
+SRC_URI[sha256sum] = "282f7e1dc03f65af19d247e7ab1b266c0aee8ff542492541d4565c91d127d4b4"
 
 S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/lib/firmware/brcm
     
-    #Install BCM4330 bluetooth firmware
+    #Install BCM4330 wifi and bluetooth firmware
     install -m 0755 fw_bcm4330_bg.bin ${D}/lib/firmware/brcm
     install -m 0755 fw_bcm4330_apsta_bg.bin ${D}/lib/firmware/brcm
     install -m 0755 brcmfmac4330-sdio.txt ${D}/lib/firmware/brcm
     install -m 0755 bcm4330.hcd ${D}/lib/firmware/brcm
     
-    #Install BCM4339 bluetooth firmware
+    #Install AP6335 wifi and bluetooth firmware
     install -m 0755 fw_bcm4339a0_ag.bin ${D}/lib/firmware/brcm
     install -m 0755 fw_bcm4339a0_ag_apsta.bin ${D}/lib/firmware/brcm
     install -m 0755 nvram_ap6335.txt ${D}/lib/firmware/brcm
     install -m 0755 bcm4339a0.hcd ${D}/lib/firmware/brcm
+
+    #Install AP6212 wifi and bluetooth firmware
+    install -m 0755 fw_bcm43438a0.bin ${D}/lib/firmware/brcm
+    install -m 0755 fw_bcm43438a0_apsta.bin ${D}/lib/firmware/brcm
+    install -m 0755 nvram_ap6212.txt ${D}/lib/firmware/brcm
+    install -m 0755 bcm43438a0.hcd ${D}/lib/firmware/brcm
 }
 
 FILES_${PN}-dbg += "/lib/firmware/.debug"
