@@ -57,6 +57,8 @@ patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-multimedia/gst
 patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-graphics/mesa/mesa-demos_%.bbappend < sources/meta-edm-bsp-release/patches/0004-mesa-demos-add-support-for-multi-platform.patch
 patch -Np1 -r - sources/meta-fsl-arm/recipes-multimedia/gstreamer/gst1.0-fsl-plugin_4.0.7.bb < sources/meta-edm-bsp-release/patches/0005-meta-fsl-arm-gst1.0-fsl-plugin-libfslvpuwrap-is-alre.patch
 patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-sdk/recipes-qt5/qt5/qtbase_%.bbappend < sources/meta-edm-bsp-release/patches/0006-imx-meta-sdk-recipes-qt5-qt5-qtbase-add-linuxfb-supp.patch
+patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-sdk/conf/distro/include/fsl-imx-base.inc < sources/meta-edm-bsp-release/patches/0007-fsl-imx-base.inc-remove-hard-coded-IMAGE_FSTYPES.patch
+patch -Np1 -r - sources/meta-fsl-arm/conf/machine/include/imx-base.inc < sources/meta-edm-bsp-release/patches/0008-imx-base.inc-add-default-IMAGE_FSTYPES-for-imx6-seri.patch
 
 ## Upgrde chromium from 40 to 48
 patch -Np1 -r - sources/meta-browser/recipes-browser/chromium/chromium_48.0.2548.0.bb < sources/meta-edm-bsp-release/patches/chromium48_0001-Remove-chromium_48-from-blacklist-to-compile-it-in-Y.patch
@@ -233,75 +235,88 @@ if [ -d ../sources/meta-freescale ]; then
     sed -e "s,\$.BSPDIR./sources/meta-fsl-arm-extra\s,,g" -i conf/bblayers.conf
 fi
 
+#Identify SOC type
+CPU_TYPE=`echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g'`
+echo CPU_TYPE=$CPU_TYPE
+
 # Generate uEnv.txt for u-boot
 UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-uenv"
 
 echo UENV_PATH=$UENV_PATH
 
-if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "lvds10" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
-&& [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ] \
-&& [ "$MACHINE" != "pico-imx6ul-emmc" ]; then
-	echo "Display is wrong. Please assign DISPLAY as one of lvds7, lvds10, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
-	if [ "$BASEBOARD" == "tc0700" ]; then
-		echo "setting lvds7 as default display"
-		DISPLAY="lvds7"
-	else
-		echo "setting hdmi720p as default display"
-		DISPLAY="hdmi720p"
-	fi
-fi
-
-# i.mx6ul only has LCDIF interface and can't change display type by uEnv.txt
-if [ "$MACHINE" == "pico-imx6ul-emmc" ]; then
-		DISPLAY="lcd"
-fi
-
-echo DISPLAY=$DISPLAY
-
 if [ -f $UENV_PATH/uEnv.txt ] ; then
 	rm $UENV_PATH/uEnv.txt
 fi
 
-cp $UENV_PATH/uEnv_${DISPLAY}.txt $UENV_PATH/uEnv.txt
-
-if [ "$MACHINE" == "edm1-cf-imx6" ] || [ "$MACHINE" == "edm1-cf-imx6-no-console" ] ; then
-	if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "tc0700" ] ; then
-		echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, tc0700"
-		echo "setting fairy as default baseboard"
-		BASEBOARD="fairy"
+if [ "$CPU_TYPE" == 'imx6' ]; then
+	if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "lvds10" ] && [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
+	&& [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ]; then
+		echo "Display is wrong. Please assign DISPLAY as one of lvds7, lvds10, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
+		if [ "$BASEBOARD" == "tc0700" ]; then
+			echo "setting lvds7 as default display"
+			DISPLAY="lvds7"
+		else
+			echo "setting hdmi720p as default display"
+			DISPLAY="hdmi720p"
+		fi
 	fi
 
-	sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+	cp $UENV_PATH/uEnv_${DISPLAY}.txt $UENV_PATH/uEnv.txt
 
-	echo BASEBOARD=$BASEBOARD
-fi
-
-if [ "$MACHINE" == "pico-imx6" ] ; then
-	if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] ; then
-		echo "BASEBOARD is wrong. Please assign BASEBOARD as one of dwarf, hobbit, nymph"
-		echo "setting dwarf as default baseboard"
-		BASEBOARD="dwarf"
+	# Set default baseboard type for 'edm1-cf-imx6' and 'pico-imx6'
+	if [ "$MACHINE" == "edm1-cf-imx6" ] || [ "$MACHINE" == "edm1-cf-imx6-no-console" ] ; then
+		if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "tc0700" ] ; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, tc0700"
+			echo "setting fairy as default baseboard"
+			BASEBOARD="fairy"
+		fi
+		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+		echo BASEBOARD=$BASEBOARD
 	fi
 
-	sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
-
-	echo BASEBOARD=$BASEBOARD
+	if [ "$MACHINE" == "pico-imx6" ] ; then
+		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] ; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of dwarf, hobbit, nymph"
+			echo "setting dwarf as default baseboard"
+			BASEBOARD="dwarf"
+		fi
+		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+		echo BASEBOARD=$BASEBOARD
+	fi
 fi
+
+
+# i.mx6ul can only output to TTL LCD panel and can't change display settings by uEnv.txt
+if [ "$CPU_TYPE" == 'imx6ul' ] ; then
+		DISPLAY="lcd"
+fi
+
+# i.mx6sx can only output to LVDS and TTL LCD and can't change display settings by uEnv.txt
+# it requires to change device tree file to enable output to TTL LCD
+if [ "$CPU_TYPE" == 'imx6sx' ]; then
+		DISPLAY="lvds7"
+fi
+
+echo DISPLAY=$DISPLAY
 
 # Set default audio output device by display type for pulseaudio
-PULSEAUDIO_PATH="../sources/meta-edm-bsp-release/recipes-multimedia/pulseaudio/pulseaudio"
-if [ -f $PULSEAUDIO_PATH/default.pa ] ; then
-	rm $PULSEAUDIO_PATH/default.pa
-fi
+# imx6 may output to LVDS/TTL_LCD or HDMI, and the default audio output device also depends on them.
+# LVDS/TTL_LCD: output to audio codec(SGTL5k), HDMI: output to HDMI audio
+if [ "$CPU_TYPE" == 'imx6' ]; then
+	PULSEAUDIO_PATH="../sources/meta-edm-bsp-release/recipes-multimedia/pulseaudio/pulseaudio"
+	if [ -f $PULSEAUDIO_PATH/default.pa ] ; then
+		rm $PULSEAUDIO_PATH/default.pa
+	fi
 
-cp $PULSEAUDIO_PATH/default_template.pa $PULSEAUDIO_PATH/default.pa
+	cp $PULSEAUDIO_PATH/default_template.pa $PULSEAUDIO_PATH/default.pa
 
-if [ "$DISPLAY" == "hdmi720p" ] || [ "$DISPLAY" == "hdmi1080p" ]  || [ "$DISPLAY" == "lvds7_hdmi720p" ]; then
-	sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound-hdmi.analog-stereo/' $PULSEAUDIO_PATH/default.pa
-	echo default audio output device is hdmi
-else
-	sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound.analog-stereo/' $PULSEAUDIO_PATH/default.pa
-	echo default audio output device is audio codec
+	if [ "$DISPLAY" == "hdmi720p" ] || [ "$DISPLAY" == "hdmi1080p" ]  || [ "$DISPLAY" == "lvds7_hdmi720p" ]; then
+		sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound-hdmi.analog-stereo/' $PULSEAUDIO_PATH/default.pa
+		echo default audio output device is hdmi
+	else
+		sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound.analog-stereo/' $PULSEAUDIO_PATH/default.pa
+		echo default audio output device is audio codec
+	fi
 fi
 
 unset DISPLAY
