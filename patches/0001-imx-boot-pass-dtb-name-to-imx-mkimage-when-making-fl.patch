@@ -1,0 +1,27 @@
+From db5b96e480bfe5e9d224cef3433aafbd54991f0c Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Thu, 3 May 2018 10:36:19 +0800
+Subject: [PATCH] imx-boot: pass dtb name to imx-mkimage when making flash.bin
+
+The default dtb file name is fsl-imx8mq-evk.
+To adapt different boards, it'd be better to pass dtb name in imx-mkimage.
+---
+ imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_0.2.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_0.2.bb b/imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_0.2.bb
+index 5d063eb..971c0c7 100644
+--- a/imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_0.2.bb
++++ b/imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_0.2.bb
+@@ -102,7 +102,7 @@ do_compile () {
+     # mkimage for i.MX8
+     for target in ${IMXBOOT_TARGETS}; do
+         echo "building ${SOC_TARGET} - ${target}"
+-        make SOC=${SOC_TARGET} ${target}
++        make SOC=${SOC_TARGET} dtbs=${UBOOT_DTB_NAME} ${target}
+         if [ -e "${S}/${SOC_TARGET}/flash.bin" ]; then
+             cp ${S}/${SOC_TARGET}/flash.bin ${S}/${BOOT_CONFIG_MACHINE}-${target}
+         fi
+-- 
+1.9.1
+
