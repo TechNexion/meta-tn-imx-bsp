@@ -54,6 +54,8 @@ clean_up()
 
 # Patch recipes to fix bugs
 patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_0.2.bb < sources/meta-edm-bsp-release/patches/0001-imx-boot-pass-dtb-name-to-imx-mkimage-when-making-fl.patch
+patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-security/optee-imx/optee-os-imx_git.bb < sources/meta-edm-bsp-release/patches/0002-optee-os-imx-fix-build-failure-when-machine-isn-t-im.patch
+
 
 # get command line options
 OLD_OPTIND=$OPTIND
