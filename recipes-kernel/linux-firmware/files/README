@@ -1,0 +1,17 @@
+These firmware files are especially for TechNexion QCA9377-3 WIFI chip.
+Because of license restriction, we can't publish Qualcomm Atheros proprietary firmware files on public internet.
+Please contact TechNexion FAE or Sales to get licensed wifi firmware files:
+Then, follow the steps:
+1. Put all the firmware files into sources/meta-edm-bsp-release/recipes-kernel/linux-firmware/files
+The required firmware files for TechNexion QCA9377-3 are:
+---------------------------------
+bdwlan30.bin
+otp30.bin
+qwlan30.bin
+utf30.bin
+wlan/cfg.dat
+wlan/qcom_cfg.ini
+---------------------------------
+
+2. Activate the deployment of QCA9377-3 firmware files in Yocto building process:
+   cp sources/meta-edm-bsp-release/recipes-kernel/linux-firmware/files/linux-firmware-qca-tn.bak sources/meta-edm-bsp-release/recipes-kernel/linux-firmware/linux-firmware-qca-tn.bb
