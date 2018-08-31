@@ -1,0 +1,54 @@
+From 0f9182068d44305ccc6afe3cf77e5c19120fb5db Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Thu, 30 Aug 2018 15:27:54 +0800
+Subject: [PATCH] optee-os-imx: fix build failure when the board isn't
+ supported by optee-os-imx
+
+If the board isn't supported by optee-os-imx, the fixed recipe would assign a name of supported board
+by i.mx SOC type to avoid building failure for optee-os-imx.
+---
+ .../recipes-security/optee-imx/optee-os-imx_git.bb   | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/imx/meta-bsp/recipes-security/optee-imx/optee-os-imx_git.bb b/imx/meta-bsp/recipes-security/optee-imx/optee-os-imx_git.bb
+index 9455eac..4318a26 100644
+--- a/imx/meta-bsp/recipes-security/optee-imx/optee-os-imx_git.bb
++++ b/imx/meta-bsp/recipes-security/optee-imx/optee-os-imx_git.bb
+@@ -19,6 +19,17 @@ B = "${WORKDIR}/build.${OPTEE_PLATFORM}"
+ 
+ python () {
+ 	machine = d.getVar("MACHINE", True)
++	machineoverrides=(d.getVar('MACHINEOVERRIDES', True) or '').split(':')
++
++	# NXP official supported board list is in imx-optee-os/scripts/imx_build.sh
++	# git://source.codeaurora.org/external/imx/imx-optee-os.git
++	supported_board_list = ['mx6ulevk','mx6ul9x9evk', 'mx6ullevk', 'mx6slevk', 'mx6sllevk', 'mx6sxsabreauto', \
++	'mx6sxsabresd', 'mx6qsabrelite', 'mx6qsabresd', 'mx6qsabreauto', 'mx6qpsabresd', 'mx6qpsabreauto', \
++	'mx6dlsabresd', 'mx6dlsabreauto', 'mx7dsabresd', 'mx7ulpevk', 'mx8mqevk']
++
++	default_soc_board = {'mx8mq': 'mx8mqevk', 'mx7ulp': 'mx7ulpevk', 'mx7d': 'mx7dsabresd', \
++	'mx6dl': 'mx6dlsabresd', 'mx6qp': 'mx6qpsabresd', 'mx6q': 'mx6qsabresd', 'mx6sx': 'mx6sxsabresd', \
++	'mx6sll': 'mx6sllevk', 'mx6sl': 'mx6slevk', 'mx6ul': 'mx6ulevk'}
+ 
+ 	import re
+ 	if re.match('imx6qpdlsolox',machine):
+@@ -29,8 +40,15 @@ python () {
+ 		subplatform = 'mx6ullevk'
+ 	elif re.match('imx',machine):
+ 		subplatform = machine[1:]
++	elif re.search('imx',machine):
++		subplatform = machine
++		if subplatform not in supported_board_list:
++				for type in default_soc_board.keys():
++					if type in machineoverrides:
++						subplatform = default_soc_board.get(type, 0)
+ 	else:
+-        	bb.fatal("optee-os-imx doesn't recognize this MACHINE")
++		bb.fatal("optee-os-imx doesn't recognize this MACHINE")
++
+ 	d.setVar("OPTEE_PLATFORM", subplatform)
+ }
+ 
+-- 
+1.9.1
+
