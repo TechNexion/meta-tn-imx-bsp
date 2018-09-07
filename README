@@ -4,7 +4,7 @@ i.MX Linux Yocto Project BSP 4.9.88-2.0.0_ga Release
 The following boards were supported in this release.
 
    * SOC: NXP i.MX 8MQuad 
-	 Machine: TechNexion PICO-8M (pico-8m)
+	 Machine: TechNexion PICO-IMX8M
 
  * i.MX Device Tree configurations for each machine
     Each machine files lists the associated device trees for that machine.
@@ -26,7 +26,7 @@ Run i.MX Linux Yocto Project Setup:
 $: [MACHINE=<machine>] [DISTRO=fsl-imx-<backend>] source ./edm-setup-release.sh -b <build folder>
 
 where
- <machine> defaults to imx6qsabresd
+ <machine> specifies the target platform (it corresponds to the .conf file under /conf/machine)
  <build folder> specifies the build folder name 
 
 After this your system will be configured to start a Yocto Project build.
@@ -51,14 +51,14 @@ XWayland is the default distro for all i.MX families.
 Here are some examples:
 (The example uses the imx6qsabresd MACHINE but substitute this with whatever you are using)
 
-Building XWayland image on PICO-8M
+Building XWayland image on PICO-IMX8M
 ------------
-  DISTRO=fsl-imx-xwayland MACHINE=pico-8m source edm-setup-release.sh –b build-xwayland
+  DISTRO=fsl-imx-xwayland MACHINE=pico-imx8m source edm-setup-release.sh –b build-xwayland
   bitbake fsl-image-qt5-validation-imx
   
-Building Wayland image on PJICO-8M
+Building Wayland image on PICO-IMX8M
 ------------
-  DISTRO=fsl-imx-wayland MACHINE=pico-8m source edm-setup-release.sh -b build-wayland
+  DISTRO=fsl-imx-wayland MACHINE=pico-imx8m source edm-setup-release.sh -b build-wayland
   bitbake fsl-image-qt5-validation-imx
 
 To run the QT5 examples use the following parameters:
@@ -106,7 +106,7 @@ Building boot image for imx8 with optee disabled:
 To disable optee from the boot image you should remove tee.bin from eFIT image
 Please refer to README and <mkimage_fit_atf.sh> files from imx-boot for more information
 
-Flashing boot for imx8:
+Flashing bootloader for imx8:
 
 dd if=imx-boot-<MACHINE>-sd.bin of=<SDCARD> conv=notrunc seek=33 bs=1K
 
