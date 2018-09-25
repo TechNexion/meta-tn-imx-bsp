@@ -95,7 +95,7 @@ fi
 
 if [ -z "$MACHINE" ]; then
     echo setting to default machine
-    MACHINE='imx6qpsabresd'
+    MACHINE='pico-imx6-qca'
 fi
 
 # copy new EULA into community so setup uses latest i.MX EULA
@@ -160,6 +160,124 @@ if [ -d ../sources/meta-freescale ]; then
     sed -e "s,meta-fsl-arm\s,meta-freescale ,g" -i conf/bblayers.conf
     sed -e "s,\$.BSPDIR./sources/meta-fsl-arm-extra\s,,g" -i conf/bblayers.conf
 fi
+
+#Identify SOC type
+CPU_TYPE=`echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g'`
+echo CPU_TYPE=$CPU_TYPE
+
+# Generate uEnv.txt for u-boot
+UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-uenv"
+
+echo UENV_PATH=$UENV_PATH
+
+if [ -f $UENV_PATH/uEnv.txt ] ; then
+	rm $UENV_PATH/uEnv.txt
+fi
+
+if [ "$CPU_TYPE" == 'imx6' ]; then
+	if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "lvds10" ] && [ "$DISPLAY" != "lvds15" ] \
+	&& [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
+	&& [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ]; then
+		echo "Display is wrong. Please assign DISPLAY as one of lvds7, lvds10, lvds15, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
+		if [ "$BASEBOARD" == "tc0700" ]; then
+			echo "setting lvds7 as default display"
+			DISPLAY="lvds7"
+		else
+			echo "setting hdmi720p as default display"
+			DISPLAY="hdmi720p"
+		fi
+	fi
+
+	cp $UENV_PATH/uEnv_${DISPLAY}.txt $UENV_PATH/uEnv.txt
+
+	# Set default baseboard type for 'edm1-cf-imx6' and 'pico-imx6'
+	if [ "$MACHINE" == "edm1-cf-imx6" ] || [ "$MACHINE" == "edm1-cf-imx6-no-console" ] ; then
+		if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "tc0700" ] ; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, tc0700"
+			echo "setting fairy as default baseboard"
+			BASEBOARD="fairy"
+		fi
+		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+		echo BASEBOARD=$BASEBOARD
+	fi
+
+	if [ "$MACHINE" == "pico-imx6-qca" ] || [ "$MACHINE" == "pico-imx6-brcm" ] ; then
+		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
+			echo "setting pi as default baseboard"
+			BASEBOARD="pi"
+		fi
+		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+		echo BASEBOARD=$BASEBOARD
+	fi
+fi
+
+if [ "$CPU_TYPE" == 'imx7' ]; then
+	if [ "$MACHINE" == "pico-imx7-qca" ] || [ "$MACHINE" == "pico-imx7-brcm" ] ; then
+		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
+			echo "setting pi as default baseboard"
+			BASEBOARD="pi"
+		fi
+		cp $UENV_PATH/uEnv_empty.txt $UENV_PATH/uEnv.txt
+		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+		echo BASEBOARD=$BASEBOARD
+	fi
+fi
+
+if [ "$CPU_TYPE" == 'imx6ul' ]; then
+	if [ "$MACHINE" == "pico-imx6ul-qca" ] || [ "$MACHINE" == "pico-imx6ul-brcm" ] ; then
+		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
+			echo "setting hobbit as default baseboard"
+			BASEBOARD="pi"
+		fi
+		cp $UENV_PATH/uEnv_empty.txt $UENV_PATH/uEnv.txt
+		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+		echo BASEBOARD=$BASEBOARD
+	fi
+fi
+
+# i.mx6ul can only output to TTL LCD panel and can't change display settings by uEnv.txt
+if [ "$CPU_TYPE" == 'imx6ul' ] ; then
+		DISPLAY="lcd"
+fi
+
+# i.mx6sx can only output to LVDS and TTL LCD and can't change display settings by uEnv.txt
+# it requires to change device tree file to enable output to TTL LCD
+if [ "$CPU_TYPE" == 'imx6sx' ]; then
+		DISPLAY="lvds7"
+fi
+
+# i.mx7 can only output to TTL LCD panel
+if [ "$CPU_TYPE" == 'imx7' ] ; then
+		DISPLAY="lcd"
+fi
+
+echo DISPLAY=$DISPLAY
+
+# Set default audio output device by display type for pulseaudio
+# imx6 may output to LVDS/TTL_LCD or HDMI, and the default audio output device also depends on them.
+# LVDS/TTL_LCD: output to audio codec(SGTL5k), HDMI: output to HDMI audio
+if [ "$CPU_TYPE" == 'imx6' ]; then
+	PULSEAUDIO_PATH="../sources/meta-edm-bsp-release/recipes-multimedia/pulseaudio/pulseaudio"
+	if [ -f $PULSEAUDIO_PATH/default.pa ] ; then
+		rm $PULSEAUDIO_PATH/default.pa
+	fi
+
+	cp $PULSEAUDIO_PATH/default_template.pa $PULSEAUDIO_PATH/default.pa
+
+	if [ "$DISPLAY" == "hdmi720p" ] || [ "$DISPLAY" == "hdmi1080p" ]  || [ "$DISPLAY" == "lvds7_hdmi720p" ]; then
+		sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound-hdmi.analog-stereo/' $PULSEAUDIO_PATH/default.pa
+		echo default audio output device is hdmi
+	else
+		sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound.analog-stereo/' $PULSEAUDIO_PATH/default.pa
+		echo default audio output device is audio codec
+	fi
+fi
+
+unset DISPLAY
+unset BASEBOARD
 
 cd  $BUILD_DIR
 clean_up
