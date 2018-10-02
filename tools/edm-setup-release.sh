@@ -164,6 +164,8 @@ fi
 #Identify SOC type
 CPU_TYPE=`echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g'`
 echo CPU_TYPE=$CPU_TYPE
+WIFI_MODULE=`echo $MACHINE | grep -oE 'brcm|qca'`
+
 
 # Generate uEnv.txt for u-boot
 UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-uenv"
@@ -256,26 +258,32 @@ fi
 
 echo DISPLAY=$DISPLAY
 
-# Set default audio output device by display type for pulseaudio
-# imx6 may output to LVDS/TTL_LCD or HDMI, and the default audio output device also depends on them.
-# LVDS/TTL_LCD: output to audio codec(SGTL5k), HDMI: output to HDMI audio
-if [ "$CPU_TYPE" == 'imx6' ]; then
-	PULSEAUDIO_PATH="../sources/meta-edm-bsp-release/recipes-multimedia/pulseaudio/pulseaudio"
-	if [ -f $PULSEAUDIO_PATH/default.pa ] ; then
-		rm $PULSEAUDIO_PATH/default.pa
-	fi
-
-	cp $PULSEAUDIO_PATH/default_template.pa $PULSEAUDIO_PATH/default.pa
-
-	if [ "$DISPLAY" == "hdmi720p" ] || [ "$DISPLAY" == "hdmi1080p" ]  || [ "$DISPLAY" == "lvds7_hdmi720p" ]; then
-		sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound-hdmi.analog-stereo/' $PULSEAUDIO_PATH/default.pa
-		echo default audio output device is hdmi
-	else
-		sed -i -e 's/.*#set-default-sink output.*/set-default-sink alsa_output.platform-sound.analog-stereo/' $PULSEAUDIO_PATH/default.pa
-		echo default audio output device is audio codec
-	fi
+# Choose corresponding device tree file for different WLAN (QCA or BRCM), e.g. 'imx6dl-pico-qca_pi.dtb' or 'imx6dl-pico_pi.dtb'
+if [ -n "$WIFI_MODULE" ]; then
+	sed -i "1s/^/wifi_module=$WIFI_MODULE\n/" $UENV_PATH/uEnv.txt
 fi
 
+# Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
+
+if [ "$CPU_TYPE" == 'imx8m' ] && [ "$WLAN"="y" ]; then
+	echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
+	echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
+
+	echo WLAN=qca
+fi
+
+if [ "$CPU_TYPE" == 'imx6' ] && [ "$WLAN"="y" ]; then
+	if [ "$WIFI_MODULE" == 'qca' ]; then
+		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
+		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
+	elif [ "$WIFI_MODULE" == 'brcm' ]; then
+		echo "LICENSE_FLAGS_WHITELIST = \"commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
+		echo "IMAGE_INSTALL_append = \" linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
+	fi
+	echo WLAN="$WIFI_MODULE"
+fi
+
+unset WLAN
 unset DISPLAY
 unset BASEBOARD
 
