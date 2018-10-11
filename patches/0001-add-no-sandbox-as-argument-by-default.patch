@@ -1,0 +1,24 @@
+From 5db50410fa268a8dde33bf2699829a76a3a462bc Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Thu, 11 Oct 2018 02:53:51 +0000
+Subject: [PATCH] add '--no-sandbox' as argument by default
+
+Avoid the error 'Running as root without --no-sandbox is not supported.',
+when activating chromium.
+---
+ chrome/installer/linux/common/wrapper | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/chrome/installer/linux/common/wrapper b/chrome/installer/linux/common/wrapper
+index 03c7ac4..cc2a6bc 100755
+--- a/chrome/installer/linux/common/wrapper
++++ b/chrome/installer/linux/common/wrapper
+@@ -48,4 +48,4 @@ exec 2> >(exec cat >&2)
+ CHROME_EXTRA_ARGS=""
+ 
+ # Note: exec -a below is a bashism.
+-exec -a "$0" "$HERE/@@PROGNAME@@" ${CHROME_EXTRA_ARGS} "$@"
++exec -a "$0" "$HERE/@@PROGNAME@@" ${CHROME_EXTRA_ARGS} "$@" "--no-sandbox"
+-- 
+2.7.4
+

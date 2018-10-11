@@ -1,0 +1,26 @@
+From 41bbbe77eec898b9323ad5a7c18a66671f057351 Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Thu, 11 Oct 2018 14:22:37 +0800
+Subject: [PATCH] chromium: add '--no-sandbox' as default argument
+
+Avoid the error 'Running as root without --no-sandbox is not supported.',
+when activating chromium.
+---
+ recipes-browser/chromium/chromium-gn.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/recipes-browser/chromium/chromium-gn.inc b/recipes-browser/chromium/chromium-gn.inc
+index 3f40b01..8392bd6 100644
+--- a/recipes-browser/chromium/chromium-gn.inc
++++ b/recipes-browser/chromium/chromium-gn.inc
+@@ -11,6 +11,7 @@ B = "${S}/${OUTPUT_DIR}"
+ SRC_URI += " \
+         file://v8-qemu-wrapper.patch \
+         file://wrapper-extra-flags.patch \
++        file://0001-add-no-sandbox-as-argument-by-default.patch \
+ "
+ 
+ # Append instead of assigning; the gtk-icon-cache class inherited above also
+-- 
+1.9.1
+
