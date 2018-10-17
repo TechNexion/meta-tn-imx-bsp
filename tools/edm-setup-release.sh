@@ -166,8 +166,8 @@ fi
 #Identify SOC type
 CPU_TYPE=`echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g'`
 echo CPU_TYPE=$CPU_TYPE
-WIFI_MODULE=`echo $MACHINE | grep -oE 'brcm|qca'`
-
+#WIFI_MODULE=`echo $MACHINE | grep -oE 'brcm|qca'`
+echo WIFI_MODULE=$WIFI_MODULE
 
 # Generate uEnv.txt for u-boot
 UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-uenv"
@@ -205,7 +205,7 @@ if [ "$CPU_TYPE" == 'imx6' ]; then
 		echo BASEBOARD=$BASEBOARD
 	fi
 
-	if [ "$MACHINE" == "pico-imx6-qca" ] || [ "$MACHINE" == "pico-imx6-brcm" ] ; then
+	if [ "$MACHINE" == "pico-imx6" ]; then
 		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
 			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
 			echo "setting pi as default baseboard"
@@ -217,7 +217,7 @@ if [ "$CPU_TYPE" == 'imx6' ]; then
 fi
 
 if [ "$CPU_TYPE" == 'imx7' ]; then
-	if [ "$MACHINE" == "pico-imx7-qca" ] || [ "$MACHINE" == "pico-imx7-brcm" ] ; then
+	if [ "$MACHINE" == "pico-imx7" ]; then
 		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
 			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
 			echo "setting pi as default baseboard"
@@ -230,7 +230,7 @@ if [ "$CPU_TYPE" == 'imx7' ]; then
 fi
 
 if [ "$CPU_TYPE" == 'imx6ul' ]; then
-	if [ "$MACHINE" == "pico-imx6ul-qca" ] || [ "$MACHINE" == "pico-imx6ul-brcm" ] ; then
+	if [ "$MACHINE" == "pico-imx6ul" ]; then
 		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
 			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
 			echo "setting hobbit as default baseboard"
@@ -267,25 +267,33 @@ fi
 
 # Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
 
-if [ "$CPU_TYPE" == 'imx8m' ] && [ "$WLAN"="y" ]; then
+if [ "$CPU_TYPE" == 'imx8m' ] && [ "$WIFI_FIRMWARE"="y" ]; then
 	echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
 	echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
 
-	echo WLAN=qca
+	echo WIFI_FIRMWARE=qca
 fi
 
-if [ "$CPU_TYPE" == 'imx6' ] && [ "$WLAN"="y" ]; then
-	if [ "$WIFI_MODULE" == 'qca' ]; then
-		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
-		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
-	elif [ "$WIFI_MODULE" == 'brcm' ]; then
-		echo "LICENSE_FLAGS_WHITELIST = \"commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
-		echo "IMAGE_INSTALL_append = \" linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
+if [ "$CPU_TYPE" == 'imx6' ]; then
+	echo WIFI_FIRMWARE=$WIFI_FIRMWARE
+	if [ "$WIFI_FIRMWARE" == "y" ]; then
+		if [ "$WIFI_MODULE" == 'qca' ]; then
+			echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
+			echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
+		elif [ "$WIFI_MODULE" == 'brcm' ]; then
+			echo "LICENSE_FLAGS_WHITELIST = \"commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
+			echo "IMAGE_INSTALL_append = \" linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
+		fi
+		echo Selected wifi firmware: $WIFI_MODULE
+	elif [ "$WIFI_FIRMWARE" == "all" ]; then
+		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
+		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
+		echo Selected wifi firmware: "qca brcm"
 	fi
-	echo WLAN="$WIFI_MODULE"
 fi
 
-unset WLAN
+unset WIFI_MODULE
+unset WIFI_FIRMWARE
 unset DISPLAY
 unset BASEBOARD
 
