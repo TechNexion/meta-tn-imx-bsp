@@ -33,6 +33,10 @@
 **                 It can be invoked from the command line in the form
 **						<-d> to print a debug log
 **						<--patchram patchram_file>
+**							it's able to give full_file_path, file_path_without_file_name, auto
+**							'full_file_path': load the specified firmware file
+**							'file_path_without_file_name': use the specified path, but load firmware file by chip id
+**							'auto': use the default path '/lib/firmware/brcm', and load firmware file by chip id
 **						<--baudrate baud_rate>
 **						<--bd_addr bd_address>
 **						<--enable_lpm>
@@ -154,8 +158,36 @@
 #define HCI_UART_3WIRE	2
 #define HCI_UART_H4DS	3
 #define HCI_UART_LL		4
+#define LOCAL_NAME_BUFFER_LEN                   32
+#define HCI_EVT_CMD_CMPL_LOCAL_NAME_STRING      6
 
 typedef unsigned char uchar;
+/* AMPAK FW auto detection table */
+typedef struct {
+    char *chip_id;
+    char *updated_chip_id; //firmware name
+} fw_auto_detection_entry_t;
+
+#define FW_TABLE_VERSION "v1.2 20170424"
+static const fw_auto_detection_entry_t fw_auto_detection_table[] = {
+    {"BCM4330B1","BCM4330B1"},  //BCM4330B1
+    {"4343A0","BCM43438A0"},    //AP6212
+    {"BCM43430A1","BCM43438A1"}, //AP6212A
+    {"BCM20702A","BCM20710A1"}, //AP6210B
+    {"BCM4335C0","BCM4339A0"}, //AP6335
+    {"BCM4330B1","BCM40183B2"}, //AP6330
+    {"BCM4324B3","BCM43241B4"}, //AP62X2
+    {"BCM4350C0","BCM4354A1"}, //AP6354
+    {"BCM4354A2","BCM4356A2"}, //AP6356
+    {"BCM4345C0","BCM4345C0"}, //AP6255
+//    {"BCM43341B0","BCM43341B0"}, //AP6234
+//    {"BCM2076B1","BCM2076B1"}, //AP6476
+	{"BCM43430B0","BCM4343B0"}, //AP6236
+	{"BCM4359C0","BCM4359C0"},	//AP6359
+	{"BCM4349B1","BCM4359B1"},	//AP6359
+    {(const char *) NULL, NULL}
+};
+static const char default_fw_path[] = "/lib/firmware/brcm";
 
 int uart_fd = -1;
 int hcdfile_fd = -1;
@@ -170,12 +202,17 @@ int i2s = 0;
 int no2bytes = 0;
 int tosleep = 0;
 int baudrate = 0;
+int auto_mode=1;
 double timeout = 1800.0;
 
 struct termios termios;
 uchar buffer[1024];
+uchar local_name[LOCAL_NAME_BUFFER_LEN];
+uchar fw_folder_path[1024];
 
 uchar hci_reset[] = { 0x01, 0x03, 0x0c, 0x00 };
+
+uchar hci_read_local_name[] = { 0x01, 0x14, 0x0c, 0x00 };
 
 uchar hci_download_minidriver[] = { 0x01, 0x2e, 0xfc, 0x00 };
 
@@ -204,24 +241,39 @@ uchar hci_write_uart_clock_setting_48Mhz[] =
 int
 parse_patchram(char *optarg)
 {
-	char *p;
-
-	if (!(p = strrchr(optarg, '.'))) {
-		fprintf(stderr, "file %s not an HCD file\n", optarg);
-		exit(3);
-	}
-
-	p++;
-
-	if (strcasecmp("hcd", p) != 0) {
-		fprintf(stderr, "file %s not an HCD file\n", optarg);
-		exit(4);
-	}
-
-	if ((hcdfile_fd = open(optarg, O_RDONLY)) == -1) {
-		fprintf(stderr, "file %s could not be opened, error %d\n", optarg, errno);
-		exit(5);
-	}
+    char *p;
+    int len = strlen(optarg);
+    //user doesn't specify the file path or full path of file name
+    if (strcmp(optarg,"auto") == 0)
+    {
+        strcpy(fw_folder_path, default_fw_path);
+        fprintf(stderr,"FW folder path = %s\n", fw_folder_path);
+    } else if (p = strrchr(optarg, '.')) { //user specifies full path of file name
+        p++;
+        if (strcasecmp("hcd", p) != 0) {
+            fprintf(stderr, "file %s not an HCD file\n", optarg);
+            exit(4);
+        }
+        if ((hcdfile_fd = open(optarg, O_RDONLY)) == -1) {
+            fprintf(stderr, "file %s could not be opened, error %d\n", optarg, errno);
+            exit(5);
+        }
+        auto_mode=0;
+    } else { //user only specifies file path
+        p = optarg+len-1;;
+        /*Look for first '/' to know the fw path*/
+        while(len>0) {
+            if(*p == '/')
+                break;
+            len--;
+            p--;
+        }
+        if(len>0) {
+            *p =0;
+            strcpy(fw_folder_path,optarg);
+            fprintf(stderr,"FW folder path = %s\n", fw_folder_path);
+        }
+    }
 
 	return(0);
 }
@@ -282,7 +334,7 @@ validate_baudrate(int baud_rate, int *value)
 int
 parse_baudrate(char *optarg)
 {
-	baudrate = atoi(optarg);
+	int baudrate = atoi(optarg);
 
 	if (validate_baudrate(baudrate, &termios_baudrate)) {
 		BRCM_encode_baud_rate(baudrate, &hci_update_baud_rate[6]);
@@ -591,7 +643,7 @@ dump(uchar *out, int len)
 	fprintf(stderr, "\n");
 }
 
-void
+int
 read_event(int fd, uchar *buffer)
 {
 	int i = 0;
@@ -644,6 +696,7 @@ read_event(int fd, uchar *buffer)
                 else
 		dump(buffer, count);
 	}
+	return count;
 }
 
 void
@@ -677,6 +730,61 @@ proc_reset()
 	read_event(uart_fd, buffer);
 
 	alarm(0);
+}
+
+void
+proc_read_local_name()
+{
+    int i, count;
+    char *p_name;
+    hci_send_cmd(hci_read_local_name, sizeof(hci_read_local_name));
+
+	count = read_event(uart_fd, buffer);
+	if (count < 100)
+		read_event(uart_fd, buffer);
+
+    p_name = &buffer[1+HCI_EVT_CMD_CMPL_LOCAL_NAME_STRING];
+    for (i=0; (i < LOCAL_NAME_BUFFER_LEN)||(*(p_name+i) != 0); i++)
+        *(p_name+i) = toupper(*(p_name+i));
+    strcpy(local_name,p_name);
+    fprintf(stderr,"chip id = %s\n", local_name);
+}
+
+void
+proc_open_patchram()
+{
+    char fw_path[1024];
+    char *p;
+    int i;
+    fw_auto_detection_entry_t *p_entry;
+    p_entry = (fw_auto_detection_entry_t *)fw_auto_detection_table;
+    while (p_entry->chip_id != NULL)
+    {
+        if (strstr(local_name, p_entry->chip_id)!=NULL)
+        {
+            strcpy(local_name,p_entry->updated_chip_id);
+            break;
+        }
+        p_entry++;
+    }
+    sprintf(fw_path,"%s/%s.hcd",fw_folder_path,local_name);
+    fprintf(stderr, "FW path = %s\n", fw_path);
+    if ((hcdfile_fd = open(fw_path, O_RDONLY)) == -1) {
+        fprintf(stderr, "file %s could not be opened, error %d\n", fw_path , errno);
+    } else {
+		return;
+    }
+    p = local_name;
+    fprintf(stderr, "Retry lower case FW name\n");
+    for (i=0; (i < LOCAL_NAME_BUFFER_LEN)||(*(p+i) != 0); i++)
+        *(p+i) = tolower(*(p+i));
+    sprintf(fw_path,"%s/%s.hcd",fw_folder_path,local_name);
+    fprintf(stderr, "FW path = %s\n", fw_path);
+    if ((hcdfile_fd = open(fw_path, O_RDONLY)) == -1) {
+        fprintf(stderr, "file %s could not be opened, error %d\n", fw_path, errno);
+        exit(5);
+    }
+
 }
 
 void
@@ -848,7 +956,7 @@ main (int argc, char **argv)
 #ifdef ANDROID
 	read_default_bdaddr();
 #endif
-
+	fprintf(stderr, "###FW Auto detection patch version = [%s]###\n", FW_TABLE_VERSION);
 	if (parse_cmd_line(argc, argv)) {
 		exit(1);
 	}
@@ -860,6 +968,11 @@ main (int argc, char **argv)
 	init_uart();
 
 	proc_reset();
+
+    if (auto_mode == 1) {
+        proc_read_local_name();
+        proc_open_patchram();
+    }
 
 	if (use_baudrate_for_download) {
 		if (termios_baudrate) {
