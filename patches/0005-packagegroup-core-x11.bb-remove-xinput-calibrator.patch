@@ -1,0 +1,26 @@
+From 221379518602ad9ab3c0f72870c90e235b8edc81 Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Wed, 24 Oct 2018 11:53:26 +0800
+Subject: [PATCH] packagegroup-core-x11.bb: remove xinput-calibrator
+
+The touch panel for TechNexion products which is needed to be calibrated is ADS6846 resistive touch,
+and the calibration is done by ts_calibrate.
+To prevent from confusing customers, so we remove xinput-calibrator by default.
+---
+ meta/recipes-graphics/packagegroups/packagegroup-core-x11.bb | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/meta/recipes-graphics/packagegroups/packagegroup-core-x11.bb b/meta/recipes-graphics/packagegroups/packagegroup-core-x11.bb
+index 001db9e..85c0421 100644
+--- a/meta/recipes-graphics/packagegroups/packagegroup-core-x11.bb
++++ b/meta/recipes-graphics/packagegroups/packagegroup-core-x11.bb
+@@ -31,6 +31,5 @@ RDEPENDS_${PN}-utils = "\
+     xrandr \
+     xmodmap \
+     xdpyinfo \
+-    xinput-calibrator \
+     dbus-x11 \
+     "
+-- 
+1.9.1
+

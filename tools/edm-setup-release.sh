@@ -58,6 +58,7 @@ patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-security/optee
 patch -Np1 -r - sources/meta-fsl-bsp-release/imx/meta-bsp/classes/image_types_fsl.bbclass < sources/meta-edm-bsp-release/patches/0003-image_types_fsl.bbclass-change-to-put-u-boot.img-int.patch
 cp sources/meta-edm-bsp-release/patches/0001-add-no-sandbox-as-argument-by-default.patch sources/meta-browser/recipes-browser/chromium/files
 patch -Np1 -r - sources/meta-browser/recipes-browser/chromium/chromium-gn.inc < sources/meta-edm-bsp-release/patches/0004-chromium-add-no-sandbox-as-default-argument.patch
+patch -Np1 -r - sources/poky/meta/recipes-graphics/packagegroups/packagegroup-core-x11.bb < sources/meta-edm-bsp-release/patches/0005-packagegroup-core-x11.bb-remove-xinput-calibrator.patch
 
 # get command line options
 OLD_OPTIND=$OPTIND
