@@ -277,7 +277,7 @@ if [ "$CPU_TYPE" == 'imx8m' ]; then
 	fi
 fi
 
-if [ "$CPU_TYPE" == 'imx6' ]; then
+if [ "$CPU_TYPE" == 'imx6' ]|| [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ] ; then
 	echo WIFI_FIRMWARE=$WIFI_FIRMWARE
 	if [ "$WIFI_FIRMWARE" == "y" ]; then
 		if [ "$WIFI_MODULE" == 'qca' ]; then
