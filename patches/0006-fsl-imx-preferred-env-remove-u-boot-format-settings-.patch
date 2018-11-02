@@ -1,0 +1,27 @@
+From eeb18635ca83d31ee70c56dfe179638ae28d4ea6 Mon Sep 17 00:00:00 2001
+From: Richard Hu <richard.hu@technexion.com>
+Date: Thu, 1 Nov 2018 16:21:03 +0800
+Subject: [PATCH] fsl-imx-preferred-env: remove u-boot format settings for
+ i.mx6ul
+
+Those settings can't be overwritten by machine configuration file.
+It makes u-boot can't support SPL on i.mx6ul.
+---
+ imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc b/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc
+index 8242b05..ae3e163 100644
+--- a/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc
++++ b/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc
+@@ -70,7 +70,3 @@ IMX_DEFAULT_DISTRO_FEATURES += " systemd"
+ SOC_HAS_VIVANTE_KERNEL_DRIVER_SUPPORT_mx6 = "1"
+ SOC_HAS_VIVANTE_KERNEL_DRIVER_SUPPORT_mx7ulp = "1"
+ 
+-UBOOT_SUFFIX_mx6ul = "imx"
+-SPL_BINARY_mx6ul = ""
+-UBOOT_MAKE_TARGET_mx6ul = "u-boot.imx"
+-
+-- 
+1.9.1
+
