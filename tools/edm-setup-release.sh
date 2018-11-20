@@ -196,10 +196,10 @@ if [ "$CPU_TYPE" == 'imx6' ]; then
 
 	cp $UENV_PATH/uEnv_${DISPLAY}.txt $UENV_PATH/uEnv.txt
 
-	# Set default baseboard type for 'edm1-cf-imx6' and 'pico-imx6'
-	if [ "$MACHINE" == "edm1-cf-imx6" ] || [ "$MACHINE" == "edm1-cf-imx6-no-console" ] ; then
-		if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "tc0700" ] ; then
-			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, tc0700"
+	# Set default baseboard type for 'edm-imx6' and 'pico-imx6'
+	if [ "$MACHINE" == "edm-imx6" ]; then
+		if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "gnome" ] ; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, gnome"
 			echo "setting fairy as default baseboard"
 			BASEBOARD="fairy"
 		fi
