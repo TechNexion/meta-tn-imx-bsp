@@ -219,6 +219,7 @@ if [ "$CPU_TYPE" == 'imx6' ]; then
 fi
 
 if [ "$CPU_TYPE" == 'imx7' ]; then
+	DISPLAY="lcd"
 	if [ "$MACHINE" == "pico-imx7" ]; then
 		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
 			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
@@ -232,6 +233,7 @@ if [ "$CPU_TYPE" == 'imx7' ]; then
 fi
 
 if [ "$CPU_TYPE" == 'imx6ul' ]; then
+	DISPLAY="lcd"
 	if [ "$MACHINE" == "pico-imx6ul" ]; then
 		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
 			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
@@ -244,21 +246,24 @@ if [ "$CPU_TYPE" == 'imx6ul' ]; then
 	fi
 fi
 
-# i.mx6ul can only output to TTL LCD panel and can't change display settings by uEnv.txt
-if [ "$CPU_TYPE" == 'imx6ul' ] ; then
-		DISPLAY="lcd"
+if [ "$CPU_TYPE" == 'imx8m' ]; then
+	if [ "$DISPLAY" != "hdmi" ] && [ "$DISPLAY" != "mipi5" ]; then
+		echo "Display is wrong. Please assign DISPLAY as one of hdmi, mipi5"
+	else
+		cp $UENV_PATH/uEnv_imx8.txt $UENV_PATH/uEnv.txt
+		if [ "$DISPLAY" == "hdmi" ]; then
+			sed -i "1s/^/display=hdmi\n/" $UENV_PATH/uEnv.txt
+			echo "setting hdmi as default display"
+			DISPLAY="hdmi"
+		elif [ "$DISPLAY" == "mipi5" ]; then
+			sed -i "1s/^/display=mipi5\n/" $UENV_PATH/uEnv.txt
+			echo "setting mipi5 as default display"
+			DISPLAY="mipi5"
+		fi
+	fi
+
 fi
 
-# i.mx6sx can only output to LVDS and TTL LCD and can't change display settings by uEnv.txt
-# it requires to change device tree file to enable output to TTL LCD
-if [ "$CPU_TYPE" == 'imx6sx' ]; then
-		DISPLAY="lvds7"
-fi
-
-# i.mx7 can only output to TTL LCD panel
-if [ "$CPU_TYPE" == 'imx7' ] ; then
-		DISPLAY="lcd"
-fi
 
 echo DISPLAY=$DISPLAY
 
