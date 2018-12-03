@@ -229,6 +229,15 @@ if [ "$CPU_TYPE" == 'imx7' ]; then
 		cp $UENV_PATH/uEnv_empty.txt $UENV_PATH/uEnv.txt
 		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
 		echo BASEBOARD=$BASEBOARD
+	elif [ "$MACHINE" == "edm-imx7" ]; then
+		if [ "$BASEBOARD" != "gnome" ]; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of gnome"
+			echo "setting gnome as default baseboard"
+			BASEBOARD="gnome"
+		fi
+		cp $UENV_PATH/uEnv_empty.txt $UENV_PATH/uEnv.txt
+		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
+		echo BASEBOARD=$BASEBOARD
 	fi
 fi
 
