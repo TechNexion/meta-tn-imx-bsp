@@ -301,11 +301,13 @@ if [ "$CPU_TYPE" == 'imx6' ]|| [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'im
 		elif [ "$WIFI_MODULE" == 'brcm' ]; then
 			echo "LICENSE_FLAGS_WHITELIST = \"commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
 			echo "IMAGE_INSTALL_append = \" linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
+		elif [ "$WIFI_MODULE" == 'ath-pci' ]; then
+			echo "IMAGE_INSTALL_append = \" linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
 		fi
 		echo Selected wifi firmware: $WIFI_MODULE
 	elif [ "$WIFI_FIRMWARE" == "all" ]; then
 		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
-		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
+		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn linux-firmware-brcm-tn linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
 		echo Selected wifi firmware: "qca brcm"
 	fi
 fi
