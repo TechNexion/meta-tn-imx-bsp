@@ -277,7 +277,7 @@ fi
 echo DISPLAY=$DISPLAY
 
 # Choose corresponding device tree file for different WLAN (QCA or BRCM), e.g. 'imx6dl-pico-qca_pi.dtb' or 'imx6dl-pico_pi.dtb'
-if [ -n "$WIFI_MODULE" ]; then
+if [ -n "$WIFI_MODULE" -a -f $UENV_PATH/uEnv.txt ]; then
 	sed -i "1s/^/wifi_module=$WIFI_MODULE\n/" $UENV_PATH/uEnv.txt
 fi
 
