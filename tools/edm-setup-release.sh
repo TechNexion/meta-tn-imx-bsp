@@ -188,6 +188,9 @@ if [ "$CPU_TYPE" == 'imx6' ]; then
 		if [ "$BASEBOARD" == "tc0700" ]; then
 			echo "setting lvds7 as default display"
 			DISPLAY="lvds7"
+		elif [ "$BASEBOARD" == "tc1000" ]; then
+			echo "setting lvds10 as default display"
+			DISPLAY="lvds10"
 		else
 			echo "setting hdmi720p as default display"
 			DISPLAY="hdmi720p"
@@ -198,8 +201,8 @@ if [ "$CPU_TYPE" == 'imx6' ]; then
 
 	# Set default baseboard type for 'edm-imx6' and 'pico-imx6'
 	if [ "$MACHINE" == "edm-imx6" ]; then
-		if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "gnome" ] ; then
-			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, gnome"
+		if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "gnome" ]  && [ "$BASEBOARD" != "tc0700" ]  && [ "$BASEBOARD" != "tc1000" ] ; then
+			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, gnome, tc0700, tc1000"
 			echo "setting fairy as default baseboard"
 			BASEBOARD="fairy"
 		fi
