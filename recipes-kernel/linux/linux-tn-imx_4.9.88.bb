@@ -8,18 +8,11 @@ DESCRIPTION = "Linux Kernel provided and supported by NXP with focus on \
 i.MX Family Reference Boards. It includes support for many IPs such as GPU, VPU and IPU."
 
 require recipes-kernel/linux/linux-imx.inc
-require recipes-kernel/linux/linux-imx-src.inc
+require recipes-kernel/linux/linux-tn-src_${PV}.inc
 
 DEPENDS += "lzop-native bc-native"
 
-TECHNEXION_GITHUB_MIRROR ?= "git://github.com/TechNexion/linux.git"
-
-SRCBRANCH = "tn-imx_4.9.88_2.0.0_ga-test"
-
-SRC_URI = "${TECHNEXION_GITHUB_MIRROR};branch=${SRCBRANCH}"
-
-SRCREV = "55c2b4068f1e91b9c5c466f570c329f45433daf9"
-LOCALVERSION = "-${SRCBRANCH}"
+SRC_URI += "file://0001-uapi-Add-ion.h-to-userspace.patch"
 
 DEFAULT_PREFERENCE = "1"
 
