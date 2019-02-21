@@ -1,0 +1,2 @@
+bootcmd_mmc=run loadimage;run mmcboot;
+uenvcmd=run bootcmd_mmc

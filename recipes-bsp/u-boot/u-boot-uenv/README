@@ -1,0 +1,42 @@
+# Copyright (C) 2015-2016 Technexion Ltd.
+
+uEnv.txt is used to set display type and baseboard type.
+
+Support Hardware:
+EDM1-CF-IMX6
+EDM1-CF-IMX6P
+EDM1-CF-IMX6QP
+EDM2-CF-IMX6
+PICO-IMX6
+PICO-IMX6-POP
+
+EDM1-CF-IMX6 and PICO-IMX6 are CPU modules, and it's convenient to set baseboard type in uEnv.txt to load corresponding .dtb file.
+
+Avaible baseboards for EDM1-CF-IMX6: fairy, mimas, tc0700
+Example to set baseboard as fairy in uEnv.txt:
+=====================================================
+baseboard=fairy
+=====================================================
+
+Avaible baseboards for PICO-IMX6: dwarf, hobbit, nymph
+Example to set baseboard as dwarf in uEnv.txt:
+=====================================================
+baseboard=dwarf
+=====================================================    
+
+Display Settings:
+
+HDMI 720P:
+displayinfo=video=mxcfb0:dev=hdmi,1280x720M@60,if=RGB24 fbmem=28M
+
+HDMI 1080P:
+displayinfo=video=mxcfb0:dev=hdmi,1920x1080M@60,if=RGB24 fbmem=28M
+
+LVDS 1024x600 - 7 inch display:
+displayinfo=video=mxcfb0:dev=ldb,1024x600@60,if=RGB24
+
+TTL LCD 800x480 - 5 inch/7 inch display:
+displayinfo=video=mxcfb0:dev=lcd,800x480@60,if=RGB24
+
+Dual display output to HDMI 720P and LVDS 1024x600:
+displayinfo=video=mxcfb0:dev=hdmi,1280x720M@60,if=RGB24 video=mxcfb1:dev=ldb,1024x600@60,if=RGB24
