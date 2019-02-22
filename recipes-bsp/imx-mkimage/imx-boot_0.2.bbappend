@@ -1,6 +1,8 @@
-
 SRCBRANCH = "imx_4.14.78_1.0.0_ga"
 SRCREV = "2cf091c075ea1950afa22a56e224dc4e448db542"
+
+DEPENDS_remove = "optee-os-imx"
+DEPENDS_append = " optee-os-imx-tn"
 
 do_compile () {
     if [ "${SOC_TARGET}" = "iMX8M" ]; then

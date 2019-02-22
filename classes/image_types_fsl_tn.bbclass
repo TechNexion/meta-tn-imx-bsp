@@ -1,5 +1,9 @@
 inherit image_types_fsl
 
+# Overrides required software for optee to our recipe
+IMAGE_INSTALL_remove = " ${@bb.utils.contains('COMBINED_FEATURES', 'optee', 'packagegroup-fsl-optee-imx', '', d)} "
+IMAGE_INSTALL_append = " ${@bb.utils.contains('COMBINED_FEATURES', 'optee', 'packagegroup-tn-optee-imx', '', d)} "
+
 #
 # Generate the boot image with the boot scripts and required Device Tree
 # files
