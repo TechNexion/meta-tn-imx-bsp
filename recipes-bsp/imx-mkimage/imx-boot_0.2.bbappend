@@ -2,6 +2,16 @@
 SRCBRANCH = "imx_4.14.78_1.0.0_ga"
 SRCREV = "2cf091c075ea1950afa22a56e224dc4e448db542"
 
+IMX_FIRMWARE_mx8mm = "firmware-imx"
+SOC_TARGET_mx8mm = "iMX8M"
+DEPENDS_append_mx8mm = " dtc-native"
+ATF_MACHINE_NAME_mx8mm = "bl31-imx8mm.bin"
+
+IMX_FIRMWARE_pico-imx8mm = "firmware-imx"
+SOC_TARGET_pico-imx8mm = "iMX8M"
+DEPENDS_append_pico-imx8mm = " dtc-native"
+ATF_MACHINE_NAME_pico-imx8mm = "bl31-imx8mm.bin"
+
 do_compile () {
     if [ "${SOC_TARGET}" = "iMX8M" ]; then
         echo 8MQ boot binary build
@@ -51,3 +61,5 @@ do_compile () {
         fi
     done
 }
+
+COMPATIBLE_MACHINE = "(mx8qm|mx8qxp|mx8mq|pico-imx8m|mx8mm|pico-imx8mm)"
