@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = "file://${S}/CORE/HDD/src/wlan_hdd_main.c;beginline=1;endline
 inherit module
 
 SRCREV = "47fe5cdb97890c1b5a31faa953b799668d3f1370"
+SRCREV_mx8mm = "17b182616419105613bfa938533272f2a0adcf7a"
+SRCREV_pico-imx8mm = "17b182616419105613bfa938533272f2a0adcf7a"
 
 SRC_URI = "git://github.com/TechNexion/qcacld-2.0.git;branch=${SRCBRANCH} \
 "
@@ -18,4 +20,4 @@ EXTRA_OEMAKE_append = " CONFIG_CLD_HL_SDIO_CORE=y CONFIG_PER_VDEV_TX_DESC_POOL=1
                        CONFIG_QCA_SUPPORT_TXRX_DRIVER_TCP_DEL_ACK=y CONFIG_WLAN_WAPI_MODE_11AC_DISABLE=y \
                        TARGET_BUILD_VARIANT=user CONFIG_NON_QC_PLATFORM=y CONFIG_HDD_WLAN_WAIT_TIME=10000"
 
-COMPATIBLE_MACHINE = "mx6|mx7|mx8"
+COMPATIBLE_MACHINE = "mx6|mx7|mx8|mx8m|mx8mm|pico-imx8m|pico-imx8mm"
