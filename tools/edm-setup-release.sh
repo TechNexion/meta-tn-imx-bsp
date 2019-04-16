@@ -261,25 +261,6 @@ if [ "$CPU_TYPE" == 'imx6ul' ]; then
 	fi
 fi
 
-if [ "$CPU_TYPE" == 'imx8m' ]; then
-	if [ "$DISPLAY" != "hdmi" ] && [ "$DISPLAY" != "mipi5" ]; then
-		echo "Display is wrong. Please assign DISPLAY as one of hdmi, mipi5"
-	else
-		cp $UENV_PATH/uEnv_imx8.txt $UENV_PATH/uEnv.txt
-		if [ "$DISPLAY" == "hdmi" ]; then
-			sed -i "1s/^/display=hdmi\n/" $UENV_PATH/uEnv.txt
-			echo "setting hdmi as default display"
-			DISPLAY="hdmi"
-		elif [ "$DISPLAY" == "mipi5" ]; then
-			sed -i "1s/^/display=mipi5\n/" $UENV_PATH/uEnv.txt
-			echo "setting mipi5 as default display"
-			DISPLAY="mipi5"
-		fi
-	fi
-
-fi
-
-
 echo DISPLAY=$DISPLAY
 
 # Choose corresponding device tree file for different WLAN (QCA or BRCM), e.g. 'imx6dl-pico-qca_pi.dtb' or 'imx6dl-pico_pi.dtb'
