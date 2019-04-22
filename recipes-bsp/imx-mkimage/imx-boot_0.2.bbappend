@@ -1,9 +1,6 @@
-IMX_FIRMWARE_mx8mm = "firmware-imx"
-IMX_FIRMWARE_mx8mq = "firmware-imx"
-DEPENDS_append_mx8mm = " dtc-native"
-DEPENDS_append_mx8mq = " dtc-native"
-SOC_DIR_mx8mm = "iMX8M"
-SOC_DIR_mx8mq = "iMX8M"
+IMX_FIRMWARE_mx8m = "firmware-imx"
+DEPENDS_append_mx8m = " dtc-native"
+SOC_DIR_mx8m = "iMX8M"
 
 do_compile () {
     if [ "${SOC_TARGET}" = "iMX8M" -o "${SOC_TARGET}" = "iMX8MM" ]; then
@@ -15,7 +12,7 @@ do_compile () {
         cp ${DEPLOY_DIR_IMAGE}/signed_*_imx8m.bin                ${S}/${SOC_DIR}/
         cp ${DEPLOY_DIR_IMAGE}/u-boot-spl.bin-${MACHINE}-${UBOOT_CONFIG} ${S}/${SOC_DIR}/u-boot-spl.bin
         cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/${UBOOT_DTB_NAME}   ${S}/${SOC_DIR}/
-        cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/u-boot-nodtb.bin    ${S}/${SOC_DIR}/u-boot-nodtb.bin
+        cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/u-boot-nodtb.bin-${MACHINE}-${UBOOT_CONFIG}    ${S}/${SOC_DIR}/u-boot-nodtb.bin
         cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/mkimage_uboot       ${S}/${SOC_DIR}/
 
         cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/${ATF_MACHINE_NAME} ${S}/${SOC_DIR}/bl31.bin
