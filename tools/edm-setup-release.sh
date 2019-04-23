@@ -168,104 +168,23 @@ if [ -d ../sources/meta-freescale ]; then
     sed -e "s,\$.BSPDIR./sources/meta-fsl-arm-extra\s,,g" -i conf/bblayers.conf
 fi
 
-#Identify SOC type
-CPU_TYPE=`echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g'`
-echo CPU_TYPE=$CPU_TYPE
-#WIFI_MODULE=`echo $MACHINE | grep -oE 'brcm|qca'`
-echo WIFI_MODULE=$WIFI_MODULE
-
-# Generate uEnv.txt for u-boot
-UENV_PATH="../sources/meta-edm-bsp-release/recipes-bsp/u-boot/u-boot-uenv"
-
-echo UENV_PATH=$UENV_PATH
-
-if [ -f $UENV_PATH/uEnv.txt ] ; then
-	rm $UENV_PATH/uEnv.txt
+# Pass in the extra variables for uEnv.txt recipe
+if [ -n $DISPLAY ]; then
+    export DISPLAY_INFO=$DISPLAY
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_INFO"
 fi
-
-if [ "$CPU_TYPE" == 'imx6' ]; then
-	if [ "$DISPLAY" != "lvds7" ] && [ "$DISPLAY" != "lvds10" ] && [ "$DISPLAY" != "lvds15" ] \
-	&& [ "$DISPLAY" != "hdmi720p" ] && [ "$DISPLAY" != "hdmi1080p" ]  \
-	&& [ "$DISPLAY" != "lcd" ] && [ "$DISPLAY" != "lvds7_hdmi720p" ] && [ "$DISPLAY" != "custom" ]; then
-		echo "Display is wrong. Please assign DISPLAY as one of lvds7, lvds10, lvds15, hdmi720p, hdmi1080p, lcd, lvds7_hdmi720p, lcd, custom"
-		if [ "$BASEBOARD" == "tc0700" ]; then
-			echo "setting lvds7 as default display"
-			DISPLAY="lvds7"
-		elif [ "$BASEBOARD" == "tc1000" ]; then
-			echo "setting lvds10 as default display"
-			DISPLAY="lvds10"
-		else
-			echo "setting hdmi720p as default display"
-			DISPLAY="hdmi720p"
-		fi
-	fi
-
-	cp $UENV_PATH/uEnv_${DISPLAY}.txt $UENV_PATH/uEnv.txt
-
-	# Set default baseboard type for 'edm-imx6' and 'pico-imx6'
-	if [ "$MACHINE" == "edm-imx6" ]; then
-		if [ "$BASEBOARD" != "fairy" ] && [ "$BASEBOARD" != "gnome" ]  && [ "$BASEBOARD" != "tc0700" ]  && [ "$BASEBOARD" != "tc1000" ] ; then
-			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of fairy, gnome, tc0700, tc1000"
-			echo "setting fairy as default baseboard"
-			BASEBOARD="fairy"
-		fi
-		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
-		echo BASEBOARD=$BASEBOARD
-	fi
-
-	if [ "$MACHINE" == "pico-imx6" ]; then
-		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
-			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
-			echo "setting pi as default baseboard"
-			BASEBOARD="pi"
-		fi
-		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
-		echo BASEBOARD=$BASEBOARD
-	fi
+if [ -n $BASEBOARD ]; then
+    export BASE_BOARD=$BASEBOARD
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
 fi
-
-if [ "$CPU_TYPE" == 'imx7' ]; then
-	DISPLAY="lcd"
-	if [ "$MACHINE" == "pico-imx7" ]; then
-		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
-			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
-			echo "setting pi as default baseboard"
-			BASEBOARD="pi"
-		fi
-		cp $UENV_PATH/uEnv_empty.txt $UENV_PATH/uEnv.txt
-		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
-		echo BASEBOARD=$BASEBOARD
-	elif [ "$MACHINE" == "edm-imx7" ]; then
-		if [ "$BASEBOARD" != "gnome" ]; then
-			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of gnome"
-			echo "setting gnome as default baseboard"
-			BASEBOARD="gnome"
-		fi
-		cp $UENV_PATH/uEnv_empty.txt $UENV_PATH/uEnv.txt
-		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
-		echo BASEBOARD=$BASEBOARD
-	fi
-fi
-
-if [ "$CPU_TYPE" == 'imx6ul' ]; then
-	DISPLAY="lcd"
-	if [ "$MACHINE" == "pico-imx6ul" ]; then
-		if [ "$BASEBOARD" != "dwarf" ] && [ "$BASEBOARD" != "hobbit" ] && [ "$BASEBOARD" != "nymph" ] && [ "$BASEBOARD" != "pi" ]; then
-			echo "BASEBOARD is wrong. Please assign BASEBOARD as one of pi, nymph, dwarf, hobbit"
-			echo "setting hobbit as default baseboard"
-			BASEBOARD="pi"
-		fi
-		cp $UENV_PATH/uEnv_empty.txt $UENV_PATH/uEnv.txt
-		sed -i "1s/^/baseboard=$BASEBOARD\n/" $UENV_PATH/uEnv.txt
-		echo BASEBOARD=$BASEBOARD
-	fi
-fi
-
-echo DISPLAY=$DISPLAY
-
-# Choose corresponding device tree file for different WLAN (QCA or BRCM), e.g. 'imx6dl-pico-qca_pi.dtb' or 'imx6dl-pico_pi.dtb'
-if [ -n "$WIFI_MODULE" -a -f $UENV_PATH/uEnv.txt ]; then
-	sed -i "1s/^/wifi_module=$WIFI_MODULE\n/" $UENV_PATH/uEnv.txt
+if [ -n $WIFI_FIRMWARE ]; then
+    if [ "$WIFI_FIRMWARE" == "y" ] && [ -n $WIFI_MODULE ]; then
+        export WIFI_MODULES=$WIFI_MODULE
+        export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE WIFI_MODULES"
+    elif [ "$WIFI_FIRMWARE" == "all" ]; then
+        export WIFI_MODULES="qca brcm ath-pci"
+        export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE WIFI_MODULES"
+    fi
 fi
 
 # Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
@@ -275,7 +194,6 @@ if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ] ; then
 	if [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "all" ]; then
 		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
 		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
-
 		echo Selected wifi firmware: qca
 	fi
 fi
