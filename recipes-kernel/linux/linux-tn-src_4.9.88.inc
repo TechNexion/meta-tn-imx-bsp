@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 PR = "r0"
 SRCBRANCH = "tn-imx_4.9.88_2.0.0_ga-test"
-LOCALVERSION = "-${SRCBRANCH}"
+LOCALVERSION = "-${SRCREV}"
 KERNEL_SRC = "git://github.com/TechNexion/linux.git"
 
 SRC_URI = "${KERNEL_SRC};branch=${SRCBRANCH}"
