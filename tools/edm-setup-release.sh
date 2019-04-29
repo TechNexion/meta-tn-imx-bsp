@@ -270,7 +270,7 @@ fi
 
 # Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
 
-if [ "$CPU_TYPE" == 'imx8m' ] || [ "$CPU_TYPE" == 'imx8mm' ] ; then
+if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ] ; then
 	echo WIFI_FIRMWARE=$WIFI_FIRMWARE
 	if [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "all" ]; then
 		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
