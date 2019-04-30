@@ -3,6 +3,7 @@ DESCRIPTION = "Broadcom Wi-fi & bluetooth firmware"
 SECTION = "kernel"
 LICENSE = "Proprietary"
 LICENSE_FLAGS = "commercial_brcm"
+
 LIC_FILES_CHKSUM = "file://nvram_ap6335.txt;md5=340d39854632bdd68f9dc8aa3d1447b9"
 
 SRC_URI += " \
@@ -22,16 +23,16 @@ do_install() {
     install -d ${D}/lib/firmware/brcm
 
     #Install AP6335 wifi and bluetooth firmware
-    install -m 0755 fw_bcm4339a0_ag.bin ${D}/lib/firmware/brcm
-    install -m 0755 fw_bcm4339a0_ag_apsta.bin ${D}/lib/firmware/brcm
-    install -m 0755 nvram_ap6335.txt ${D}/lib/firmware/brcm
-    install -m 0755 bcm4339a0.hcd ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6335_4.2/Wi-Fi/fw_bcm4339a0_ag.bin ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6335_4.2/Wi-Fi/fw_bcm4339a0_ag_apsta.bin ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6335_4.2/Wi-Fi/nvram_ap6335.txt ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6335_4.2/BT/bcm4339a0.hcd ${D}/lib/firmware/brcm
 
     #Install AP6212 wifi and bluetooth firmware
-    install -m 0755 fw_bcm43438a0.bin ${D}/lib/firmware/brcm
-    install -m 0755 fw_bcm43438a0_apsta.bin ${D}/lib/firmware/brcm
-    install -m 0755 nvram_ap6212.txt ${D}/lib/firmware/brcm
-    install -m 0755 bcm43438a0.hcd ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6212_4.2/Wi-Fi/fw_bcm43438a0.bin ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6212_4.2/Wi-Fi/fw_bcm43438a0_apsta.bin ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6212_4.2/Wi-Fi/nvram_ap6212.txt ${D}/lib/firmware/brcm
+    install -m 0755 ${S}/AP6212_4.2/BT/bcm43438a0.hcd ${D}/lib/firmware/brcm
 }
 
 FILES_${PN}-dbg += "/lib/firmware/.debug"
