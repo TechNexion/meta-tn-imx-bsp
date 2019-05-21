@@ -11,10 +11,11 @@ DEPENDS_append = " python dtc-native"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://Licenses/gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
+PR = "r0"
 UBOOT_SRC ?= "git://github.com/TechNexion/u-boot-edm.git"
 SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-wip"
 SRC_URI = "${UBOOT_SRC};branch=${SRCBRANCH}"
-SRCREV = "6dd72616d4cdd8a7c505002f2e3e89b7e6fbbfd1"
+SRCREV = "f6e4d14056d82aff4973dde4ec5fb93b96c8855d"
 
 S = "${WORKDIR}/git"
 
