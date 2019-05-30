@@ -69,7 +69,7 @@ while getopts "k:r:t:b:e:gh" fsl_setup_flag
 do
     case $fsl_setup_flag in
         b) BUILD_DIR="$OPTARG";
-           echo -e "\n Build directory is " $BUILD_DIR
+           echo -e "\nBuild directory: $BUILD_DIR"
            ;;
         h) fsl_setup_help='true';
            ;;
@@ -98,7 +98,7 @@ if [ -z "$BUILD_DIR" ]; then
 fi
 
 if [ -z "$MACHINE" ]; then
-    echo setting to default machine
+    echo "setting to default machine"
     MACHINE='pico-imx6-qca'
 fi
 
@@ -157,12 +157,12 @@ echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >
 
 echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $BUILD_DIR/conf/bblayers.conf
 
-echo BSPDIR=$BSPDIR
-echo BUILD_DIR=$BUILD_DIR
+echo "BSPDIR: $BSPDIR"
+echo "BUILD_DIR: $BUILD_DIR"
 
 # Support integrating community meta-freescale instead of meta-fsl-arm
 if [ -d ../sources/meta-freescale ]; then
-    echo meta-freescale directory found
+    echo "meta-freescale directory found"
     # Change settings according to environment
     sed -e "s,meta-fsl-arm\s,meta-freescale ,g" -i conf/bblayers.conf
     sed -e "s,\$.BSPDIR./sources/meta-fsl-arm-extra\s,,g" -i conf/bblayers.conf
@@ -177,46 +177,83 @@ if [ -n $BASEBOARD ]; then
     export BASE_BOARD=$BASEBOARD
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
 fi
-if [ -n $WIFI_FIRMWARE ]; then
-    if [ "$WIFI_FIRMWARE" == "y" ] && [ -n $WIFI_MODULE ]; then
-        export WIFI_MODULES=$WIFI_MODULE
-        export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE WIFI_MODULES"
-    elif [ "$WIFI_FIRMWARE" == "all" ]; then
-        export WIFI_MODULES="qca brcm ath-pci"
-        export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE WIFI_MODULES"
-    fi
-fi
 
 # Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
+#Identify SOC type
+CPU_TYPE=$(echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g')
+echo "CPU_TYPE: $CPU_TYPE"
+echo "WIFI_FIRMWARE: $WIFI_FIRMWARE"
+echo "WIFI_MODULE: $WIFI_MODULE"
 
-if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ] ; then
-	echo WIFI_FIRMWARE=$WIFI_FIRMWARE
-	if [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "all" ]; then
-		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
-		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
-		echo Selected wifi firmware: qca
-	fi
+if [ -z "${WIFI_FIRMWARE#"${WIFI_FIRMWARE%%[! ]*}"}" ]; then
+    if [ -z "${WIFI_MODULE#"${WIFI_MODULE%%[! ]*}"}" ]; then
+        echo "WARNING - No WIFI_FIRMWARE and no WIFI_MODULES specified"
+        export WIFI_MODULES=""
+    else
+        echo "WARNING - No WIFI_FIRMWARE but defined WIFI_MODULE"
+        if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
+            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless modules."
+            export WIFI_MODULES="qca"
+        else
+            export WIFI_MODULES=$WIFI_MODULE
+        fi
+    fi
+else
+    if [ "$WIFI_FIRMWARE" == "all" ]; then
+        if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
+            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless modules."
+            export WIFI_MODULES="qca"
+        elif [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ]; then
+            export WIFI_MODULES="qca brcm ath-pci"
+        else
+            echo "WARNING - No matched CPU_TYPE: $CPU_TYPE, hence no WIFI_MODULES."
+            export WIFI_MODULES=""
+        fi
+    else
+        if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
+            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless modules."
+            export WIFI_MODULES="qca"
+        else
+            if  [ -z "${WIFI_MODULE#"${WIFI_MODULE%%[! ]*}"}" ]; then
+                echo "WARNING - No WIFI_MODULE specified."
+                export WIFI_MODULES=""
+            else
+                export WIFI_MODULES=$WIFI_MODULE
+            fi
+        fi
+    fi
 fi
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE WIFI_MODULES"
+echo "Selected wifi modules: $WIFI_MODULES"
 
-if [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ] ; then
-	echo WIFI_FIRMWARE=$WIFI_FIRMWARE
-	if [ "$WIFI_FIRMWARE" == "y" ]; then
-		if [ "$WIFI_MODULE" == 'qca' ]; then
-			echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
-			echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
-		elif [ "$WIFI_MODULE" == 'brcm' ]; then
-			echo "LICENSE_FLAGS_WHITELIST = \"commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
-			echo "IMAGE_INSTALL_append = \" linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
-		elif [ "$WIFI_MODULE" == 'ath-pci' ]; then
-			echo "IMAGE_INSTALL_append = \" linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
-		fi
-		echo Selected wifi firmware: $WIFI_MODULE
-	elif [ "$WIFI_FIRMWARE" == "all" ]; then
-		echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
-		echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn linux-firmware-brcm-tn linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
-		echo Selected wifi firmware: "qca brcm"
-	fi
-fi
+#if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ] ; then
+#       echo WIFI_FIRMWARE=$WIFI_FIRMWARE
+#       if [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "all" ]; then
+#               echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
+#               echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
+#               echo Selected wifi firmware: qca
+#       fi
+#fi
+#
+#if [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ] ; then
+#       echo WIFI_FIRMWARE=$WIFI_FIRMWARE
+#       if [ "$WIFI_FIRMWARE" == "y" ]; then
+#               if [ "$WIFI_MODULE" == 'qca' ]; then
+#                       echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
+#                       echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
+#               elif [ "$WIFI_MODULE" == 'brcm' ]; then
+#                       echo "LICENSE_FLAGS_WHITELIST = \"commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
+#                       echo "IMAGE_INSTALL_append = \" linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
+#               elif [ "$WIFI_MODULE" == 'ath-pci' ]; then
+#                       echo "IMAGE_INSTALL_append = \" linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
+#               fi
+#               echo Selected wifi firmware: $WIFI_MODULE
+#       elif [ "$WIFI_FIRMWARE" == "all" ]; then
+#              echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
+#              echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn linux-firmware-brcm-tn linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
+#               echo Selected wifi firmware: "qca brcm"
+#       fi
+#fi
 
 unset WIFI_MODULE
 unset WIFI_FIRMWARE
