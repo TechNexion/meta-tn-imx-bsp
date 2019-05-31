@@ -178,53 +178,43 @@ if [ -n $BASEBOARD ]; then
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
 fi
 
-# Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
-#Identify SOC type
+# Identify SOC type
 CPU_TYPE=$(echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g')
-echo "CPU_TYPE: $CPU_TYPE"
-echo "WIFI_FIRMWARE: $WIFI_FIRMWARE"
-echo "WIFI_MODULE: $WIFI_MODULE"
 
+# Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
 if [ -z "${WIFI_FIRMWARE#"${WIFI_FIRMWARE%%[! ]*}"}" ]; then
-    if [ -z "${WIFI_MODULE#"${WIFI_MODULE%%[! ]*}"}" ]; then
-        echo "WARNING - No WIFI_FIRMWARE and no WIFI_MODULES specified"
-        export WIFI_MODULES=""
-    else
-        echo "WARNING - No WIFI_FIRMWARE but defined WIFI_MODULE"
-        if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
-            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless modules."
-            export WIFI_MODULES="qca"
-        else
-            export WIFI_MODULES=$WIFI_MODULE
-        fi
-    fi
+    echo "WARNING - No WIFI_FIRMWARE specified"
+    export RF_FIRMWARES=""
 else
     if [ "$WIFI_FIRMWARE" == "all" ]; then
         if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
-            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless modules."
-            export WIFI_MODULES="qca"
+            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless module, so load qca firmware"
+            export RF_FIRMWARES="qca"
         elif [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ]; then
-            export WIFI_MODULES="qca brcm ath-pci"
+            export RF_FIRMWARES="qca brcm ath-pci"
         else
-            echo "WARNING - No matched CPU_TYPE: $CPU_TYPE, hence no WIFI_MODULES."
-            export WIFI_MODULES=""
+            echo "WARNING - No matched CPU_TYPE: $CPU_TYPE, hence no WIFI_FIRMWARE"
+            export RF_FIRMWARES=""
         fi
-    else
+    elif [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "Y" ]; then
         if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
-            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless modules."
-            export WIFI_MODULES="qca"
+            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless module, so load qca firmware"
+            export RF_FIRMWARES="qca"
         else
             if  [ -z "${WIFI_MODULE#"${WIFI_MODULE%%[! ]*}"}" ]; then
                 echo "WARNING - No WIFI_MODULE specified."
-                export WIFI_MODULES=""
+                export RF_FIRMWARES=""
             else
-                export WIFI_MODULES=$WIFI_MODULE
+                export RF_FIRMWARES=$WIFI_MODULE
             fi
         fi
+    else
+        echo "WARNING - Unrecognized WIFI_FIRMWARE specified"
+        export RF_FIRMWARES=""
     fi
 fi
-export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE WIFI_MODULES"
-echo "Selected wifi modules: $WIFI_MODULES"
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE RF_FIRMWARES"
+echo "Selected wifi firmwares: $RF_FIRMWARES"
 
 #if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ] ; then
 #       echo WIFI_FIRMWARE=$WIFI_FIRMWARE
