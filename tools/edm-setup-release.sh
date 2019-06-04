@@ -188,7 +188,7 @@ if [ -z "${WIFI_FIRMWARE#"${WIFI_FIRMWARE%%[! ]*}"}" ]; then
 else
     if [ "$WIFI_FIRMWARE" == "all" ]; then
         if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
-            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless module, so load qca firmware"
+            echo "WARNING - imx8mq/imx8mm SOM only supports qca wireless module, so load qca firmware"
             export RF_FIRMWARES="qca"
         elif [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ]; then
             export RF_FIRMWARES="qca brcm ath-pci"
@@ -198,7 +198,7 @@ else
         fi
     elif [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "Y" ]; then
         if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
-            echo "WARNING - pico-imx8mq/pico-imx8mm only supports qca wireless module, so load qca firmware"
+            echo "WARNING - imx8mq/imx8mm SOM only supports qca wireless module, so load qca firmware"
             export RF_FIRMWARES="qca"
         else
             if  [ -z "${WIFI_MODULE#"${WIFI_MODULE%%[! ]*}"}" ]; then
