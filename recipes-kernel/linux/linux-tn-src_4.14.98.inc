@@ -10,6 +10,6 @@ SRCBRANCH = "tn-imx_4.14.98_2.0.0_ga-wip"
 LOCALVERSION = "-${SRCREV}"
 KERNEL_SRC = "git://github.com/TechNexion/linux.git"
 SRC_URI = "${KERNEL_SRC};branch=${SRCBRANCH}"
-SRCREV = "fcdc950678d0f9155670e528b91f5ae1db5be42d"
+SRCREV = "097af1ac9f50c577b5c6aace4c4920d42d4c240a"
 
 S = "${WORKDIR}/git"
