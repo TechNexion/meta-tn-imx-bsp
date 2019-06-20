@@ -20,46 +20,33 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-. sources/meta-fsl-bsp-release/imx/tools/setup-utils.sh
-
-CWD=`pwd`
-PROGNAME="setup-environment"
+CWD=$(pwd)
+PROGNAME="$CWD/sources/meta-edm-bsp-release/tools/setup-environment.sh"
 exit_message ()
 {
-   echo "To return to this build environment later please run:"
-   echo "    source setup-environment <build_dir>"
-
+    echo "To return to this build environment later please run:"
+    echo "    source setup-environment <build_dir>"
 }
 
 usage()
 {
     echo -e "\nUsage: source edm-setup-release.sh
     Optional parameters: [-b build-dir] [-h]"
-echo "
+    echo "
     * [-b build-dir]: Build directory, if unspecified script uses 'build' as output directory
     * [-h]: help
-"
+    "
 }
 
 
 clean_up()
 {
-
     unset CWD BUILD_DIR FSLDISTRO
     unset fsl_setup_help fsl_setup_error fsl_setup_flag
     unset usage clean_up
     unset ARM_DIR META_FSL_BSP_RELEASE
     exit_message clean_up
 }
-
-# Patch recipes to fix bugs
-#patch -Np1 -sr - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_0.2.bb < sources/meta-edm-bsp-release/patches/0001-imx-boot-pass-dtb-name-to-imx-mkimage-when-making-fl.patch
-#patch -Np1 -sr - sources/meta-fsl-bsp-release/imx/meta-bsp/recipes-security/optee-imx/optee-os-imx_git.bb < sources/meta-edm-bsp-release/patches/0002-optee-os-imx-fix-build-failure-when-the-board-isn-t-.patch
-#patch -Np1 -sr - sources/meta-fsl-bsp-release/imx/meta-bsp/classes/image_types_fsl.bbclass < sources/meta-edm-bsp-release/patches/0003-image_types_fsl.bbclass-change-to-put-u-boot.img-int.patch
-#cp sources/meta-edm-bsp-release/patches/0001-add-no-sandbox-as-argument-by-default.patch sources/meta-browser/recipes-browser/chromium/files
-#patch -Np1 -sr - sources/meta-browser/recipes-browser/chromium/chromium-gn.inc < sources/meta-edm-bsp-release/patches/0004-chromium-add-no-sandbox-as-default-argument.patch
-#patch -Np1 -sr - sources/poky/meta/recipes-graphics/packagegroups/packagegroup-core-x11.bb < sources/meta-edm-bsp-release/patches/0005-packagegroup-core-x11.bb-remove-xinput-calibrator.patch
-#patch -Np1 -sr - sources/meta-fsl-bsp-release/imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc < sources/meta-edm-bsp-release/patches/0006-fsl-imx-preferred-env-remove-u-boot-format-settings-.patch
 
 # get command line options
 OLD_OPTIND=$OPTIND
@@ -97,19 +84,11 @@ if [ -z "$BUILD_DIR" ]; then
     BUILD_DIR='build'
 fi
 
-if [ -z "$MACHINE" ]; then
-    echo "setting to default machine"
-    MACHINE='pico-imx6-qca'
-fi
-
-# copy new EULA into community so setup uses latest i.MX EULA
-cp sources/meta-fsl-bsp-release/imx/EULA.txt sources/meta-freescale/EULA
-
-# Set up the basic yocto environment
+# Set up the basic yocto environment by calling our setup-environment.sh
 if [ -z "$DISTRO" ]; then
-   DISTRO=$FSLDISTRO MACHINE=$MACHINE . ./$PROGNAME $BUILD_DIR
+   DISTRO=$FSLDISTRO MACHINE=$MACHINE source $PROGNAME $BUILD_DIR
 else
-   MACHINE=$MACHINE . ./$PROGNAME $BUILD_DIR
+   MACHINE=$MACHINE source $PROGNAME $BUILD_DIR
 fi
 
 # Point to the current directory since the last command changed the directory to $BUILD_DIR
@@ -129,36 +108,12 @@ else
     cp $BUILD_DIR/conf/local.conf.org $BUILD_DIR/conf/local.conf
 fi
 
-
+# swap around the original generated bblayers.conf from fsl community layer
 if [ ! -e $BUILD_DIR/conf/bblayers.conf.org ]; then
     cp $BUILD_DIR/conf/bblayers.conf $BUILD_DIR/conf/bblayers.conf.org
 else
     cp $BUILD_DIR/conf/bblayers.conf.org $BUILD_DIR/conf/bblayers.conf
 fi
-
-
-META_FSL_BSP_RELEASE="${CWD}/sources/meta-fsl-bsp-release/imx/meta-bsp"
-
-echo "" >> $BUILD_DIR/conf/bblayers.conf
-echo "# i.MX Yocto Project Release TechNexion Layers" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-edm-bsp-release \"" >> $BUILD_DIR/conf/bblayers.conf
-
-echo "" >> $BUILD_DIR/conf/bblayers.conf
-echo "# i.MX Yocto Project Release layers" >> $BUILD_DIR/conf/bblayers.conf
-hook_in_layer meta-fsl-bsp-release/imx/meta-bsp
-hook_in_layer meta-fsl-bsp-release/imx/meta-sdk
-
-echo "" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-gnome \"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-networking \"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-python \"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $BUILD_DIR/conf/bblayers.conf
-
-echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $BUILD_DIR/conf/bblayers.conf
-
-echo "BSPDIR: $BSPDIR"
-echo "BUILD_DIR: $BUILD_DIR"
 
 # Support integrating community meta-freescale instead of meta-fsl-arm
 if [ -d ../sources/meta-freescale ]; then
@@ -169,11 +124,11 @@ if [ -d ../sources/meta-freescale ]; then
 fi
 
 # Pass in the extra variables for uEnv.txt recipe
-if [ -n $DISPLAY ]; then
+if [ -n "$DISPLAY" ]; then
     export DISPLAY_INFO=$DISPLAY
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_INFO"
 fi
-if [ -n $BASEBOARD ]; then
+if [ -n "$BASEBOARD" ]; then
     export BASE_BOARD=$BASEBOARD
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
 fi
@@ -216,40 +171,11 @@ fi
 export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE RF_FIRMWARES"
 echo "Selected wifi firmwares: $RF_FIRMWARES"
 
-#if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ] ; then
-#       echo WIFI_FIRMWARE=$WIFI_FIRMWARE
-#       if [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "all" ]; then
-#               echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
-#               echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
-#               echo Selected wifi firmware: qca
-#       fi
-#fi
-#
-#if [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ] ; then
-#       echo WIFI_FIRMWARE=$WIFI_FIRMWARE
-#       if [ "$WIFI_FIRMWARE" == "y" ]; then
-#               if [ "$WIFI_MODULE" == 'qca' ]; then
-#                       echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca\"" >> $BUILD_DIR/conf/local.conf
-#                       echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn\"" >> $BUILD_DIR/conf/local.conf
-#               elif [ "$WIFI_MODULE" == 'brcm' ]; then
-#                       echo "LICENSE_FLAGS_WHITELIST = \"commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
-#                       echo "IMAGE_INSTALL_append = \" linux-firmware-brcm-tn\"" >> $BUILD_DIR/conf/local.conf
-#               elif [ "$WIFI_MODULE" == 'ath-pci' ]; then
-#                       echo "IMAGE_INSTALL_append = \" linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
-#               fi
-#               echo Selected wifi firmware: $WIFI_MODULE
-#       elif [ "$WIFI_FIRMWARE" == "all" ]; then
-#              echo "LICENSE_FLAGS_WHITELIST = \"commercial_qca commercial_brcm\"" >> $BUILD_DIR/conf/local.conf
-#              echo "IMAGE_INSTALL_append = \" linux-firmware-qca-tn linux-firmware-brcm-tn linux-firmware-ath10k-tn\"" >> $BUILD_DIR/conf/local.conf
-#               echo Selected wifi firmware: "qca brcm"
-#       fi
-#fi
-
 unset WIFI_MODULE
 unset WIFI_FIRMWARE
 unset DISPLAY
 unset BASEBOARD
 
-cd  $BUILD_DIR
+cd $BUILD_DIR
 clean_up
 unset FSLDISTRO

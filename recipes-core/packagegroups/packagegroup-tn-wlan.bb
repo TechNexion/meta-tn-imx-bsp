@@ -23,4 +23,4 @@ RDEPENDS_${PN}_append_ath-pci = " linux-firmware-ath10k-tn"
 
 # Extra Kernel Modules
 #MACHINE_EXTRA_RRECOMMENDS_append = " kernel-module-qcacld-tn"
-RRECOMMENDS_${PN}_append_qca = " ${@bb.utils.contains('COMBINED_FEATURES', 'wifi', 'kernel-module-qcacld-tn', '',d)}"
+RRECOMMENDS_${PN} += " ${@bb.utils.contains('COMBINED_FEATURES', 'wifi', 'kernel-module-qcacld-tn', '',d)}"
