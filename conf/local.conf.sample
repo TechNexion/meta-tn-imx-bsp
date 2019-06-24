@@ -250,3 +250,5 @@ LICENSE_FLAGS_WHILELIST ?= "commercial commercial_qca commercial_brcm"
 BASE_BOARD ?= "pi"
 DISPLAY_INFO ?= "lcd"
 RF_FIRMWARES ?= "qca"
+SOUNDCARD ?= "voicehat"
+
