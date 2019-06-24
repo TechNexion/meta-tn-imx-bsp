@@ -64,32 +64,42 @@ if [ -z "$DISTRO" ]; then
   return 1
 fi
 
-# copy new EULA into community so setup uses latest i.MX EULA
-cp sources/meta-fsl-bsp-release/imx/EULA.txt sources/meta-freescale/EULA
-
-# Set up the basic yocto environment via fsl community's version of setup-environment
-TEMPLATECONF="$CWD/sources/meta-edm-bsp-release/conf" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
+TNCONFIGS=$(ls $CWD/sources/meta-edm-bsp-release/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
+FSLCONFIGS=$(ls $CWD/sources/meta-fsl-bsp-release/imx/meta-bsp/conf/machine/*.conf $CWD/sources/meta-freescale*/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
+# Set up the basic yocto environment by sourcing fsl community's setup-environment bash script with/without TEMPLATECONF
+if [ $TNCONFIGS -gt 0 ] ; then
+  TEMPLATECONF="$CWD/sources/meta-edm-bsp-release/conf" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
+else
+  MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
+fi
 
 #
 # For some reason, our modified original bblayers.conf.sample are replaced by
 # FSL community's base/conf/bblayer.conf
 # So work around by appending additional layers
 #
-if ! grep -Fq "meta-edm-bsp-release" $PWD/conf/bblayers.conf; then
-  echo "" >> $PWD/conf/bblayers.conf
-  echo "# i.MX Yocto Project Release TechNexion Layers" >> $PWD/conf/bblayers.conf
-  echo "BBLAYERS += \" \${BSPDIR}/sources/meta-edm-bsp-release \"" >> $PWD/conf/bblayers.conf
-  echo "" >> $PWD/conf/bblayers.conf
-
-  echo "# i.MX Yocto Project Release layers" >> $PWD/conf/bblayers.conf
-  hook_in_layer meta-fsl-bsp-release/imx/meta-bsp
-  hook_in_layer meta-fsl-bsp-release/imx/meta-sdk
-  echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
-  echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-gnome \"" >> $PWD/conf/bblayers.conf
-  echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-networking \"" >> $PWD/conf/bblayers.conf
-  echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-python \"" >> $PWD/conf/bblayers.conf
-  echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
-  echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
+if [ $TNCONFIGS -gt 0 ] ; then
+  if ! grep -Fq "meta-edm-bsp-release" $PWD/conf/bblayers.conf; then
+    echo "" >> $PWD/conf/bblayers.conf
+    echo "# i.MX Yocto Project Release TechNexion Layers" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-edm-bsp-release \"" >> $PWD/conf/bblayers.conf
+  fi
+fi
+if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
+  if ! grep -Fq "meta-fsl-bsp-release" $PWD/conf/bblayers.conf; then
+    # copy new EULA into community so setup uses latest i.MX EULA
+    cp $PWD/../sources/meta-fsl-bsp-release/imx/EULA.txt $PWD/../sources/meta-freescale/EULA
+    echo "" >> $PWD/conf/bblayers.conf
+    echo "# i.MX Yocto Project Release layers" >> $PWD/conf/bblayers.conf
+    hook_in_layer meta-fsl-bsp-release/imx/meta-bsp
+    hook_in_layer meta-fsl-bsp-release/imx/meta-sdk
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-gnome \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-networking \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-python \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
+  fi
 fi
 
 unset BUILDDIRECTORY
