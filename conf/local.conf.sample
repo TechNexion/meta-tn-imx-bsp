@@ -249,6 +249,6 @@ CONF_VERSION = "1"
 LICENSE_FLAGS_WHILELIST ?= "commercial commercial_qca commercial_brcm"
 BASE_BOARD ?= "pi"
 DISPLAY_INFO ?= "lcd"
-RF_FIRMWARES ?= "qca"
+RF_FIRMWARES ?= "qca ath-pci"
 SOUNDCARD ?= "voicehat"
 
