@@ -8,9 +8,6 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit packagegroup
 
-# Extra Kernel Firmwares
-FW = "${@'' if d.getVar('RF_FIRMWARES', True) is None else ':'.join([fw.lower() for fw in d.getVar('RF_FIRMWARES', True).split(' ') if fw])}"
-OVERRIDES .= ":${FW}"
 # QCA
 PACKAGES_remove_qca = "linux-firmware-qca"
 RDEPENDS_${PN}_append_qca = " linux-firmware-qca-tn"

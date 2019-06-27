@@ -252,3 +252,7 @@ DISPLAY_INFO ?= "lcd"
 RF_FIRMWARES ?= "qca ath-pci"
 SOUNDCARD ?= "voicehat"
 
+# Extra MACHINEOVERRIDES for External Kernel Firmwares/Modules
+MACHINEOVERRIDES =. "${@'' if d.getVar('RF_FIRMWARES', True) is None else '%s:' % ':'.join([fw.lower() for fw in d.getVar('RF_FIRMWARES', True).split(' ') if fw])}"
+MACHINEOVERRIDES =. "${@'' if d.getVar('SOUNDCARD', True) is None else '%s:' % d.getVar('SOUNDCARD', True).lower()}"
+
