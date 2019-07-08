@@ -246,7 +246,6 @@ PACKAGECONFIG_append_pn-nativesdk-qemu = " sdl"
 # this doesn't mean anything to you.
 CONF_VERSION = "1"
 
-LICENSE_FLAGS_WHILELIST ?= "commercial commercial_qca commercial_brcm"
 BASE_BOARD ?= "pi"
 DISPLAY_INFO ?= "lcd"
 RF_FIRMWARES ?= "qca ath-pci"
