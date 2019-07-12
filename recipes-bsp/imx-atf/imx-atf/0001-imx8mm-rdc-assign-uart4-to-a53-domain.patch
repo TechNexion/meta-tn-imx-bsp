@@ -1,0 +1,28 @@
+From f293e6e21bd5b0a002e9ea1e5885fb075243ac53 Mon Sep 17 00:00:00 2001
+From: David Wolfe <david.wolfe@nxp.com>
+Date: Wed, 30 Jan 2019 09:35:53 -0600
+Subject: [PATCH] imx8mm: rdc: assign uart4 to a53 domain
+
+Signed-off-by: David Wolfe <david.wolfe@nxp.com>
+---
+ plat/imx/imx8mm/imx8mm_bl31_setup.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/plat/imx/imx8mm/imx8mm_bl31_setup.c b/plat/imx/imx8mm/imx8mm_bl31_setup.c
+index 4819b5c4..da29ff23 100644
+--- a/plat/imx/imx8mm/imx8mm_bl31_setup.c
++++ b/plat/imx/imx8mm/imx8mm_bl31_setup.c
+@@ -313,7 +313,9 @@ void bl31_early_platform_setup2(u_register_t arg0, u_register_t arg1,
+ 
+ 	/* Assign M4 to domain 1 */
+ 	mmio_write_32(IMX_RDC_BASE + 0x204, 0x1);
+-	mmio_write_32(IMX_RDC_BASE + 0x518, 0xfc);
++	/* RDC_PDAP70 (UART4) r/w for all DID except M4 */
++	mmio_write_32(IMX_RDC_BASE + 0x518, 0xf3);
++	/* RDC_PDAP105 (UART2) r/w for all DID except M4 */
+ 	mmio_write_32(IMX_RDC_BASE + 0x5A4, 0xf3);
+ 
+ #if defined (CSU_RDC_TEST)
+-- 
+2.19.1
+
