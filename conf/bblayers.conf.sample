@@ -11,6 +11,10 @@ BBLAYERS ?= " \
   \
   ##OEROOT##/../meta-openembedded/meta-oe \
   ##OEROOT##/../meta-openembedded/meta-multimedia \
+  ##OEROOT##/../meta-openembedded/meta-gnome \
+  ##OEROOT##/../meta-openembedded/meta-networking \
+  ##OEROOT##/../meta-openembedded/meta-python \
+  ##OEROOT##/../meta-openembedded/meta-filesystems \
   \
   ##OEROOT##/../meta-freescale \
   ##OEROOT##/../meta-freescale-3rdparty \
@@ -20,10 +24,14 @@ BBLAYERS ?= " \
   \
   ##OEROOT##/../meta-fsl-bsp-release/imx/meta-bsp \
   ##OEROOT##/../meta-fsl-bsp-release/imx/meta-sdk \
+  \
   ##OEROOT##/../meta-browser \
-  ##OEROOT##/../meta-openembedded/meta-gnome \
-  ##OEROOT##/../meta-openembedded/meta-networking \
-  ##OEROOT##/../meta-openembedded/meta-python \
-  ##OEROOT##/../meta-openembedded/meta-filesystems \
   ##OEROOT##/../meta-qt5 \
+  \
+  ##OEROOT##/../meta-openembedded-core/meta \
+  ##OEROOT##/../meta-virtualization \
+  ##OEROOT##/../meta-updater \
+  ##OEROOT##/../meta-updater-qemux86-64/ \
+  ##OEROOT##/../meta-intel-iot-security/meta-security-smack \
+  ##OEROOT##/../meta-intel-iot-security/meta-security-framework \
 "

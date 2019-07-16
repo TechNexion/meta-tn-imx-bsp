@@ -93,12 +93,22 @@ if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
     echo "# i.MX Yocto Project Release layers" >> $PWD/conf/bblayers.conf
     hook_in_layer meta-fsl-bsp-release/imx/meta-bsp
     hook_in_layer meta-fsl-bsp-release/imx/meta-sdk
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-gnome \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-networking \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-python \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
+    echo "" >> $PWD/conf/bblayers.conf
+    echo "# i.MX Container OS and OTA layers" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-intel-iot-security/meta-security-smack \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-intel-iot-security/meta-security-framework \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded-core/meta  \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-updater \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-updater-qemux86-64 \"" >> $PWD/conf/bblayers.conf
+    
+
   fi
   if ! grep -Fq "meta-nxp-nfc" $PWD/conf/bblayers.conf; then
     echo "" >> $PWD/conf/bblayers.conf
