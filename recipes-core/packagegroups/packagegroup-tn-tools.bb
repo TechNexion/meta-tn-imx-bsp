@@ -19,5 +19,6 @@ RDEPENDS_${PN} = " \
     create-ap \
     iptables \
     rsync \
+    libgpiod \
 "
 
