@@ -17,15 +17,25 @@ python do_setuenv() {
         supported_boards = {"pico-imx6": ("pi", "dwarf", "hobbit", "nymph"), \
                             "pico-imx7": ("pi", "dwarf", "hobbit", "nymph"), \
                             "pico-imx6ul": ("pi", "dwarf", "hobbit", "nymph"), \
+                            "pico-imx8mq": ("pi"), \
+                            "pico-imx8mm": ("pi"), \
+                            "flex-imx8mm": ("pi"), \
                             "edm-imx6": ("gnome", "fairy", "tc0700", "tc1000"), \
                             "edm-imx7": ("gnome"), \
+                            "edm-imx8mq": ("wizard"), \
                             "tep1-imx7": (""), \
                             "tep1-imx6ul": (""), \
                             "tek-imx6": (""), \
                             "tek3-imx6ul": ("")}
-        default_boards = {"pico-imx6": "pi", "pico-imx7": "pi", "pico-imx6ul": "pi", \
-                          "edm-imx6": "fairy", "edm-imx7": "gnome"}
-
+        default_boards = {"pico-imx6": "pi", \
+                          "pico-imx7": "pi", \
+                          "pico-imx6ul": "pi", \
+                          "pico-imx8mq": "pi", \
+                          "pico-imx8mm": "pi", \
+                          "flex-imx8mm": "pi", \
+                          "edm-imx6": "fairy", \
+                          "edm-imx7": "gnome", \
+                          "edm-imx8mq": "wizard"}
         if mach in supported_boards.keys():
             if bboard in supported_boards[mach]:
                 return bboard
@@ -63,8 +73,12 @@ python do_setuenv() {
                                             "hdmi720p", "hdmi1080p", "lcd", \
                                             "lvds7_hdmi720p", "custom"), \
                               "pico-imx7": ("lcd", "custom"), \
-                              "pico-imx8": ("mipi5", "hdmi", "custom")}
-        default_displays = {"tc0700": "lvds7", "tc1000": "lvds10", \
+                              "pico-imx8mq": ("mipi5", "hdmi", "custom"), \
+                              "pico-imx8mm": ("mipi5", "custom"), \
+                              "flex-imx8mm": ("mipi5", "custom"), \
+                              "edm-imx8mq": ("mipi5", "hdmi", "custom")}
+        default_displays = {"tc0700": "lvds7", \
+                            "tc1000": "lvds10", \
                             "pico-imx6": "hdmi720p"}
         if mach in supported_displays.keys():
             if disp in supported_displays[mach]:
@@ -100,9 +114,6 @@ python do_setuenv() {
                 f.write("displayinfo={}\n".format(displayinfo))
             if wifi_module is not None:
                 f.write("wifi_module={}\n".format(wifi_module))
-            f.write("mmcargs=setenv bootargs console=${console},${baudrate} root=${mmcroot} ${displayinfo}\n")
-            f.write("bootcmd_mmc=run loadimage;run mmcboot;\n")
-            f.write("uenvcmd=run bootcmd_mmc\n")
 
     # Conjure up appropriate uEnv.txt settings
     gen_uenvtxt(d)
