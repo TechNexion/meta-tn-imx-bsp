@@ -2,7 +2,7 @@ SUMMARY = "u-boot uEnv.txt"
 DESCRIPTION = "u-boot uEnv.txt"
 SECTION = "base"
 LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://README;md5=6e3b4d22a2346e07c446bc8dca914ae4"
+LIC_FILES_CHKSUM = "file://README;md5=84bf3d71eb40db8daf2ba7e156e31099"
 
 SRC_URI += " \
    file://README \
@@ -41,11 +41,11 @@ python do_setuenv() {
                 return bboard
         if mach in default_boards.keys():
             return "{}".format(default_boards[mach])
-        if bboard != "":
+        if len(bboard) > 0:
             return bboard
         return None
 
-    def gen_displayinfo(disp):
+    def gen_videoarg(disp):
         if disp == "custom":
             return "video=mxcfb0:dev=hdmi,1280x720M@60,if=RGB24 fbmem=28M"
         elif disp == "hdmi":
@@ -87,11 +87,11 @@ python do_setuenv() {
                             "axon-imx6": "hdmi720p"}
         if mach in supported_displays.keys():
             if disp in supported_displays[mach]:
-                return gen_displayinfo(disp)
+                return gen_videoarg(disp)
         if bboard in default_displays.keys():
-            return gen_displayinfo(default_displays[bboard])
+            return gen_videoarg(default_displays[bboard])
         if mach in default_displays.keys():
-            return gen_displayinfo(default_displays[mach])
+            return gen_videoarg(default_displays[mach])
         return None
 
     def parse_radio(radios):
@@ -112,14 +112,17 @@ python do_setuenv() {
         machine = d.getVar("MACHINE")
         board = d.getVar("BASE_BOARD")
         display = d.getVar("DISPLAY_INFO")
+        radios = d.getVar("RF_FIRMWARES")
+        panel = d.getVar("DISPLAY_PANEL")
+        alt_fdt = d.getVar("ALT_FDTNAME")
         if machine is None:
             bb.warn("Generating uEnv.txt requires MACHINE variable")
         if board is None:
             bb.warn("Generating uEnv.txt requires BASE_BOARD variable")
-        bb.note("Generating uEnv.txt with machine:{} board:{} display:{}".format(machine, board, display))
+        bb.note("Generating uEnv.txt with machine:{} board:{} display:{} radios:{} panel:{} alt_fdt:{}".format(machine, board, display, radios, panel, alt_fdt))
         baseboard = parse_baseboard(machine, board)
         displayinfo = parse_display(machine, board, display)
-        wifi_module = parse_radio(d.getVar("RF_FIRMWARES"))
+        wifi_module = parse_radio(radios)
         uenv_cmd = parse_uenvcmd(machine)
         with open(envfile, 'w+') as f:
             if baseboard is not None:
@@ -128,9 +131,15 @@ python do_setuenv() {
                 f.write("displayinfo={}\n".format(displayinfo))
             if wifi_module is not None:
                 f.write("wifi_module={}\n".format(wifi_module))
+            if panel is not None:
+                f.write("panel={}\n".format(panel))
             f.write("mmcargs=setenv bootargs console=${console},${baudrate} root=${mmcroot} ${displayinfo}\n")
             f.write("bootcmd_mmc=run loadimage;run mmcboot;\n")
-            f.write("uenvcmd={}run bootcmd_mmc;\n".format(uenv_cmd if uenv_cmd is not None else ""))
+            if alt_fdt is not None:
+                f.write("alt_fdtname={}\n".format(alt_fdt))
+                f.write("uenvcmd=setenv has_fdt 1; setenv fdtname ${alt_fdtname}; setenv fdtfile ${alt_fdtname}.dtb; {}run bootcmd_mmc;\n".format(uenv_cmd if uenv_cmd is not None else ""))
+            else:
+                f.write("uenvcmd={}run bootcmd_mmc;\n".format(uenv_cmd if uenv_cmd is not None else ""))
             f.seek(0, 0)
             bb.note("Generated uEnv.txt\n{}".format(f.read()))
 
