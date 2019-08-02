@@ -154,6 +154,10 @@ if [ -n "$DISPLAY" ]; then
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_INFO"
   fi
 fi
+if [ -n "$PANEL" ]; then
+    export DISPLAY_PANEL=$PANEL
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_PANEL"
+fi
 if [ -n "$BASEBOARD" ]; then
   echo "Specified BASE_BOARD: $BASEBOARD"
   export BASE_BOARD=$BASEBOARD
@@ -161,6 +165,10 @@ if [ -n "$BASEBOARD" ]; then
     echo "Export BASE_BOARD=$BASEBOARD to yocto via BB_ENV_EXTRAWHITE"
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
   fi
+fi
+if [ -n "$FDTNAME" ]; then
+    export ALT_FDTNAME=$FDTNAME
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE ALT_FDTNAME"
 fi
 
 # Identify SOC type
