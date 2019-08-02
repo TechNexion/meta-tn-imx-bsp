@@ -128,9 +128,17 @@ if [ -n "$DISPLAY" ]; then
     export DISPLAY_INFO=$DISPLAY
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_INFO"
 fi
+if [ -n "$PANEL" ]; then
+    export DISPLAY_PANEL=$PANEL
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_PANEL"
+fi
 if [ -n "$BASEBOARD" ]; then
     export BASE_BOARD=$BASEBOARD
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
+fi
+if [ -n "$FDTNAME" ]; then
+    export ALT_FDTNAME=$FDTNAME
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE ALT_FDTNAME"
 fi
 
 # Identify SOC type
@@ -175,6 +183,8 @@ unset WIFI_MODULE
 unset WIFI_FIRMWARE
 unset DISPLAY
 unset BASEBOARD
+unset PANEL
+unset FDTNAME
 
 cd $BUILD_DIR
 clean_up
