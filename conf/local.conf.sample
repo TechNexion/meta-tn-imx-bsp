@@ -255,3 +255,5 @@ SOUNDCARD ?= "voicehat"
 MACHINEOVERRIDES =. "${@'' if d.getVar('RF_FIRMWARES', True) is None else '%s:' % ':'.join([fw.lower() for fw in d.getVar('RF_FIRMWARES', True).split(' ') if fw])}"
 MACHINEOVERRIDES =. "${@'' if d.getVar('SOUNDCARD', True) is None else '%s:' % d.getVar('SOUNDCARD', True).lower()}"
 
+XZ_COMPRESSION_LEVEL = "-9"
+XZ_INTEGRITY_CHECK = "crc64"
