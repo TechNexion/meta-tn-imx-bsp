@@ -15,7 +15,7 @@ PR = "r0"
 UBOOT_SRC ?= "git://github.com/TechNexion/u-boot-edm.git"
 SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-wip"
 SRC_URI = "${UBOOT_SRC};branch=${SRCBRANCH}"
-SRCREV = "d2a05ec101470eeb5ff285f803a4f8fe5a03f78e"
+SRCREV = "52f1cac9546c4b91e90e59714c6cf4588edd238b"
 
 S = "${WORKDIR}/git"
 
