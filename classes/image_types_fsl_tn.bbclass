@@ -120,7 +120,7 @@ generate_imx_sdcard () {
 			exit 1
 		;;
 		imx-boot)
-			dd if=${DEPLOY_DIR_IMAGE}/imx-boot-${UBOOT_CONFIG}.bin of=${SDCARD} conv=notrunc seek=${IMX_BOOT_SEEK} bs=1K
+			dd if=${DEPLOY_DIR_IMAGE}/imx-boot-${MACHINE}-${UBOOT_CONFIG}.bin of=${SDCARD} conv=notrunc seek=${IMX_BOOT_SEEK} bs=1K
 		;;
         u-boot)
 		if [ -n "${SPL_BINARY}" ]; then
