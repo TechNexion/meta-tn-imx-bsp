@@ -4,17 +4,17 @@ SECTION = "kernel"
 LICENSE = "Proprietary"
 LICENSE_FLAGS = "commercial_brcm"
 
-LIC_FILES_CHKSUM = "file://nvram_ap6335.txt;md5=340d39854632bdd68f9dc8aa3d1447b9"
+LIC_FILES_CHKSUM = "file://AP6335_4.2/Wi-Fi/nvram_ap6335.txt;md5=340d39854632bdd68f9dc8aa3d1447b9"
 
 SRC_URI += " \
-    file://fw_bcm4339a0_ag.bin \
-    file://fw_bcm4339a0_ag_apsta.bin \
-    file://nvram_ap6335.txt \
-    file://bcm4339a0.hcd \
-    file://fw_bcm43438a0.bin \
-    file://fw_bcm43438a0_apsta.bin \
-    file://nvram_ap6212.txt \
-    file://bcm43438a0.hcd \
+    file://AP6335_4.2/Wi-Fi/fw_bcm4339a0_ag.bin \
+    file://AP6335_4.2/Wi-Fi/fw_bcm4339a0_ag_apsta.bin \
+    file://AP6335_4.2/Wi-Fi/nvram_ap6335.txt \
+    file://AP6335_4.2/BT/bcm4339a0.hcd \
+    file://AP6212_4.2/Wi-Fi/fw_bcm43438a0.bin \
+    file://AP6212_4.2/Wi-Fi/fw_bcm43438a0_apsta.bin \
+    file://AP6212_4.2/Wi-Fi/nvram_ap6212.txt \
+    file://AP6212_4.2/BT/bcm43438a0.hcd \
 "
 
 S = "${WORKDIR}"
