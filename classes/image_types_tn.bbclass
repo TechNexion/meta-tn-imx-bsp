@@ -1,12 +1,9 @@
-inherit image_types_fsl
-
 #
-# Generate the boot image with the boot scripts and required Device Tree
-# files
+# Generate the boot image with the boot scripts and required Device Tree files
 #
-# Override _generate_boot_image()
+# _generate_tn_boot_image()
 #
-_generate_boot_image() {
+_generate_tn_boot_image() {
 	local boot_part=$1
 
 	# Create boot partition image
@@ -106,7 +103,7 @@ _generate_boot_image() {
 # ^                        ^            ^                        ^                               ^
 # |                        |            |                        |                               |
 # 0                      4096     4MiB +  8MiB       4MiB +  8Mib + SDIMG_ROOTFS   4MiB +  8MiB + SDIMG_ROOTFS + 4MiB
-generate_imx_sdcard () {
+generate_tn_sdcard () {
 	# Create partition table
 	parted -s ${SDCARD} mklabel msdos
 	parted -s ${SDCARD} unit KiB mkpart primary fat32 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${IMAGE_ROOTFS_ALIGNMENT} \+ ${BOOT_SPACE_ALIGNED})
@@ -147,13 +144,11 @@ generate_imx_sdcard () {
 		;;
 	esac
 
-	_generate_boot_image 1
+	_generate_tn_boot_image 1
 
 	# Burn Partition
 	dd if=${WORKDIR}/boot.img of=${SDCARD} conv=notrunc,fsync seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024)
 	dd if=${SDCARD_ROOTFS} of=${SDCARD} conv=notrunc,fsync seek=1 bs=$(expr ${BOOT_SPACE_ALIGNED} \* 1024 + ${IMAGE_ROOTFS_ALIGNMENT} \* 1024)
 
-	# md5 checksum the disk image
-	md5sum ${SDCARD} > ${SDCARD}.md5.txt
 }
 
