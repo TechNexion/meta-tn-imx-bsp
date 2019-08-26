@@ -102,11 +102,15 @@ python do_setuenv() {
         machine = d.getVar("MACHINE")
         board = d.getVar("BASE_BOARD")
         display = d.getVar("DISPLAY_INFO")
-        print("machine:{} board:{} display:{}".format(machine, board, display))
-        baseboard = parse_baseboard(machine, d.getVar("BASE_BOARD"))
-        displayinfo = parse_display(machine, d.getVar("BASE_BOARD"), d.getVar("DISPLAY_INFO"))
+        if machine is None:
+            bb.warn("Generating uEnv.txt requires MACHINE variable")
+        if board is None:
+            bb.warn("Generating uEnv.txt requires BASE_BOARD variable")
+        print("Generating uEnv.txt with machine:{} board:{} display:{}".format(machine, board, display))
+        baseboard = parse_baseboard(machine, board)
+        displayinfo = parse_display(machine, board, display)
         wifi_module = parse_radio(d.getVar("WIFI_MODULES"))
-        print("displayinfo:{} wifi_module:{}".format(displayinfo, wifi_module))
+        print("Generating uEnv.txt parsed results baseboard:{} displayinfo:{} wifi_module:{}".format(baseboard, displayinfo, wifi_module))
         with open(envfile, 'w') as f:
             if baseboard is not None:
                 f.write("baseboard={}\n".format(baseboard))
