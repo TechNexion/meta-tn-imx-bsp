@@ -78,8 +78,10 @@ IMAGE_INSTALL_append = " packagegroup-tn-tools packagegroup-tn-wlan packagegroup
 IMAGE_FSTYPES_append = " ext4 sdcard.xz"
 IMAGE_CLASSES_append = " image_types_tn"
 IMAGE_CLASSES_remove_mx8 = "image_types_tn"
-SDCARD_GENERATION_COMMAND_mx6 = "generate_tn_sdcard"
-SDCARD_GENERATION_COMMAND_mx7 = "generate_tn_sdcard"
+SDCARD_GENERATION_COMMAND_mx6dl = "generate_tn_sdcard"
+SDCARD_GENERATION_COMMAND_mx6q = "generate_tn_sdcard"
+SDCARD_GENERATION_COMMAND_mx7d = "generate_tn_sdcard"
+SDCARD_GENERATION_COMMAND_mx8m = "generate_imx_sdcard"
 LICENSE_FLAGS_WHITELIST += "commercial_qca commercial_brcm"
 
 # wic (sdcard) image
