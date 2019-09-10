@@ -50,6 +50,8 @@ python do_setuenv() {
             return "video=mxcfb0:dev=ldb,1280x800@60,if=RGB24"
         elif disp == "lvds15":
             return "video=mxcfb0:dev=ldb,1368x768@60,if=RGB24"
+        elif disp == "lvds2ch":
+            return "video=mxcfb0:dev=ldb,1920x1080@60,if=RGB24"
         elif disp == "lvds7":
             return "video=mxcfb0:dev=ldb,1024x600@60,if=RGB24"
         elif disp == "lvds7_hdmi720p":
@@ -59,13 +61,17 @@ python do_setuenv() {
         return None
 
     def parse_display(mach, bboard, disp):
-        supported_displays = {"pico-imx6": ("lcd", "lvds7", "lvds10", "lvds15", \
+        supported_displays = {"pico-imx6": ("lvds7", "lvds10", "lvds15", "lvds2ch", \
                                             "hdmi720p", "hdmi1080p", "lcd", \
                                             "lvds7_hdmi720p", "custom"), \
                               "pico-imx7": ("lcd", "custom"), \
-                              "pico-imx8": ("mipi5", "hdmi", "custom")}
+                              "pico-imx8": ("mipi5", "hdmi", "custom"), \
+                              "tek-imx6": ("lvds7", "lvds10", "lvds15", "lvds2ch", \
+                                            "hdmi720p", "hdmi1080p", "lcd", \
+                                            "lvds7_hdmi720p", "custom")}
         default_displays = {"tc0700": "lvds7", "tc1000": "lvds10", \
-                            "pico-imx6": "hdmi720p"}
+                            "pico-imx6": "hdmi720p", \
+                            "tek-imx6": "lvds15"}
         if mach in supported_displays.keys():
             if disp in supported_displays[mach]:
                 return gen_displayinfo(disp)
