@@ -14,6 +14,8 @@ DEPENDS += "lzop-native bc-native"
 
 SRC_URI += "file://0001-uapi-Add-ion.h-to-userspace.patch"
 
+SRC_URI_append_lvds2ch = " file://tep5_dual_channel_15_18_21_inch_1920x1080.patch"
+
 DEFAULT_PREFERENCE = "1"
 
 DO_CONFIG_V7_COPY = "no"

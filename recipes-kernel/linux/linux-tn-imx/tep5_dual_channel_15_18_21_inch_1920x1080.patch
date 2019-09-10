@@ -1,0 +1,72 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-tep5.dtsi b/arch/arm/boot/dts/imx6qdl-tep5.dtsi
+index bcf4467..09fe824 100644
+--- a/arch/arm/boot/dts/imx6qdl-tep5.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-tep5.dtsi
+@@ -674,6 +674,8 @@
+ 
+ &ldb {
+ 	status = "okay";
++	split-mode;
++
+ 	lvds-channel@0 {
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+@@ -682,16 +684,16 @@
+ 
+ 		display-timings {
+ 			native-mode = <&timing0>;
+-			timing0: hj070na0 {
+-				clock-frequency = <71100000>;
+-				hactive = <1280>;
+-				vactive = <800>;
+-				hback-porch = <40>;
+-				hfront-porch = <40>;
+-				vback-porch = <10>;
+-				vfront-porch = <3>;
+-				hsync-len = <80>;
+-				vsync-len = <10>;
++			timing0: 1920x1080 {
++				clock-frequency = <72000000>;
++				hactive = <1920>;
++				vactive = <1080>;
++				hback-porch = <45>;
++				hfront-porch = <45>;
++				vback-porch = <18>;
++				vfront-porch = <18>;
++				hsync-len = <10>;
++				vsync-len = <4>;
+ 			};
+ 		};
+ 	};
+@@ -700,20 +702,20 @@
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+ 		primary;
+-		status = "disabled";
++		status = "okay";
+ 
+ 		display-timings {
+ 			native-mode = <&timing1>;
+-			timing1: hj070na1 {
+-				clock-frequency = <71100000>;
+-				hactive = <1280>;
+-				vactive = <800>;
+-				hback-porch = <40>;
+-				hfront-porch = <40>;
+-				vback-porch = <10>;
+-				vfront-porch = <3>;
+-				hsync-len = <80>;
+-				vsync-len = <10>;
++			timing1: 1920x1080 {
++				clock-frequency = <72000000>;
++				hactive = <1920>;
++				vactive = <1080>;
++				hback-porch = <45>;
++				hfront-porch = <45>;
++				vback-porch = <18>;
++				vfront-porch = <18>;
++				hsync-len = <10>;
++				vsync-len = <4>;
+ 			};
+ 		};
+ 	};
