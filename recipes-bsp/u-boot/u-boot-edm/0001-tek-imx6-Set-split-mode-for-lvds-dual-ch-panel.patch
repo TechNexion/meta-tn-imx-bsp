@@ -1,0 +1,75 @@
+From d36f748d7234624f4212a9f7d84ca7944719e16a Mon Sep 17 00:00:00 2001
+From: Po Cheng <po.cheng@technexion.com>
+Date: Wed, 11 Sep 2019 15:47:13 +0800
+Subject: [PATCH] tek-imx6: Set split mode for lvds dual ch panel
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+ board/technexion/tek-imx6/tek-imx6.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/board/technexion/tek-imx6/tek-imx6.c b/board/technexion/tek-imx6/tek-imx6.c
+index cde4828..fcedf93 100644
+--- a/board/technexion/tek-imx6/tek-imx6.c
++++ b/board/technexion/tek-imx6/tek-imx6.c
+@@ -494,8 +494,9 @@ static int detect_usb(struct display_info_t const *dev)
+ 			if(strncmp(udev->prod, touch_matches[dev->addr].prod, strlen(touch_matches[dev->addr].prod)) == 0)
+ 				return 1;
+ 	}
+-
+ #endif /* !define(CONFIG_DM_USB) */
++	if (!strcmp(dev->mode.name, "LVDS_DUAL_1920x1080"))
++		return 1;
+ 	return 0;
+ }
+ 
+@@ -582,6 +583,23 @@ struct display_info_t const displays[] = {{
+ 		.upper_margin   = 17,
+ 		.lower_margin   = 17,
+ 		.hsync_len      = 20,
++} }, {
++	.bus	= 1,
++	.addr	= 1,
++	.pixfmt = IPU_PIX_FMT_RGB24,
++	.detect = detect_usb,
++	.enable = enable_lvds,
++	.mode	= {
++		.name           = "LVDS_DUAL_1920x1080",
++		.refresh        = 60,
++		.xres           = 1080,
++		.yres           = 960,
++		.pixclock       = 14124,
++		.left_margin    = 45,
++		.right_margin   = 45,
++		.upper_margin   = 18,
++		.lower_margin   = 18,
++		.hsync_len      = 10,
+ 		.vsync_len      = 4,
+ 		.sync           = FB_SYNC_EXT,
+ 		.vmode          = FB_VMODE_NONINTERLACED
+@@ -667,12 +685,14 @@ static void setup_display(void)
+ 		| IOMUXC_GPR2_DATA_WIDTH_CH1_24BIT
+ 		| IOMUXC_GPR2_BIT_MAPPING_CH0_SPWG
+ 		| IOMUXC_GPR2_DATA_WIDTH_CH0_24BIT
++		| IOMUXC_GPR2_SPLIT_MODE_EN_MASK
+ 		| IOMUXC_GPR2_LVDS_CH1_MODE_ENABLED_DI0
+ 		| IOMUXC_GPR2_LVDS_CH0_MODE_ENABLED_DI0;
+ 	writel(reg, &iomux->gpr[2]);
+ 	reg = readl(&iomux->gpr[3]);
+ 
+ 	reg = (reg & ~(IOMUXC_GPR3_LVDS0_MUX_CTL_MASK
++		| IOMUXC_GPR3_LVDS1_MUX_CTL_MASK
+ 		| IOMUXC_GPR3_HDMI_MUX_CTL_MASK))
+ 		| (IOMUXC_GPR3_MUX_SRC_IPU1_DI0
+ 		<< IOMUXC_GPR3_LVDS0_MUX_CTL_OFFSET);
+@@ -691,6 +711,7 @@ int board_eth_init(bd_t *bis)
+ int board_early_init_f(void)
+ {
+ 	setup_iomux_uart();
++
+ #if defined(CONFIG_VIDEO_IPUV3)
+ 	setup_display();
+ #endif
+-- 
+2.7.4
+
