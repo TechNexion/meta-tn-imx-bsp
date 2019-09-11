@@ -16,6 +16,8 @@ SRCBRANCH = "tn-imx_v2017.03_4.9.88_2.0.0_ga-test"
 SRC_URI = "${UBOOT_SRC};branch=${SRCBRANCH}"
 SRCREV = "d814ef7cc1e9474d660bbe0f2497282209084e2b"
 
+SRC_URI_append_lvds2ch = " file://0001-tek-imx6-Set-split-mode-for-lvds-dual-ch-panel.patch"
+
 S = "${WORKDIR}/git"
 
 inherit fsl-u-boot-localversion
