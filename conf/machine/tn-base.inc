@@ -94,7 +94,7 @@ LICENSE_FLAGS_WHITELIST += "commercial_qca commercial_brcm"
 
 # wic (sdcard) image
 WKS_FILE = "tn-spl-bootpart-rootfs.wks.in"
-WKS_FILE_mx8 = "tn-imx8-uboot-bootpart-rootfs.wks.in"
+WKS_FILE_mx8 = "tn-imx8-imxboot-bootpart-rootfs.wks.in"
 WKS_FILE_DEPENDS += "u-boot-edm"
 WKS_FILE_DEPENDS_mx8 += "imx-boot"
 IMAGE_BOOT_FILES_append_uenv = " ${UENV_FILENAME}"
