@@ -21,6 +21,7 @@ RDEPENDS_${PN} = " \
     rsync \
     picocom \
     dtc \
+    voicehat-test \
     libgpiod \
 "
 
