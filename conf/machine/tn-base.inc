@@ -19,7 +19,8 @@
 # Extra MACHINEOVERRIDES for External Kernel Firmwares/Modules
 MACHINEOVERRIDES .= ":tn"
 MACHINEOVERRIDES .= "${@'' if d.getVar('RF_FIRMWARES', True) is None else ':%s' % ':'.join([fw.lower() for fw in d.getVar('RF_FIRMWARES', True).split(' ') if fw])}"
-MACHINEOVERRIDES .= "${@'' if d.getVar('SOUNDCARD', True) is None else ':%s' % d.getVar('SOUNDCARD', True).lower()}"
+MACHINEOVERRIDES .= "${@'' if (d.getVar('SOUNDCARD', True) is None or len(d.getVar('SOUNDCARD', True)) == 0) else ':%s' % d.getVar('SOUNDCARD', True).lower()}"
+MACHINEOVERRIDES .= "${@'' if (d.getVar('NFC', True) is None or len(d.getVar('NFC', True)) == 0) else ':%s' % d.getVar('NFC', True).lower()}"
 
 #
 # Kernel Specifics
@@ -72,7 +73,9 @@ MACHINE_FEATURES_append = " pci wifi bluetooth touchscreen"
 MACHINE_FEATURES_remove_mx8 = "touchscreen"
 MACHINE_EXTRA_RRECOMMENDS_append = " broadcom-bluetooth"
 MACHINE_EXTRA_RRECOMMENDS_remove_mx8 = "broadcom-bluetooth"
-IMAGE_INSTALL_append = " packagegroup-tn-tools packagegroup-tn-wlan packagegroup-tn-voicehat"
+IMAGE_INSTALL_append = " packagegroup-tn-tools packagegroup-tn-wlan"
+IMAGE_INSTALL_append_voicehat = " packagegroup-tn-voicehat"
+IMAGE_INSTALL_append_nfc = " packagegroup-tn-nfc"
 IMAGE_FSTYPES_append = " ext4 sdcard.xz"
 IMAGE_CLASSES_append = " image_types_tn"
 IMAGE_CLASSES_remove_mx8 = "image_types_tn"
