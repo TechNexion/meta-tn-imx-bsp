@@ -89,7 +89,6 @@ WKS_FILE = "tn-spl-bootpart-rootfs.wks.in"
 WKS_FILE_mx8 = "tn-imx8-uboot-bootpart-rootfs.wks.in"
 WKS_FILE_DEPENDS += "u-boot-edm"
 WKS_FILE_DEPENDS_mx8 += "imx-boot"
-WIC_CREATE_EXTRA_ARGS = "--no-fstab-update"
 IMAGE_BOOT_FILES_append_uenv = " ${UENV_FILENAME}"
 IMAGE_BOOT_FILES_append_bootscr = " ${UENV_SCRNAME}"
 
