@@ -21,7 +21,8 @@ RDEPENDS_${PN} = " \
     rsync \
     picocom \
     dtc \
-    voicehat-test \
     libgpiod \
 "
 
+RDEPENDS_${PN}_append_mx7 = " voicehat-test"
+RDEPENDS_${PN}_append_mx8 = " voicehat-test"
