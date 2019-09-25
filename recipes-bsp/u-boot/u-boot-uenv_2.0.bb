@@ -114,6 +114,9 @@ python do_setuenv() {
                 f.write("displayinfo={}\n".format(displayinfo))
             if wifi_module is not None:
                 f.write("wifi_module={}\n".format(wifi_module))
+            f.write("mmcargs=setenv bootargs console=${console},${baudrate} root=${mmcroot} ${displayinfo}\n")
+            f.write("bootcmd_mmc=run loadimage;run mmcboot;\n")
+            f.write("uenvcmd=run bootcmd_mmc\n")
 
     # Conjure up appropriate uEnv.txt settings
     gen_uenvtxt(d)
