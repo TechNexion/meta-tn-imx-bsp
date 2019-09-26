@@ -105,7 +105,7 @@ python do_setuenv() {
         print("machine:{} board:{} display:{}".format(machine, board, display))
         baseboard = parse_baseboard(machine, d.getVar("BASE_BOARD"))
         displayinfo = parse_display(machine, d.getVar("BASE_BOARD"), d.getVar("DISPLAY_INFO"))
-        wifi_module = parse_radio(d.getVar("WIFI_MODULES"))
+        wifi_module = parse_radio(d.getVar("RF_FIRMWARES"))
         print("displayinfo:{} wifi_module:{}".format(displayinfo, wifi_module))
         with open(envfile, 'w') as f:
             if baseboard is not None:
