@@ -123,6 +123,11 @@ if [ -d ../sources/meta-freescale ]; then
     sed -e "s,\$.BSPDIR./sources/meta-fsl-arm-extra\s,,g" -i conf/bblayers.conf
 fi
 
+# Add BB_GIT_SHALLOW options for fetching git repositories
+echo "BB_GIT_SHALLOW ?= \"1\"" >> $BUILD_DIR/conf/local.conf
+echo "BB_GIT_SHALLOW_DEPTH ?= \"1\"" >> $BUILD_DIR/conf/local.conf
+echo "BB_GIT_SHALLOW_DEPTH_doc = \"\"" >> $BUILD_DIR/conf/local.conf
+
 # Pass in the extra variables for uEnv.txt recipe
 if [ -n "$TOKEN" ]; then
     export PA_TOKEN=$TOKEN
