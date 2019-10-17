@@ -59,8 +59,8 @@ DDR_FIRMWARE_NAME_mx8 = "lpddr4_pmu_train_1d_imem.bin lpddr4_pmu_train_1d_dmem.b
 #
 # IMX-BOOT specifics (NXP u-boot packaged binary, i.e. a.k.a flash.bin)
 #
-IMXBOOT_TARGETS_mx8 = "flash_evk"
-IMXBOOT_TARGETS_mx8mq += "flash_evk_no_hdmi"
+IMXBOOT_TARGETS = "flash_evk"
+IMXBOOT_TARGETS_mx8mm = " flash_evk_no_hdmi"
 IMAGE_BOOTLOADER_mx8 = "imx-boot"
 IMX_BOOT_SEEK = "1"
 IMX_BOOT_SEEK_mx8 = "33"
