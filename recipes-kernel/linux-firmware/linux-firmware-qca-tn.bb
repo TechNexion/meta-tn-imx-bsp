@@ -14,6 +14,9 @@ SRC_URI += " \
     file://utf30.bin \
     file://wlan/cfg.dat \
     file://wlan/qcom_cfg.ini \
+    file://qca/notice.txt \
+    file://qca/nvm_tlv_3.2.bin \
+    file://qca/rampatch_tlv_3.2.tlv \
 "
 
 S = "${WORKDIR}"
