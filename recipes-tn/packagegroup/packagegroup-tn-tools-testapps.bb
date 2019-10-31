@@ -23,6 +23,7 @@ RDEPENDS_${PN} = " \
     fbset \
     i2c-tools \
     iproute2 \
+    tcpdump \
     memtester \
     python-subprocess \
     python-datetime \
