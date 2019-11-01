@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://Licenses/gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a
 UBOOT_SRC ?= "git://github.com/TechNexion/u-boot-edm.git"
 SRCBRANCH = "tn-imx_v2017.03_4.9.88_2.0.0_ga-test"
 SRC_URI = "${UBOOT_SRC};branch=${SRCBRANCH}"
-SRCREV = "d814ef7cc1e9474d660bbe0f2497282209084e2b"
+SRCREV = "d6de3b2aabe07c229dbe4c688b10f7d1e6946135"
 
 SRC_URI_append_lvds2ch = " file://0001-tek-imx6-Set-split-mode-for-lvds-dual-ch-panel.patch"
 
