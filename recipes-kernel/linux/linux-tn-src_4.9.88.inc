@@ -11,6 +11,6 @@ LOCALVERSION = "-${SRCREV}"
 KERNEL_SRC = "git://github.com/TechNexion/linux.git"
 
 SRC_URI = "${KERNEL_SRC};branch=${SRCBRANCH}"
-SRCREV = "55c2b4068f1e91b9c5c466f570c329f45433daf9"
+SRCREV = "bf1d894d6fddfce855256f833b596606db13e704"
 
 S = "${WORKDIR}/git"
