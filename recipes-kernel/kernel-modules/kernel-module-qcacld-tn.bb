@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${S}/CORE/HDD/src/wlan_hdd_main.c;beginline=1;endline
 
 inherit module
 
-SRCREV = "47fe5cdb97890c1b5a31faa953b799668d3f1370"
+SRCREV = "0df376ada12e32e5fffa6455023fae8d8a850bc8"
 
 SRC_URI = "git://github.com/TechNexion/qcacld-2.0.git;branch=${SRCBRANCH} \
 "
