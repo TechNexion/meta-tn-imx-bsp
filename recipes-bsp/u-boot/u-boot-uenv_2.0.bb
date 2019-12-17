@@ -76,10 +76,12 @@ python do_setuenv() {
                               "pico-imx8mq": ("mipi5", "hdmi", "custom"), \
                               "pico-imx8mm": ("mipi5", "custom"), \
                               "flex-imx8mm": ("mipi5", "custom"), \
-                              "edm-imx8mq": ("mipi5", "hdmi", "custom")}
+                              "edm-imx8mq": ("mipi5", "hdmi", "custom"), \
+                              "axon-imx6": ("hdmi", "custom")}
         default_displays = {"tc0700": "lvds7", \
                             "tc1000": "lvds10", \
-                            "pico-imx6": "hdmi720p"}
+                            "pico-imx6": "hdmi720p", \
+                            "axon-imx6": "hdmi720p"}
         if mach in supported_displays.keys():
             if disp in supported_displays[mach]:
                 return gen_displayinfo(disp)
