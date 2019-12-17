@@ -11,7 +11,7 @@ THERMAL_IMX_TEST_SRC = "git://github.com/TechNexion-customization/thermal_imx_te
 SRC_URI = "${THERMAL_IMX_TEST_SRC};branch=${SRCBRANCH} \
            file://thermal-imx-test.sh \
 "
-SRCREV = "d688aa5493d9a9724d5313f016510edc59e76eea"
+SRCREV = "61a795b52d4ab5b184fd0b00871bef94fa118bd2"
 
 S = "${WORKDIR}/git"
 
@@ -20,13 +20,11 @@ do_install() {
     install -d "${D}/opt/${PN}"
     install -m 755 *.sh "${D}/opt/${PN}"
 
-    install -d ${D}${sysconfdir}/profile.d/
-    install -m 0755 ${WORKDIR}/thermal-imx-test.sh ${D}${sysconfdir}/profile.d/
+    #install -d ${D}${sysconfdir}/profile.d/
+    #install -m 0755 ${WORKDIR}/thermal-imx-test.sh ${D}${sysconfdir}/profile.d/
 }
 
 FILES_${PN} += "/opt/${PN}"
-RDEPENDS_${PN} = "bash iperf3 stress-ng glmark2 memtester rsync"
+RDEPENDS_${PN} = "bash iperf3 stress-ng glmark2 memtester cpulimit rsync"
 
 FILES_${PN}-dbg += "/opt/${PN}/.debug"
-
-COMPATIBLE_MACHINE = "(mx8)"
