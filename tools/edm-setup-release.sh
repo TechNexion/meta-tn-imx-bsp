@@ -144,7 +144,7 @@ else
     if [ "$WIFI_FIRMWARE" == "all" ]; then
         if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
             echo "WARNING - imx8mq/imx8mm SOM only supports qca wireless module, so load qca firmware"
-            export RF_FIRMWARES="qca"
+            export RF_FIRMWARES="qca ath-pci"
         elif [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ]; then
             export RF_FIRMWARES="qca brcm ath-pci"
         else
