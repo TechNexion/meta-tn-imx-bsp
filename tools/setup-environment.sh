@@ -64,11 +64,11 @@ if [ -z "$DISTRO" ]; then
   return 1
 fi
 
-TNCONFIGS=$(ls $CWD/sources/meta-edm-bsp-release/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
+TNCONFIGS=$(ls $CWD/sources/meta-tn-imx-bsp/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
 FSLCONFIGS=$(ls $CWD/sources/meta-fsl-bsp-release/imx/meta-bsp/conf/machine/*.conf $CWD/sources/meta-freescale*/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
 # Set up the basic yocto environment by sourcing fsl community's setup-environment bash script with/without TEMPLATECONF
 if [ $TNCONFIGS -gt 0 ] ; then
-  TEMPLATECONF="$CWD/sources/meta-edm-bsp-release/conf" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
+  TEMPLATECONF="$CWD/sources/meta-tn-imx-bsp/conf" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
 else
   MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
 fi
@@ -79,10 +79,10 @@ fi
 # So work around by appending additional layers
 #
 if [ $TNCONFIGS -gt 0 ] ; then
-  if ! grep -Fq "meta-edm-bsp-release" $PWD/conf/bblayers.conf; then
+  if ! grep -Fq "meta-tn-imx-bsp" $PWD/conf/bblayers.conf; then
     echo "" >> $PWD/conf/bblayers.conf
     echo "# i.MX Yocto Project Release TechNexion Layers" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-edm-bsp-release \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-imx-bsp \"" >> $PWD/conf/bblayers.conf
   fi
 fi
 if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
