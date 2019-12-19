@@ -13,9 +13,9 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://Licenses/gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 PR = "r0"
-SRCSERVER = "git://github.com/TechNexion/u-boot-edm.git"
+SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git"
 SRCOPTIONS = ""
-SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-wip"
+SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
 SRCREV = "5823e9fa01d69b1b3c22e47ddd8192d2a7fa53ec"
 
