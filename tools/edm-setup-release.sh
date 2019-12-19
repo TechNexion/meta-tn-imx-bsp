@@ -21,7 +21,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 CWD=$(pwd)
-PROGNAME="$CWD/sources/meta-edm-bsp-release/tools/setup-environment.sh"
+PROGNAME="$CWD/sources/meta-tn-imx-bsp/tools/setup-environment.sh"
 exit_message ()
 {
     echo "To return to this build environment later please run:"
