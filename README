@@ -1,6 +1,6 @@
-i.MX Linux Yocto Project BSP 4.14.78-1.0.0_ga Release
+TechNexion i.MX Linux Yocto Project BSP 4.14.98-2.0.0_ga Release
 =====================================================
 
 For more detailed information, please refer to the following link:
 
-https://github.com/TechNexion/edm-yocto-bsp/tree/sumo_4.14.y_GA
+https://github.com/TechNexion/tn-imx-yocto-manifest/tree/sumo_4.14.y_GA-stable
