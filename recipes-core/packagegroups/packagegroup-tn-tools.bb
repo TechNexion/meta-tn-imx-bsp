@@ -28,7 +28,7 @@ RDEPENDS_${PN} = " \
     libgpiod \
     stress-ng \
     cpulimit \
-    thermal-imx-test \
+    ${@bb.utils.contains('DISTRO', 'b2qt', '', 'thermal-imx-test', d)} \
 "
 
 RDEPENDS_${PN}_append_mx7 = " voicehat-test"
