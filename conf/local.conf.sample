@@ -250,4 +250,4 @@ BASE_BOARD ?= "pi"
 DISPLAY_INFO ?= "lcd"
 RF_FIRMWARES ?= "qca ath-pci"
 SOUNDCARD ?= "voicehat"
-
+PA_TOKEN ?= "SbtQ_mC4fvJRA88_9jB7"
