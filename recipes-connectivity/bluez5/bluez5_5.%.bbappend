@@ -14,6 +14,7 @@ inherit distro_features_check
 REQUIRED_DISTRO_FEATURES = "systemd"
 
 do_install_append() {
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'fcc', 'false', 'true', d)}; then
         if [ ! -z "${SERIAL_BLUETOOTH}" ] ; then
                 default_baudrate=`echo "${SERIAL_BLUETOOTH}" | sed 's/\;.*//'`
                 install -d ${D}${systemd_unitdir}/system/
@@ -39,4 +40,5 @@ do_install_append() {
                         fi
                 done
         fi
+    fi
 }

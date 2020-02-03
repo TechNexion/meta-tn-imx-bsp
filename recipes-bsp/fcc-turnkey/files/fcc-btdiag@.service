@@ -1,0 +1,16 @@
+[Unit]
+Description=Btdiag Daemon on %I
+ConditionPathIsDirectory=/sys/bus/platform/drivers/imx-sdma
+BindsTo=dev-%i.device
+After=dev-%i.device
+Before=bluetooth.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/usr/sbin/Btdiag UDT=yes PORT=2391 IOType=SERIAL QDARTIOType=ethernet BT-DEVICE=/dev/%I BT-BAUDRATE=115200
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
