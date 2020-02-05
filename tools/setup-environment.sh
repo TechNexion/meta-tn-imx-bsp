@@ -101,12 +101,7 @@ if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
     echo "" >> $PWD/conf/bblayers.conf
     echo "# i.MX Container OS and OTA layers" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-intel-iot-security/meta-security-smack \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-intel-iot-security/meta-security-framework \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded-core/meta  \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-updater \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-updater-qemux86-64 \"" >> $PWD/conf/bblayers.conf
     
 
   fi
