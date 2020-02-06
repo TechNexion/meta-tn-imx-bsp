@@ -100,6 +100,11 @@ if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
   fi
+  if ! grep -Fq "meta-mender" $PWD/conf/bblayers.conf; then
+    echo "" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-mender/meta-mender-core \"" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-mender-community/meta-mender-technexion \"" >> $PWD/conf/bblayers.conf
+  fi
   if ! grep -Fq "meta-nxp-nfc" $PWD/conf/bblayers.conf; then
     echo "" >> $PWD/conf/bblayers.conf
     echo "# NXP nfc release layer" >> $PWD/conf/bblayers.conf

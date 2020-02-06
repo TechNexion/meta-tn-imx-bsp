@@ -18,6 +18,9 @@ BBLAYERS ?= " \
   \
   ##OEROOT##/../meta-tn-imx-bsp \
   \
+  ##OEROOT##/../meta-mender/meta-mender-core \
+  ##OEROOT##/../meta-mender-community/meta-mender-technexion/ \
+  \
   ##OEROOT##/../meta-fsl-bsp-release/imx/meta-bsp \
   ##OEROOT##/../meta-fsl-bsp-release/imx/meta-sdk \
   ##OEROOT##/../meta-browser \
