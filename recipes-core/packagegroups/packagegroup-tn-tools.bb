@@ -29,7 +29,7 @@ RDEPENDS_${PN} = " \
     stress-ng \
     cpulimit \
     ${@bb.utils.contains('DISTRO', 'b2qt', '', 'thermal-imx-test', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'virtualization', 'sudo glmark2', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'virtualization', 'sudo glmark2 net-tools', '', d)} \
 "
 
 RDEPENDS_${PN}_append_mx7 = " voicehat-test"
