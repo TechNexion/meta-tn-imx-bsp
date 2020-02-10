@@ -17,19 +17,21 @@
 ############################################################################
 
 # Extra MACHINEOVERRIDES for External Kernel Firmwares/Modules
-MACHINEOVERRIDES .= ":tn"
-MACHINEOVERRIDES .= "${@'' if d.getVar('RF_FIRMWARES', True) is None else ':%s' % ':'.join([fw.lower() for fw in d.getVar('RF_FIRMWARES', True).split(' ') if fw])}"
-MACHINEOVERRIDES .= "${@'' if (d.getVar('SOUNDCARD', True) is None or len(d.getVar('SOUNDCARD', True)) == 0) else ':%s' % d.getVar('SOUNDCARD', True).lower()}"
-MACHINEOVERRIDES .= "${@'' if (d.getVar('NFC', True) is None or len(d.getVar('NFC', True)) == 0) else ':%s' % d.getVar('NFC', True).lower()}"
+OVERRIDES_append = ":tn"
+OVERRIDES_append = "${@'' if (d.getVar('RF_FIRMWARES', True) is None or len(d.getVar('RF_FIRMWARES', True)) == 0) else ':%s' % ':'.join([fw.lower() for fw in d.getVar('RF_FIRMWARES', True).split(' ') if fw])}"
+OVERRIDES_append = "${@'' if (d.getVar('SOUNDCARD', True) is None or len(d.getVar('SOUNDCARD', True)) == 0) else ':%s' % d.getVar('SOUNDCARD', True).lower()}"
+OVERRIDES_append = "${@'' if (d.getVar('NFC', True) is None or len(d.getVar('NFC', True)) == 0) else ':%s' % d.getVar('NFC', True).lower()}"
 
 #
 # Kernel Specifics
 #
+PREFERRED_PROVIDER_kernel_tn = "linux-tn-imx"
 PREFERRED_PROVIDER_virtual/kernel_tn = "linux-tn-imx"
 
 #
 # Bootloader Specifics
 #
+PREFERRED_PROVIDER_u-boot_tn = "u-boot-edm"
 PREFERRED_PROVIDER_virtual/bootloader_tn = "u-boot-edm"
 UBOOT_CONFIG_mx8 ??= "sd"
 SPL_BINARY = "SPL"
