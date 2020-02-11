@@ -8,6 +8,6 @@ LIC_FILES_CHKSUM = "\
 
 require axonfabric-firmware.inc
 
-SRCBRANCH = "0.1.35"
+SRCBRANCH = "0.2.01"
 
 COMPATIBLE_MACHINE = "(mx6|mx8)"
