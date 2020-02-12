@@ -49,6 +49,8 @@ QT5_IMAGE_INSTALL_imxgpu3d = " \
     gstreamer1.0-plugins-good-qt"
 
 CORE_IMAGE_EXTRA_INSTALL += " \
+    packagegroup-fsl-gstreamer1.0 \
+    packagegroup-fsl-gstreamer1.0-full \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'weston-init', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', 'weston-xwayland xterm', '', d)} \
 "
