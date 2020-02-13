@@ -29,7 +29,7 @@ RDEPENDS_${PN} = " \
     stress-ng \
     cpulimit \
     thermal-imx-test \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'virtualization', 'sudo glmark2 net-tools opencv packagegroup-core-ssh-openssh', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'virtualization', 'sudo glmark2 net-tools opencv packagegroup-core-ssh-openssh wpa-supplicant wireless-tools bluez5 firmware-imx-sdma', '', d)} \
 "
 
 RDEPENDS_${PN}_append_mx7 = " voicehat-test"
