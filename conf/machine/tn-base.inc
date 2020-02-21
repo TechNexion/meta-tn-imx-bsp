@@ -42,7 +42,9 @@ UBOOT_MAKE_TARGET = ""
 # UBOOT_SEEK is for dd u-boot.imx to the raw sectors,
 # and it should be specified and the same in u-boot c-codes.
 UBOOT_SEEK = "69"
-BOOT_SPACE_mx8 = "65536"
+BOOT_SPACE_mx6 = "16384"
+BOOT_SPACE_mx7 = "16384"
+BOOT_SPACE_mx8 = "32768"
 LOADADDR_mx8 = ""
 
 #
