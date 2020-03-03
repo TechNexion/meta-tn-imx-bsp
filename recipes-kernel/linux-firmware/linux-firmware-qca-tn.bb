@@ -28,7 +28,7 @@ SRC_URI += " \
 S = "${WORKDIR}"
 
 # Gitlab Personal Access Token: e.g. SbtQ_mC4fvJRA88_9jB7
-MACHINEOVERRIDES .= "${@'' if (d.getVar('PA_TOKEN', True) is None or len(d.getVar('PA_TOKEN', True)) == 0) else ':token'}"
+OVERRIDES_append = "${@'' if (d.getVar('PA_TOKEN', True) is None or len(d.getVar('PA_TOKEN', True)) == 0) else ':token'}"
 TOKEN = "${@'' if (d.getVar('PA_TOKEN', True) is None or len(d.getVar('PA_TOKEN', True)) == 0) else '%s' % d.getVar('PA_TOKEN', True)}"
 SRCSERVER_token = "git://gitlab.com/technexion-imx/qca_firmware.git"
 SRCOPTION_token = ";protocol=https;user=oauth2:${TOKEN}"
