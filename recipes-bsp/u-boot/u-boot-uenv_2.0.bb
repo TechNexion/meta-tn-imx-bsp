@@ -97,9 +97,14 @@ python do_setuenv() {
     def parse_radio(radios):
         supported_radios = ("qca", "brcm", "ath-pci")
         radio_list = radios.split(" ") if radios is not None else None
-        print("radio_list: {}".format(radio_list))
+        bb.note("radio_list: {}".format(radio_list))
         if radio_list is not None and radio_list[0] in supported_radios:
             return radio_list[0]
+        return None
+
+    def parse_uenvcmd(mach):
+        if mach in ("pico-imx6", "edm-imx6"):
+            return "if test -n ${som} && test ${som} = imx6solo; then setenv som imx6dl; fi; "
         return None
 
     def gen_uenvtxt(d):
@@ -111,12 +116,12 @@ python do_setuenv() {
             bb.warn("Generating uEnv.txt requires MACHINE variable")
         if board is None:
             bb.warn("Generating uEnv.txt requires BASE_BOARD variable")
-        print("Generating uEnv.txt with machine:{} board:{} display:{}".format(machine, board, display))
+        bb.note("Generating uEnv.txt with machine:{} board:{} display:{}".format(machine, board, display))
         baseboard = parse_baseboard(machine, board)
         displayinfo = parse_display(machine, board, display)
         wifi_module = parse_radio(d.getVar("RF_FIRMWARES"))
-        print("Generating uEnv.txt parsed results baseboard:{} displayinfo:{} wifi_module:{}".format(baseboard, displayinfo, wifi_module))
-        with open(envfile, 'w') as f:
+        uenv_cmd = parse_uenvcmd(machine)
+        with open(envfile, 'w+') as f:
             if baseboard is not None:
                 f.write("baseboard={}\n".format(baseboard))
             if displayinfo is not None:
@@ -125,7 +130,9 @@ python do_setuenv() {
                 f.write("wifi_module={}\n".format(wifi_module))
             f.write("mmcargs=setenv bootargs console=${console},${baudrate} root=${mmcroot} ${displayinfo}\n")
             f.write("bootcmd_mmc=run loadimage;run mmcboot;\n")
-            f.write("uenvcmd=run bootcmd_mmc\n")
+            f.write("uenvcmd={}run bootcmd_mmc;\n".format(uenv_cmd if uenv_cmd is not None else ""))
+            f.seek(0, 0)
+            bb.note("Generated uEnv.txt\n{}".format(f.read()))
 
     # Conjure up appropriate uEnv.txt settings
     gen_uenvtxt(d)
