@@ -70,8 +70,10 @@ python do_setuenv() {
 
     def parse_display(mach, bboard, disp):
         supported_displays = {"pico-imx6": ("lcd", "lvds7", "lvds10", "lvds15", \
-                                            "hdmi720p", "hdmi1080p", "lcd", \
+                                            "hdmi", "hdmi720p", "hdmi1080p", \
                                             "lvds7_hdmi720p", "custom"), \
+                              "edm-imx6": ("lcd", "lvds7", "hdmi", "hdmi720p", \
+                                           "lvds7_hdmi720p", "custom"), \
                               "pico-imx7": ("lcd", "custom"), \
                               "pico-imx8mq": ("mipi5", "hdmi", "custom"), \
                               "pico-imx8mm": ("mipi5", "custom"), \
@@ -81,6 +83,7 @@ python do_setuenv() {
         default_displays = {"tc0700": "lvds7", \
                             "tc1000": "lvds10", \
                             "pico-imx6": "hdmi720p", \
+                            "edm-imx6": "hdmi720p", \
                             "axon-imx6": "hdmi720p"}
         if mach in supported_displays.keys():
             if disp in supported_displays[mach]:
