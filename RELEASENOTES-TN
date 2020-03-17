@@ -1,0 +1,107 @@
+yocto-2.5 TechNexion BSP Release Notes
+======================================
+
+Release Name: tn-sumo_4.14.98-2.0.0_GA
+Release Revision: 20191231.1
+
+New Features
+============
+
+IMX6:
+-----
+
+* New supported boards: edm
+* New supported boards: axon
+
+IMX7:
+-----
+
+* New supported boards: edm
+* New supported board: tep
+
+IMX8:
+-----
+
+* Add support for M4
+* New supported boards: xore
+
+TechNexion Test Tool Packages:
+-------------------------------
+
+* Add additional software test tools to thermal-imx-test cpulimit, dnf, memtester, iperf3, stress-ng
+* Add voicehat test
+* Add Technexion Test Image Recipe
+
+Enhancements
+============
+
+* Add NFC packagegroup to enable nxp-nfc packages
+* Add WIC image support for TechNexion sdcard image
+* Tidy up machine Configuration files - Separate common machine configurations to tn-base.inc file
+
+Known Issues
+============
+
+* Build Boot2qt using this meta-layer will fail on building glmark2 package of packagegroup-tn-tools recipe.
+* NFC demo application is not installed correctly in the NFC software package.
+
+PICO-IMX8MQ-PI:
+-------
+* BUG#168: Touch panel is not accurate, mouse pointer offsets at a distance proportional to touch displacements
+
+EDM-IMX8MQ-WIZARD:
+------------------
+* BUG#166: WM8960 audio codec does not record
+* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+* BUG#170: Wifi AP Mode failed and disconnected shortly after successful connection
+
+EDM-IMX6P-FAIRY:
+----------------
+* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+
+EDM-IMX6dl/solo-TOUCAN700:
+--------------------------
+* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+* BUG#173: irregular display on TOUCH 0700 panel from display configurations settings in bootarg
+
+EDM-IMX6P-TOUCAN1000:
+---------------------
+* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+
+EDM-IMX6P-GNOME:
+----------------
+* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+
+PICO-IMX7D-NYMPH:
+-----------------
+* BUG#177: No desktop gui interface, command line only
+
+PICO-IMX7D-PI:
+--------------
+* BUG#177: No desktop gui interface, command line only
+
+EDM-IMX7D-GNOME:
+----------------
+* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+* BUG#177: No desktop gui interface, command line only
+
+Hardware Limitation
+===================
+
+PICO-IMX8MQ-PI:
+-------
+* BUG#167: MIPI CSI Camera2 and Voicehat does not work together (CSI_nRST pin conflicts with KEY_NEXT button on Voicehat)
+
+EDM-IMX6P-FAIRY:
+* BUG#171: LVDS touch panel is not operational (old resistive touch panel no longer works)
+
+Fixes
+=====
+
+* update qcacld firmwares
+* imx-boot: replace u-boot dtb name in soc.mak instead of passing to make
+* Rework setup scripts for passing additional variables to yocto build environment
+* Introduce additional MACHINEOVERRIDES from environment variables to build different recipes/packagegroups
+* Rework image_type_fsl_tn.bbclass to remove inheritance from image-types-fsl.bbclass and build our own yocto sdcard image
