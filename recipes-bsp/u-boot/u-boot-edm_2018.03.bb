@@ -7,6 +7,7 @@ inherit pythonnative
 
 PROVIDES += "u-boot"
 DEPENDS_append = " python dtc-native"
+RDEPENDS_${PN}_append_uenv = " u-boot-uenv"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://Licenses/gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
@@ -16,7 +17,7 @@ SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git"
 SRCOPTIONS = ""
 SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-stable"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "efae791ac2a9ee275b41fa501256c1873a365f39"
+SRCREV = "5823e9fa01d69b1b3c22e47ddd8192d2a7fa53ec"
 
 S = "${WORKDIR}/git"
 

@@ -13,12 +13,23 @@ RDEPENDS_${PN} = " \
     openssh-sftp-server \
     libsocketcan \
     bash \
+    cpulimit \
     hostapd \
+    dnf \
     dnsmasq \
+    dtc \
     haveged \
+    memtester \
     create-ap \
     iptables \
+    iperf3 \
     rsync \
+    picocom \
     libgpiod \
+    stress-ng \
+    cpulimit \
+    thermal-imx-test \
 "
 
+RDEPENDS_${PN}_append_mx7 = " voicehat-test"
+RDEPENDS_${PN}_append_mx8 = " voicehat-test"

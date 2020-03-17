@@ -20,8 +20,8 @@ do_install() {
     install -d "${D}/opt/${PN}"
     install -m 755 *.sh "${D}/opt/${PN}"
 
-    install -d ${D}${sysconfdir}/profile.d/
-    install -m 0755 ${WORKDIR}/voicehat-test.sh ${D}${sysconfdir}/profile.d/
+#   install -d ${D}${sysconfdir}/profile.d/
+#   install -m 0755 ${WORKDIR}/voicehat-test.sh ${D}${sysconfdir}/profile.d/
 }
 
 FILES_${PN} += "/opt/${PN}"
@@ -29,4 +29,4 @@ RDEPENDS_${PN} = "bash alsa-utils evtest"
 
 FILES_${PN}-dbg += "/opt/${PN}/.debug"
 
-COMPATIBLE_MACHINE = "(mx8)"
+COMPATIBLE_MACHINE = "(mx7|mx8)"
