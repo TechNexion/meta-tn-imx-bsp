@@ -68,8 +68,14 @@ TNCONFIGS=$(ls $CWD/sources/meta-tn-imx-bsp/conf/machine/*.conf | xargs -n 1 bas
 FSLCONFIGS=$(ls $CWD/sources/meta-fsl-bsp-release/imx/meta-bsp/conf/machine/*.conf $CWD/sources/meta-freescale*/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
 # Set up the basic yocto environment by sourcing fsl community's setup-environment bash script with/without TEMPLATECONF
 if [ $TNCONFIGS -gt 0 ] ; then
+  echo "Setup TechNexion Yocto"
+  echo "    TEMPLATECONF=$CWD/sources/meta-tn-imx-bsp/conf MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY"
+  echo ""
   TEMPLATECONF="$CWD/sources/meta-tn-imx-bsp/conf" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
 else
+  echo "Setup Other Yocto"
+  echo "    MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY"
+  echo ""
   MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
 fi
 
@@ -78,19 +84,13 @@ fi
 # FSL community's base/conf/bblayer.conf
 # So work around by appending additional layers
 #
-if [ $TNCONFIGS -gt 0 ] ; then
-  if ! grep -Fq "meta-tn-imx-bsp" $PWD/conf/bblayers.conf; then
-    echo "" >> $PWD/conf/bblayers.conf
-    echo "# i.MX Yocto Project Release TechNexion Layers" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-imx-bsp \"" >> $PWD/conf/bblayers.conf
-  fi
-fi
 if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
-  if ! grep -Fq "meta-fsl-bsp-release" $PWD/conf/bblayers.conf; then
+  if [ -d ../sources/meta-fsl-bsp-release ] && [ !$(grep -Fq "meta-fsl-bsp-release" $PWD/conf/bblayers.conf) ]; then
     # copy new EULA into community so setup uses latest i.MX EULA
     cp $PWD/../sources/meta-fsl-bsp-release/imx/EULA.txt $PWD/../sources/meta-freescale/EULA
+    # add freescale bsp layers to bblayers.conf
     echo "" >> $PWD/conf/bblayers.conf
-    echo "# i.MX Yocto Project Release layers" >> $PWD/conf/bblayers.conf
+    echo "# Freescale i.MX Yocto Project Release layers" >> $PWD/conf/bblayers.conf
     hook_in_layer meta-fsl-bsp-release/imx/meta-bsp
     hook_in_layer meta-fsl-bsp-release/imx/meta-sdk
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-gnome \"" >> $PWD/conf/bblayers.conf
@@ -99,19 +99,36 @@ if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
-    echo "" >> $PWD/conf/bblayers.conf
-    echo "# i.MX Container OS and OTA layers" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
-    
-
   fi
-  if ! grep -Fq "meta-nxp-nfc" $PWD/conf/bblayers.conf; then
+fi
+if [ $TNCONFIGS -gt 0 ] ; then
+  # add technexion bsp layers to bblayers.conf
+  if [ -d ../sources/meta-tn-imx-bsp ] && [ !$(grep -Fq "meta-tn-imx-bsp" $PWD/conf/bblayers.conf) ]; then
+    echo "" >> $PWD/conf/bblayers.conf
+    echo "# Technexion i.MX Yocto Project Release Layers" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-imx-bsp \"" >> $PWD/conf/bblayers.conf
+  fi
+  # add technexion nfc bsp layers (from nxp) to bblayers.conf
+  if [ -d ../sources/meta-nxp-nfc ] && [ !$(grep -Fq "meta-nxp-nfc" $PWD/conf/bblayers.conf) ]; then
     echo "" >> $PWD/conf/bblayers.conf
     echo "# NXP nfc release layer" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-nxp-nfc \"" >> $PWD/conf/bblayers.conf
   fi
+  # add technexion virtualization bsp layers to bblayers.conf
+  if [ -d ../sources/meta-virtualization ] && [ !$(grep -Fq "meta-virtualization" $PWD/conf/bblayers.conf) ]; then
+    echo "" >> $PWD/conf/bblayers.conf
+    echo "# i.MX Container OS and OTA layers" >> $PWD/conf/bblayers.conf
+    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
+  fi
 fi
 
+unset CWD
+unset PROGNAME
+unset THIS_SCRIPT
+unset TNCONFIGS
+unset FSLCONFIGS
+unset MACHINE
+unset DISTRO
 unset BUILDDIRECTORY
 unset TEMPLATECONF
 unset LAYERSCONF

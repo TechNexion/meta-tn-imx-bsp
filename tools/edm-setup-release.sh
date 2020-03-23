@@ -41,6 +41,9 @@ usage()
 
 clean_up()
 {
+    unset OLD_OPTIND
+    unset OPTIND
+    unset CPU_TYPE
     unset CWD BUILD_DIR FSLDISTRO
     unset fsl_setup_help fsl_setup_error fsl_setup_flag
     unset usage clean_up
@@ -180,11 +183,6 @@ fi
 export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE RF_FIRMWARES"
 echo "Selected wifi firmwares: $RF_FIRMWARES"
 
-unset WIFI_MODULE
-unset WIFI_FIRMWARE
-unset DISPLAY
-unset BASEBOARD
-
 cd $BUILD_DIR
 clean_up
-unset FSLDISTRO
+
