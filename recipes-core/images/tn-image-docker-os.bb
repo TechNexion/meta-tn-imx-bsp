@@ -5,28 +5,36 @@ SUMMARY = "\
  A small image just capable of allowing a device to boot with\
  docker container engine.\
 "
-
 DESCRIPTION = "\
  TechNexion Docker OS Image. This image contains everything used\
  to start a docker container, e.g. arm64v8/ubuntu docker container.\
 "
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 IMAGE_INSTALL = "\
 	${QT5_IMAGE_INSTALL} \
 	${CORE_IMAGE_EXTRA_INSTALL} \
 	packagegroup-core-boot \
 	docker \
+	python3-docker-compose \
 	libvirt \
 	libvirt-python \
 	openflow \
 	kernel-modules \
+	connman \
+	tn-container-glmark2 \
 	"
 
 # Select Image Features
 IMAGE_FEATURES += " \
+    splash \
     hwcodecs \
+    ssh-server-openssh \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', '', bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11-base x11-sato', '', d), d)} \
 "
+
+IMAGE_LINGUAS = " "
 
 QT5_FONTS = "ttf-dejavu-common ttf-dejavu-sans ttf-dejavu-sans-mono ttf-dejavu-serif "
 QT5_IMAGE_INSTALL_APPS = ""
@@ -62,9 +70,10 @@ IMAGE_ROOTFS_EXTRA_SPACE_append = "${@bb.utils.contains("DISTRO_FEATURES", "syst
 WKS_FILE = "${@bb.utils.contains("DISTRO_FEATURES", "virtualization", "tn-spl-rootfs-container.wks.in", "tn-spl-bootpart-rootfs.wks.in", d)}"
 WKS_FILE_mx8 = "${@bb.utils.contains("DISTRO_FEATURES", "virtualization", "tn-imx8-imxboot-rootfs-container.wks.in", "tn-imx8-imxboot-bootpart-rootfs.wks.in", d)}"
 
-IMAGE_LINGUAS = " "
+EXTRA_USERS_PARAMS = " \
+useradd -P technexion technexion; \
+usermod -a -G sudo,users,plugdev,docker technexion; \
+"
 
-LICENSE = "MIT"
-
-inherit core-image
+inherit core-image extrausers
 inherit distro_features_check ${@bb.utils.contains('BBFILE_COLLECTIONS', 'qt5-layer', 'populate_sdk_qt5', '', d)}
