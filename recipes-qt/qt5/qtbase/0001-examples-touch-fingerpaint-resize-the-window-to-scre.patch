@@ -1,0 +1,25 @@
+From a93c069eb6832c7d94c7782fb07553ceaa322d70 Mon Sep 17 00:00:00 2001
+From: Ray Chang <ray.chang@technexion.com>
+Date: Thu, 26 Mar 2020 08:45:25 +0000
+Subject: [PATCH] examples/touch/fingerpaint: resize the window to screen size
+ and remove the title bar
+
+---
+ examples/touch/fingerpaint/mainwindow.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/examples/touch/fingerpaint/mainwindow.cpp b/examples/touch/fingerpaint/mainwindow.cpp
+index 0e45eea..310633f 100644
+--- a/examples/touch/fingerpaint/mainwindow.cpp
++++ b/examples/touch/fingerpaint/mainwindow.cpp
+@@ -63,7 +63,9 @@ MainWindow::MainWindow()
+     createMenus();
+ 
+     setWindowTitle(tr("Finger Paint"));
+-    resize(500, 500);
++    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
++    QRect rec = QApplication::desktop()->screenGeometry();
++    resize(rec.width(), rec.height());
+ }
+ //! [0]
+ 
