@@ -25,6 +25,9 @@ RDEPENDS_${PN} = " \
     iproute2 \
     tcpdump \
     memtester \
+    stress-ng \
+    hdparm \
+    glmark2 \
     python-subprocess \
     python-datetime \
     python-json \
