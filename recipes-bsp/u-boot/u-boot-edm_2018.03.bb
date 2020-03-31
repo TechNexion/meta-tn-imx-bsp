@@ -17,7 +17,7 @@ SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git"
 SRCOPTIONS = ""
 SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "becc33ae43d571f497f94588bc86ecab5cc23fbc"
+SRCREV = "b5a9b2cbb7c100650e7a4786b903ab799267c959"
 
 S = "${WORKDIR}/git"
 
