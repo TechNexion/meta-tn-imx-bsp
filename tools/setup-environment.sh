@@ -82,43 +82,76 @@ fi
 #
 # For some reason, our modified original bblayers.conf.sample are replaced by
 # FSL community's base/conf/bblayer.conf
-# So work around by appending additional layers
+# So workaround by appending additional layers
 #
+echo -e "\nTechNexion setup-environment.sh wrapper: Further modification to bblayers.conf and local.conf"
 if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
-  if [ -d ../sources/meta-fsl-bsp-release ] && [ !$(grep -Fq "meta-fsl-bsp-release" $PWD/conf/bblayers.conf) ]; then
+  if [ -d $PWD/../sources/meta-fsl-bsp-release ]; then
     # copy new EULA into community so setup uses latest i.MX EULA
     cp $PWD/../sources/meta-fsl-bsp-release/imx/EULA.txt $PWD/../sources/meta-freescale/EULA
-    # add freescale bsp layers to bblayers.conf
-    echo "" >> $PWD/conf/bblayers.conf
-    echo "# Freescale i.MX Yocto Project Release layers" >> $PWD/conf/bblayers.conf
-    hook_in_layer meta-fsl-bsp-release/imx/meta-bsp
-    hook_in_layer meta-fsl-bsp-release/imx/meta-sdk
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-gnome \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-networking \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-python \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
+    if ! grep -Fq "meta-fsl-bsp-release" $PWD/conf/bblayers.conf; then
+      # add freescale bsp layers to bblayers.conf
+      echo "" >> $PWD/conf/bblayers.conf
+      echo "# setup Freescale i.MX Yocto Project Release layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
+      hook_in_layer meta-fsl-bsp-release/imx/meta-bsp
+      hook_in_layer meta-fsl-bsp-release/imx/meta-sdk
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-gnome \"" >> $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-networking \"" >> $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-python \"" >> $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
+    fi
   fi
 fi
 if [ $TNCONFIGS -gt 0 ] ; then
   # add technexion bsp layers to bblayers.conf
-  if [ -d ../sources/meta-tn-imx-bsp ] && [ !$(grep -Fq "meta-tn-imx-bsp" $PWD/conf/bblayers.conf) ]; then
-    echo "" >> $PWD/conf/bblayers.conf
-    echo "# Technexion i.MX Yocto Project Release Layers" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-imx-bsp \"" >> $PWD/conf/bblayers.conf
+  if [ -d $PWD/../sources/meta-tn-imx-bsp ]; then
+    if ! grep -Fq "meta-tn-imx-bsp" $PWD/conf/bblayers.conf; then
+      echo "" >> $PWD/conf/bblayers.conf
+      echo "# setup Technexion i.MX Yocto Project Release Layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-imx-bsp \"" >> $PWD/conf/bblayers.conf
+    fi
   fi
   # add technexion nfc bsp layers (from nxp) to bblayers.conf
-  if [ -d ../sources/meta-nxp-nfc ] && [ !$(grep -Fq "meta-nxp-nfc" $PWD/conf/bblayers.conf) ]; then
-    echo "" >> $PWD/conf/bblayers.conf
-    echo "# NXP nfc release layer" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-nxp-nfc \"" >> $PWD/conf/bblayers.conf
+  if [ -d $PWD/../sources/meta-nxp-nfc ]; then
+    if ! grep -Fq "meta-nxp-nfc" $PWD/conf/bblayers.conf; then
+      echo "" >> $PWD/conf/bblayers.conf
+      echo "# setup NXP nfc release layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-nxp-nfc \"" >> $PWD/conf/bblayers.conf
+    fi
   fi
   # add technexion virtualization bsp layers to bblayers.conf
-  if [ -d ../sources/meta-virtualization ] && [ !$(grep -Fq "meta-virtualization" $PWD/conf/bblayers.conf) ]; then
-    echo "" >> $PWD/conf/bblayers.conf
-    echo "# i.MX Container OS and OTA layers" >> $PWD/conf/bblayers.conf
-    echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
+  if [ -d $PWD/../sources/meta-virtualization ]; then
+    # has meta-virtualization
+    if ! grep -Fq "meta-virtualization" $PWD/conf/bblayers.conf; then
+      echo "" >> $PWD/conf/bblayers.conf
+      echo "# setup i.MX Container OS and OTA layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
+    fi
+    if ! grep -Fq "BBMULTICONFIG" $PWD/conf/local.conf; then
+      mkdir -p $PWD/conf/multiconfig
+      cat > $PWD/conf/multiconfig/container.conf << EOF
+MACHINE = "tn-container"
+DISTRO = "fsl-imx-xwayland"
+DISTRO_FEATURES_append = " virtualization"
+TMPDIR = "\${TOPDIR}/tmp-container"
+TN_CONTAINER_IMAGE_TYPE ?= "tar.gz"
+EOF
+      echo "TN_CONTAINER_IMAGE_TYPE = \"tar.gz\"" >> $PWD/conf/local.conf
+      echo "BBMULTICONFIG = \"container\"" >> $PWD/conf/local.conf
+      echo "setup BBMULTICONFIG in local.conf with conf/multiconfig/container.conf"
+      cat $PWD/conf/multiconfig/container.conf
+    fi
+  else
+    # no meta-virtualization
+    echo "BBMASK += \"meta-tn-imx-bsp/recipes-containers/docker-disk/docker-disk.bb\"" >> $PWD/conf/local.conf
+    echo "BBMASK += \"meta-tn-imx-bsp/recipes-containers/docker/docker_%.bbappend\"" >> $PWD/conf/local.conf
+    # for boot2qt
+    if grep -Fq "DISTRO ?= \"b2qt\"" $PWD/conf/local.conf; then
+      echo "BBMASK += \"meta-tn-imx-bsp/recipes-graphics/wayland/weston_%.bbappend\"" >> $PWD/conf/local.conf
+      echo "BBMASK += \"meta-tn-imx-bsp/recipes-qt/qt5/qtbase_%.bbappend\"" >> $PWD/conf/local.conf
+    fi
   fi
 fi
 

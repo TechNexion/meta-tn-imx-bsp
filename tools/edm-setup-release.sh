@@ -22,6 +22,7 @@
 
 CWD=$(pwd)
 PROGNAME="$CWD/sources/meta-tn-imx-bsp/tools/setup-environment.sh"
+
 exit_message ()
 {
     echo "To return to this build environment later please run:"
@@ -72,8 +73,6 @@ if [ -z "$DISTRO" ]; then
     if [ -z "$FSLDISTRO" ]; then
         FSLDISTRO='fsl-imx-xwayland'
     fi
-else
-    FSLDISTRO="$DISTRO"
 fi
 
 OPTIND=$OLD_OPTIND
@@ -88,17 +87,29 @@ if [ -z "$BUILD_DIR" ]; then
 fi
 
 # Set up the basic yocto environment by calling our setup-environment.sh
-if [ -z "$DISTRO" ]; then
-   DISTRO=$FSLDISTRO MACHINE=$MACHINE source $PROGNAME $BUILD_DIR
+if [ -n "$FSLDISTRO" ]; then
+  echo "TechNexion Setup BSP Release: source TechNexion setup-environment.sh wrapper scripts"
+  echo "    MACHINE=$MACHINE FSLDISTRO=$FSLDISTRO source $PROGNAME $BUILD_DIR"
+  echo ""
+  DISTRO=$FSLDISTRO MACHINE=$MACHINE source $PROGNAME $BUILD_DIR
+elif [ -n "$DISTRO" ]; then
+  echo "TechNexion Setup BSP Release: Source TechNexion setup-environment.sh wrapper scripts"
+  echo "    MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILD_DIR"
+  echo ""
+  DISTRO=$DISTRO MACHINE=$MACHINE source $PROGNAME $BUILD_DIR
 else
-   MACHINE=$MACHINE source $PROGNAME $BUILD_DIR
+  echo "TechNexion Setup BSP Release: Source TechNexion setup-environment.sh wrapper scripts"
+  echo "    MACHINE=$MACHINE source $PROGNAME $BUILD_DIR"
+  echo ""
+  MACHINE=$MACHINE source $PROGNAME $BUILD_DIR
 fi
 
-# Point to the current directory since the last command changed the directory to $BUILD_DIR
+echo -e "\nTechNexion Setup BSP Release: Further modification to local.conf and bblayers.conf"
+# Point to the current directory since the source setup-environment.sh changed the directory to $BUILD_DIR
 BUILD_DIR=.
 
 if [ ! -e $BUILD_DIR/conf/local.conf ]; then
-    echo -e "\n ERROR - No build directory is set yet. Run the 'setup-environment' script before running this script to create " $BUILD_DIR
+    echo -e "\nERROR - No build directory is set yet. Run the 'setup-environment' script before running this script to create " $BUILD_DIR
     echo -e "\n"
     return 1
 fi
@@ -120,29 +131,36 @@ fi
 
 # Support integrating community meta-freescale instead of meta-fsl-arm
 if [ -d ../sources/meta-freescale ]; then
-    echo "meta-freescale directory found"
+    echo "meta-freescale directory found, so use freescale community bsp bblayer instead."
     # Change settings according to environment
     sed -e "s,meta-fsl-arm\s,meta-freescale ,g" -i conf/bblayers.conf
     sed -e "s,\$.BSPDIR./sources/meta-fsl-arm-extra\s,,g" -i conf/bblayers.conf
 fi
 
-# Add BB_GIT_SHALLOW options for fetching git repositories
-echo "BB_GIT_SHALLOW ?= \"1\"" >> $BUILD_DIR/conf/local.conf
-echo "BB_GIT_SHALLOW_DEPTH ?= \"1\"" >> $BUILD_DIR/conf/local.conf
-echo "BB_GIT_SHALLOW_DEPTH_doc = \"\"" >> $BUILD_DIR/conf/local.conf
-
 # Pass in the extra variables for uEnv.txt recipe
 if [ -n "$TOKEN" ]; then
-    export PA_TOKEN=$TOKEN
+  echo "Specified PA_TOKEN: $TOKEN"
+  export PA_TOKEN=$TOKEN
+  if ! grep -qF "PA_TOKEN" <<< $BB_ENV_EXTRAWHITE; then
+    echo "Export PA_TOKEN=$TOKEN to yocto via BB_ENV_EXTRAWHITE"
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE PA_TOKEN"
+  fi
 fi
 if [ -n "$DISPLAY" ]; then
-    export DISPLAY_INFO=$DISPLAY
+  echo "Specified DISPLAY_INFO: $DISPLAY"
+  export DISPLAY_INFO=$DISPLAY
+  if ! grep -qF "DISPLAY_INFO" <<< $BB_ENV_EXTRAWHITE; then
+    echo "Export DISPLAY_INFO=$DISPLAY to yocto via BB_ENV_EXTRAWHITE"
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_INFO"
+  fi
 fi
 if [ -n "$BASEBOARD" ]; then
-    export BASE_BOARD=$BASEBOARD
+  echo "Specified BASE_BOARD: $BASEBOARD"
+  export BASE_BOARD=$BASEBOARD
+  if ! grep -qF "BASE_BOARD" <<< $BB_ENV_EXTRAWHITE; then
+    echo "Export BASE_BOARD=$BASEBOARD to yocto via BB_ENV_EXTRAWHITE"
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
+  fi
 fi
 
 # Identify SOC type
@@ -151,37 +169,43 @@ CPU_TYPE=$(echo $MACHINE | sed 's/.*-\(imx[5-8][a-z]*\)[- $]*.*/\1/g')
 # Choose corresponding firmware package for different WLAN (QCA or BRCM), e.g. 'linux-firmware-brcm-tn' or 'linux-firmware-qca-tn'
 if [ -z "${WIFI_FIRMWARE#"${WIFI_FIRMWARE%%[! ]*}"}" ]; then
     echo "WARNING - No WIFI_FIRMWARE specified"
-    export RF_FIRMWARES=""
+    RF_FIRMWARES=""
 else
     if [ "$WIFI_FIRMWARE" == "all" ]; then
         if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
             echo "WARNING - imx8mq/imx8mm SOM only supports qca wireless module, so load qca firmware"
-            export RF_FIRMWARES="qca ath-pci"
+            RF_FIRMWARES="qca ath-pci"
         elif [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ]; then
-            export RF_FIRMWARES="qca brcm ath-pci"
+            RF_FIRMWARES="qca brcm ath-pci"
         else
             echo "WARNING - No matched CPU_TYPE: $CPU_TYPE, hence no WIFI_FIRMWARE"
-            export RF_FIRMWARES=""
+            RF_FIRMWARES=""
         fi
     elif [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "Y" ]; then
         if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
             echo "WARNING - imx8mq/imx8mm SOM only supports qca wireless module, so load qca firmware"
-            export RF_FIRMWARES="qca"
+            RF_FIRMWARES="qca"
         else
             if  [ -z "${WIFI_MODULE#"${WIFI_MODULE%%[! ]*}"}" ]; then
                 echo "WARNING - No WIFI_MODULE specified."
-                export RF_FIRMWARES=""
+                RF_FIRMWARES=""
             else
-                export RF_FIRMWARES=$WIFI_MODULE
+                RF_FIRMWARES=$WIFI_MODULE
             fi
         fi
     else
         echo "WARNING - Unrecognized WIFI_FIRMWARE specified"
-        export RF_FIRMWARES=""
+        RF_FIRMWARES=""
     fi
 fi
-export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE RF_FIRMWARES"
-echo "Selected wifi firmwares: $RF_FIRMWARES"
+if [ -n $RF_FIRMWARES ]; then
+  echo "Specified wifi firmwares: $RF_FIRMWARES"
+  export RF_FIRMWARES=$RF_FIRMWARES
+  if ! grep -qF "RF_FIRMWARES" <<< $BB_ENV_EXTRAWHITE; then
+    echo "Export RF_FIRMWARES=$RF_FIRMWARES to yocto via BB_ENV_EXTRAWHITE"
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE RF_FIRMWARES"
+  fi
+fi
 
 cd $BUILD_DIR
 clean_up
