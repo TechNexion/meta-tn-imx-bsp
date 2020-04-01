@@ -119,6 +119,14 @@ if [ $TNCONFIGS -gt 0 ] ; then
     echo "" >> $PWD/conf/bblayers.conf
     echo "# i.MX Container OS and OTA layers" >> $PWD/conf/bblayers.conf
     echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
+    mkdir -p $PWD/conf/multiconfig
+    cat > $PWD/conf/multiconfig/container.conf << EOF
+MACHINE="tn-container"
+DISTRO="fsl-imx-xwayland"
+DISTRO_FEATURES_append=" virtualization"
+TMPDIR="\${TOPDIR}/tmp-container"
+EOF
+    echo "BBMULTICONFIG = \"container\"" >> $PWD/conf/local.conf
   fi
 fi
 
