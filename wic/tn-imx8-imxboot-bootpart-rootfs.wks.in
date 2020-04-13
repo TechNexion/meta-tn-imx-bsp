@@ -17,4 +17,4 @@ part u-boot --source rawcopy --sourceparams="file=imx-boot-${MACHINE}-sd.bin" --
 part /boot --source bootimg-partition --ondisk ${WIC_FSTAB_BLKDEV} --fstype=vfat --label boot --active --align ${IMAGE_ROOTFS_ALIGNMENT} --size 32
 part / --source rootfs --ondisk ${WIC_FSTAB_BLKDEV} --fstype=ext4 --label root --align ${IMAGE_ROOTFS_ALIGNMENT}
 
-bootloader --ptable msdos
+bootloader --ptable ${WIC_PARTITION_TABLE_TYPE}
