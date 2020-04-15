@@ -90,7 +90,6 @@ SDCARD_GENERATION_COMMAND_mx6dl = "generate_tn_sdcard"
 SDCARD_GENERATION_COMMAND_mx6q = "generate_tn_sdcard"
 SDCARD_GENERATION_COMMAND_mx7d = "generate_tn_sdcard"
 SDCARD_GENERATION_COMMAND_mx8m = "generate_tn_sdcard"
-CONVERSION_CMD_md5sum_tn = "md5sum ${SDCARD} > ${SDCARD}.md5sum"
 LICENSE_FLAGS_WHITELIST += "commercial_qca commercial_brcm"
 
 # wic (sdcard) image
