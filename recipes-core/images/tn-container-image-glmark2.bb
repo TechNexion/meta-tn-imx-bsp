@@ -2,14 +2,15 @@ SUMMARY = "A minimal container image"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-inherit core-image
+IMAGE_FSTYPES = "container"
+
+inherit image
 
 # Enough free space for a full image update
 IMAGE_OVERHEAD_FACTOR = "2.3"
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+ROOTFS_BOOTSTRAP_INSTALL = ""
 
-IMAGE_FSTYPES = "${TN_CONTAINER_IMAGE_TYPE}"
 IMAGE_TYPEDEP_container += "${TN_CONTAINER_IMAGE_TYPE}"
 
 IMAGE_FEATURES = ""
@@ -33,6 +34,9 @@ IMAGE_INSTALL = "\
   packagegroup-core-full-cmdline-multiuser \
   glmark2 \
 "
+
+IMAGE_INSTALL_remove = "kernel-image kernel-devicetree u-boot-fw-utils mender"
+EXTRA_IMAGEDEPENDS_remove = "u-boot"
 
 # Workaround /var/volatile for now
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_fixup_var_volatile ; "
