@@ -26,6 +26,7 @@ IMAGE_INSTALL = "\
 	openflow \
 	kernel-modules \
 	connman \
+	jq \
 	tn-container-service \
 	"
 
