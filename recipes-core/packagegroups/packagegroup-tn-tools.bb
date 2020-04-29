@@ -26,6 +26,7 @@ RDEPENDS_${PN} = " \
     rsync \
     picocom \
     libgpiod \
+    spidev-test \
     stress-ng \
     cpulimit \
     thermal-imx-test \
