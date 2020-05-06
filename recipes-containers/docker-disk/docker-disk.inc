@@ -42,7 +42,8 @@ TN_CONTAINER_IMAGE_TYPE ??= "tar.gz"
 # TechNexion docker containers with specific CPU architectures
 TN_DOCKER_REPOSITORY_aarch64 ?= "technexion/debian-buster-wayland-hw"
 TN_DOCKER_TAG ?= "latest"
-TN_DOCKER_CONTAINER_IMAGE ?= "tn-container-image-glmark2-tn-container.${TN_CONTAINER_IMAGE_TYPE}"
+TN_CONTAINER_IMAGE ?= "tn-container-image-lighttpd"
+TN_DOCKER_CONTAINER_IMAGE ?= "${TN_CONTAINER_IMAGE}-tn-container.${TN_CONTAINER_IMAGE_TYPE}"
 TN_DOCKER_PARTITION_SIZE ?= "2048"
 TN_DOCKER_PARTITION_IMAGE ?= "docker-data-partition.img"
 

@@ -16,7 +16,76 @@ SRC_URI += " \
 S = "${WORKDIR}"
 B = "${S}/build"
 
-# JENKINS_HOMEDIR ?= "/home/admin/jenkins_home" for jenkins running in container
+#
+# IMPORTANT:
+#
+# docker-disk recipe uses "docker" command (pre-installed in yocto build environment)
+# to start a docker-in-docker container for generating the require /var/lib/docker
+# directory, setup and utilised by the docker daemon (dockerd)
+#
+# IMPLICATION:
+#
+# 1. Using docker/dockerd-native for the hosttools in the bitbake architecture
+#    is troublesome because docker requires a dockerd to run in the hosttools,
+#    and this is not easily setup within the bitbake build time. (Hence the
+#    use of 'docker' command in the pre-installed yocto build environment)
+#
+# 2. By using pre-installed 'docker' command in yocto build environment, it
+#    implies that we are using Host OS's dockerd, therefore the user(account)
+#    bitbaking this docker-disk recipe needs access to dockerd's /var/run/docker.sock
+#    on Host OS, thus allowing docker command to start a docker container.
+#
+# 3. In the case where yocto build environment is running in a docker container
+#    (referred to as "yocto-builder-container")
+#    - From 1. it requires yocto-builder-container to install a 'docker' command (binary file).
+#    - From 2. When running the "yocto-builder-container", in order to use 'docker' command
+#              properly, we need to share Host OS's /var/run/docker.sock with
+#              the "yocto-builder-container".
+#
+# 4. In "yocto-builder-container", when bitbaking docker-disk recipe, a sibling
+#    container (i.e. docker-in-docker container) is created on the Host OS,
+#    because we are using dockerd's /var/run/docker.sock on Host OS.
+#    (i.e. imagining a sister "docker-in-docker" is started on the Host OS next
+#    to the "yocto-builder-contaier")
+#
+#      +--------------------------------------+
+#      | Host OS (dockerd)                    |
+#      |                                      |
+#      | +----------+          +-----------+  |
+#      | | yocto-   |     +--> | docker-   |  |
+#      | | builder  |     |    | in-docker |  |
+#      | |          |     |    |           |  |
+#      | | $docker  |-----+    |           |  |
+#      | +----------+  starts  +-----------+  |
+#      |                                      |
+#      +--------------------------------------+
+#
+# 5. From 4, when doing do_install() and do_deploy() tasks of docker-disk recipe
+#     in the "yocto-builder-container", both "yocto-builder-container" and
+#    "docker-in-docker" containers must share a OUTPUT_IMAGE_DIR directory on
+#    Host OS, otherwise no files can be found within either containers.
+#
+#      +----------------------------------------------------------+
+#      | Host OS (dockerd)    /path/to/shared/OUTPUT_IMAGE_DIR    |
+#      |                           |                              |
+#      | +------------------+      |      +--------------------+  |
+#      | | yocto-builder    |      |      | docker-in-docker   |  |
+#      | |                  |      |      |                    |  |
+#      | |                  |      |      |                    |  |
+#      | | ${MOUNT_DIR}/    |      |      | ${MOUNT_PATH}/     |  |
+#      | |   OUT_IMAGE_DIR  | <----+----> |   OUT_IMAGE_DIR    |  |
+#      | +------------------+             +--------------------+  |
+#      |                                                          |
+#      +----------------------------------------------------------+
+#
+#    Consequently, JENKINS_HOMEDIR variable is introduced to set /path/to/shared/
+#    path on the Host OS (see-able to both sibling containers)
+#
+#    For example, on technexion's jenkins server which runs yocto builds in a
+#    "yocto-builder-container". Set the following in local.conf
+#
+#    JENKINS_HOMEDIR = "/home/admin/jenkins_home"
+#
 JENKINS_HOMEDIR ?= "${HOME}"
 SHAREDSRC = "${@ '%s' % (d.getVar('S', True).replace(d.getVar('HOME', True), d.getVar('JENKINS_HOMEDIR', True)))}"
 SHAREDBUILD = "${@ '%s' % (d.getVar('B', True).replace(d.getVar('HOME', True), d.getVar('JENKINS_HOMEDIR', True)))}"
@@ -39,13 +108,13 @@ python () {
 PV = "${TARGET_TAG}"
 
 # multiconfig dependancy only works on yocto warrior onward
-do_postfetch[mcdepends] = "multiconfig:container:tn-container-image-glmark2:do_image_complete"
+do_postfetch[mcdepends] = "multiconfig:container:${TN_CONTAINER_IMAGE}:do_image_complete"
 do_postfetch () {
 	if [ -f ${TOPDIR}/tmp-container/deploy/images/tn-container/${TN_DOCKER_CONTAINER_IMAGE} ]; then
 		mkdir -p ${S}/container
 		install -m 644 ${TOPDIR}/tmp-container/deploy/images/tn-container/${TN_DOCKER_CONTAINER_IMAGE} ${S}/container/${TN_DOCKER_CONTAINER_IMAGE}
 	else
-		bbwarn "${TOPDIR}/tmp-container/deploy/images/tn-container/${TN_DOCKER_CONTAINER_IMAGE} not found. For yocto version earlier than warrior, please build ${TN_DOCKER_CONTAINER_IMAGE} separately with the following command:\n\tbitbake multiconfig:container:tn-container-image-glmark2"
+		bbwarn "${TOPDIR}/tmp-container/deploy/images/tn-container/${TN_DOCKER_CONTAINER_IMAGE} not found. For yocto version earlier than warrior, please build ${TN_DOCKER_CONTAINER_IMAGE} separately with the following command:\n\tbitbake multiconfig:container:${TN_CONTAINER_IMAGE}"
 	fi
 }
 addtask postfetch before do_compile and after do_fetch
