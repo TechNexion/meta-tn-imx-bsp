@@ -121,6 +121,7 @@ addtask postfetch before do_compile and after do_fetch
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
+do_package_qa[noexec] = "1"
 
 do_compile () {
 	# Some sanity first for the technexion docker variables
