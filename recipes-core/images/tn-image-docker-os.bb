@@ -13,7 +13,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 # multiconfig dependency to built container images
-do_image[mcdepends] = "multiconfig:container:tn-container-image-glmark2:do_image_complete"
+do_image[mcdepends] = "multiconfig:container:${TN_CONTAINER_IMAGE}:do_image_complete"
 
 IMAGE_INSTALL = "\
 	${QT5_IMAGE_INSTALL} \
