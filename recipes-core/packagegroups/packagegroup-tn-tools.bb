@@ -19,6 +19,7 @@ RDEPENDS_${PN} = " \
     dnsmasq \
     dtc \
     haveged \
+    hdparm \
     memtester \
     create-ap \
     iptables \
