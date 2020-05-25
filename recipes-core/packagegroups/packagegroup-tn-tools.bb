@@ -31,6 +31,7 @@ RDEPENDS_${PN} = " \
     stress-ng \
     cpulimit \
     thermal-imx-test \
+    bashtop \
     ${@bb.utils.contains('DISTRO_FEATURES', 'virtualization', 'sudo glmark2 net-tools opencv packagegroup-core-ssh-openssh wpa-supplicant wireless-tools bluez5 firmware-imx-sdma', '', d)} \
 "
 
