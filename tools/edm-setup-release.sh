@@ -124,6 +124,10 @@ if [ -d ../sources/meta-freescale ]; then
 fi
 
 # Pass in the extra variables for uEnv.txt recipe
+if [ -n "$TOKEN" ]; then
+    export PA_TOKEN=$TOKEN
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE PA_TOKEN"
+fi
 if [ -n "$DISPLAY" ]; then
     export DISPLAY_INFO=$DISPLAY
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_INFO"
