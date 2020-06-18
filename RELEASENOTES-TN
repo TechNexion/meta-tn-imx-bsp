@@ -1,78 +1,121 @@
 yocto-2.5 TechNexion BSP Release Notes
 ======================================
 
-Release Name: tn-sumo_4.14.98-2.0.0_GA
-Release Revision: 20191231.1
+Release Name: tn-sumo_4.14.98-2.0.1-patch_GA
+Release Revision: 20200331.1
 
-New Features
+Features
 ============
 
-IMX6:
+PICO-IMX6UL/IMX6ULL:
 -----
+* New supported boards: pi
 
-* New supported boards: edm
-* New supported boards: axon
-
-IMX7:
+PICO-IMX6:
 -----
+* On-going supported boards: nymph pi
 
-* New supported boards: edm
-* New supported board: tep
-
-IMX8:
+EDM-IMX6:
 -----
+* On-going supported boards: fairy tc700 tc1000 gnome
 
-* Add support for M4
-* New supported boards: xore
+AXON-IMX6:
+-----
+* New supported boards: pi
+
+PICO-IMX7:
+-----
+* On-going supported boards: nymph pi
+
+EDM-IMX7:
+-----
+* On-going supported boards: gnome
+
+PICO-IMX8MM:
+-----
+* On-going supported boards: pi
+
+FLEX-IMX8MM:
+-----
+* On-going supported boards: pi
+
+PICO-IMX8M:
+-----
+* On-going supported boards: pi
+
+EDM-IMX8M:
+-----
+* On-going supported boards: wizard
+
+XORE-IMX8MM:
+-----
+* New supported boards: wizard
+
+AXON-IMX8M:
+-----
+* New supported boards: pi wizard
 
 TechNexion Test Tool Packages:
 -------------------------------
-
-* Add additional software test tools to thermal-imx-test cpulimit, dnf, memtester, iperf3, stress-ng
-* Add voicehat test
-* Add Technexion Test Image Recipe
+* ~~Add additional software test tools to thermal-imx-test cpulimit, dnf, memtester, iperf3, stress-ng~~
+* ~~Add voicehat test~~
+* ~~Add Technexion Test Image Recipe~~
+* Add additional software test tools: hdparm glmark2
+* Add utility software for controlling MicroChip USB5734 USB Controller on Flex-Wizard
+* Update axonfabric utility
 
 Enhancements
 ============
 
 * Add NFC packagegroup to enable nxp-nfc packages
+  * Fix NFC packagegroup to package nxp-nfc-bin
 * Add WIC image support for TechNexion sdcard image
-* Tidy up machine Configuration files - Separate common machine configurations to tn-base.inc file
+  * Fix dependency for bundling M4 binary files
+* ~~Tidy up machine Configuration files - Separate common machine configurations to tn-base.inc file~~
+* Introduce 'tools' in OVERRIDES for including TechNexion software test tools
+* Use personal access token to access private Wifi/BT firmwares in gitlab
+* Modify EXTRA_OEMAKE parameters to build kernel Device Tree Overlay binaries
 
 Known Issues
 ============
-
-* Build Boot2qt using this meta-layer will fail on building glmark2 package of packagegroup-tn-tools recipe.
-* NFC demo application is not installed correctly in the NFC software package.
+Yocto Builds:
+-------
+* ~~Build Boot2qt using this meta-layer will fail on building glmark2 package of packagegroup-tn-tools recipe.~~
+* ~~NFC demo application is not installed correctly in the NFC software package.~~
+* Adjust BOOT_SPACE for imx6/7/8 boards
 
 PICO-IMX8MQ-PI:
 -------
-* BUG#168: Touch panel is not accurate, mouse pointer offsets at a distance proportional to touch displacements
+* ~~BUG#168: Touch panel is not accurate, mouse pointer offsets at a distance proportional to touch displacements~~
+* BUG#212: Suspend on 1G and 4G RAM fails
 
 EDM-IMX8MQ-WIZARD:
 ------------------
-* BUG#166: WM8960 audio codec does not record
+* ~~BUG#166: WM8960 audio codec does not record~~
 * BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
-* BUG#170: Wifi AP Mode failed and disconnected shortly after successful connection
+* ~~BUG#170: Wifi AP Mode failed and disconnected shortly after successful connection~~
 
 EDM-IMX6P-FAIRY:
 ----------------
-* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
 
 EDM-IMX6dl/solo-TOUCAN700:
 --------------------------
-* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
-* BUG#173: irregular display on TOUCH 0700 panel from display configurations settings in bootarg
+* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
+* BUG#173: ~~irregular display on TOUCH 0700 panel from display configurations settings in bootarg~~
+* BUG#205: suspend the second time fails
 
 EDM-IMX6P-TOUCAN1000:
 ---------------------
-* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
 * BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+* BUG#205: suspend the second time fails
 
 EDM-IMX6P-GNOME:
 ----------------
-* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
+* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
 * BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+* BUG#205: suspend the second time fails
 
 PICO-IMX7D-NYMPH:
 -----------------
@@ -80,28 +123,40 @@ PICO-IMX7D-NYMPH:
 
 PICO-IMX7D-PI:
 --------------
-* BUG#177: No desktop gui interface, command line only
+* ~~BUG#177: No desktop gui interface, command line only~~
 
 EDM-IMX7D-GNOME:
 ----------------
-* BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work
-* BUG#177: No desktop gui interface, command line only
+* ~~BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work~~
+* ~~BUG#177: No desktop gui interface, command line only~~
+* BUG#187: EDM IMX7D mipi-csi camera fails
+
+TEP1-IMX7
+----------------
+* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+
+XORE-IMX8MM
+----------------
+* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+* BUG#229: MIPI 10inch g101uan02 (TN201) touch position is not accurate
 
 Hardware Limitation
 ===================
 
 PICO-IMX8MQ-PI:
 -------
-* BUG#167: MIPI CSI Camera2 and Voicehat does not work together (CSI_nRST pin conflicts with KEY_NEXT button on Voicehat)
+* ~~BUG#167:~~ MIPI CSI Camera2 and Voicehat does not work together (CSI_nRST pin conflicts with KEY_NEXT button on Voicehat)
 
 EDM-IMX6P-FAIRY:
-* BUG#171: LVDS touch panel is not operational (old resistive touch panel no longer works)
+-------
+* ~~BUG#171:~~ LVDS touch panel is not operational (old resistive touch panel no longer works)
 
 Fixes
 =====
-
-* update qcacld firmwares
-* imx-boot: replace u-boot dtb name in soc.mak instead of passing to make
-* Rework setup scripts for passing additional variables to yocto build environment
-* Introduce additional MACHINEOVERRIDES from environment variables to build different recipes/packagegroups
-* Rework image_type_fsl_tn.bbclass to remove inheritance from image-types-fsl.bbclass and build our own yocto sdcard image
+* ~~update qcacld firmwares~~
+* ~~imx-boot: replace u-boot dtb name in soc.mak instead of passing to make~~
+* ~~Rework setup scripts for passing additional variables to yocto build environment~~
+* ~~Introduce additional MACHINEOVERRIDES from environment variables to build different recipes/packagegroups~~
+* ~~Rework image_type_fsl_tn.bbclass to remove inheritance from image-types-fsl.bbclass and build our own yocto sdcard image~~
+* Fix XSERVER setting for imx7d machine
+* Fix GPU memory allocation issue on imx8mm with 4GB DDR
