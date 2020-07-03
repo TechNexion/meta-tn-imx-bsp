@@ -23,12 +23,16 @@ OVERRIDES_append = "${@'' if (d.getVar('SOUNDCARD', True) is None or len(d.getVa
 OVERRIDES_append = "${@'' if (d.getVar('NFC', True) is None or len(d.getVar('NFC', True)) == 0) else ':%s' % d.getVar('NFC', True).lower()}"
 OVERRIDES_append = "${@bb.utils.contains('BBLAYERS', '${BSPDIR}/sources/meta-virtualization', ':virtualization', '', d)}"
 OVERRIDES_append = "${@':tools' if (d.getVar('DISTRO', True) == 'fsl-imx-xwayland' or d.getVar('DISTRO', True) == 'fsl-imx-wayland' or d.getVar('DISTRO', True) == 'fsl-imx-x11') else ''}"
+OVERRIDES_append = "${@':rescue' if (d.getVar('INITRAMFS_IMAGE', True) == 'tn-image-rescue-initramfs') else ''}"
 
 #
 # Kernel Specifics
 #
 PREFERRED_PROVIDER_kernel_tn = "linux-tn-imx"
 PREFERRED_PROVIDER_virtual/kernel_tn = "linux-tn-imx"
+KERNEL_CLASSES_append_rescue = " kernel-fitimage"
+KERNEL_IMAGETYPES_append_rescue = " fitImage"
+RDEPENDS_${KERNEL_PACKAGE_NAME}-base_rescue = ""
 
 #
 # Bootloader Specifics
@@ -114,3 +118,9 @@ XZ_INTEGRITY_CHECK = "crc64"
 # Additional BitBake/Yocto build tool
 HOSTTOOLS_NONFATAL += "git-lfs"
 
+# meta-virtualization
+DISTRO_FEATURES_append_virtualization = " virtualization"
+
+# technexion rescue-loader
+DISTRO_FEATURES_remove_rescue = "x11 wayland"
+DISTRO_FEATURES_append_rescue = " directfb"
