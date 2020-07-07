@@ -3,6 +3,8 @@
 # Copyright 2017-2018 NXP
 # Released under the MIT license (see COPYING.MIT for the terms)
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/file:"
+
 require recipes-kernel/linux/linux-imx.inc
 require recipes-kernel/linux/linux-tn-src_${PV}.inc
 
@@ -36,5 +38,13 @@ do_copy_defconfig () {
         cp ${S}/arch/arm64/configs/tn_imx8_defconfig ${B}/../defconfig
     fi
 }
+
+SRC_URI_append_rescue = " \
+	file://0001-imx8mm-patch-to-reduce-cma-size-to-100MB.patch \
+	file://0002-imx8mq-patch-to-reduce-cma-size-to-100MB.patch \
+	file://0001-imx7d-patch-to-reduce-cmd-size-to-50MB.patch \
+	file://0002-imx6dl-patch-to-reduce-cmd-size-to-50MB.patch \
+	file://0003-imx6q-patch-to-reduce-cmd-size-to-50MB.patch \
+	"
 
 COMPATIBLE_MACHINE = "(mx6|mx7|mx8)"

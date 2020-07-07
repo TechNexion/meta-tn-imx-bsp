@@ -1,0 +1,26 @@
+From 8189fa70c23e890da2aeb98d151426256b49f600 Mon Sep 17 00:00:00 2001
+From: Po Cheng <po.cheng@technexion.com>
+Date: Tue, 7 Jul 2020 12:53:17 +0800
+Subject: [PATCH 1/2] imx8mm: patch to reduce cma size to 100MB
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-imx8mm.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-imx8mm.dtsi b/arch/arm64/boot/dts/freescale/fsl-imx8mm.dtsi
+index b86bfc8..e4e5ffd 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-imx8mm.dtsi
+@@ -79,7 +79,7 @@
+ 		linux,cma {
+ 			compatible = "shared-dma-pool";
+ 			reusable;
+-			size = <0 0x28000000>;
++			size = <0 0x06000000>;
+ 			alloc-ranges = <0 0x40000000 0 0x60000000>;
+ 			linux,cma-default;
+ 		};
+-- 
+2.7.4
+
