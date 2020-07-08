@@ -48,6 +48,9 @@ BOOT_SPACE_mx6 = "16384"
 BOOT_SPACE_mx7 = "16384"
 BOOT_SPACE_mx8 = "32768"
 LOADADDR_mx8 = ""
+# u-boot splash file
+SPLASH_FILENAME = "splash.bmp"
+BOOT_SCRIPTS_append = " ${SPLASH_FILENAME}:splash.bmp"
 
 #
 # u-boot env (uEnv.txt + boot.scr.uimg)
@@ -98,6 +101,7 @@ WKS_FILE = "tn-spl-bootpart-rootfs.wks.in"
 WKS_FILE_mx8 = "tn-imx8-imxboot-bootpart-rootfs.wks.in"
 WKS_FILE_DEPENDS += "u-boot-edm"
 WKS_FILE_DEPENDS_mx8 += "imx-boot"
+IMAGE_BOOT_FILES_append = " ${SPLASH_FILENAME}"
 IMAGE_BOOT_FILES_append_uenv = " ${UENV_FILENAME}"
 
 # xz compression options
