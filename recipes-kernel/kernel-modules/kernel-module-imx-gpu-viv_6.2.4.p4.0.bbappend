@@ -5,4 +5,4 @@
 
 SRCBRANCH = "tn-imx_4.14.98_2.0.0_ga-next"
 KERNEL_SRC = "git://github.com/TechNexion/linux-tn-imx.git"
-SRCREV = "186eccf6787ad9f1ae90fcabaf63ba3bcd874a79"
+SRCREV = "71001c3647fd3d6871f6b3efa2ad81c322cc34bc"
