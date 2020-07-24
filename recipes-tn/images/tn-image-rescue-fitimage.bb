@@ -32,3 +32,10 @@ inherit core-image
 IMAGE_ROOTFS_SIZE = "0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 IMAGE_OVERHEAD_FACTOR = "1.0"
+
+python do_check_initramfs_image () {
+    initramfs_image = d.getVar("INITRAMFS_IMAGE", True)
+    if initramfs_image is None or initramfs_image != "tn-image-rescue-initramfs":
+        bb.fatal("Must set INITRAMFS_IMAGE = \"tn-image-rescue-initramfs\" in local.conf to build tn-image-rescue-fitimage")
+}
+addtask check_initramfs_image before do_rootfs
