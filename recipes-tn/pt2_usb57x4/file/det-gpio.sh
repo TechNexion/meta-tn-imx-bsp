@@ -6,14 +6,15 @@
 LOCK="/tmp/power-cycle.pid"
 VID=0x0424
 PID=0x2734
-PORT=$1
-PROCID=$2
+DID=$1
+PORT=$2
+PROCID=$3
 DET_STATE=0
 DET_COUNT=0
 
 set_gpio_num () {
 	# ARG1: Number matching to USB Port Number
-	case "$1" in
+	case "$PORT" in
 	1)
 		GPIONUM=11
 		;;
@@ -75,9 +76,10 @@ state_change () {
 #
 # ARG1: USB Port Number
 # ARG2: Parents PID for kill -USR1
-if [ -z "$1" ]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
 	echo "Command Syntax:"
-	echo "	det_gpio [USB_PORT] [PROC_PID]"
+	echo "	det_gpio [DID] [USB_PORT] [PROC_PID]"
+	echo "DID = Device ID from lsusb"
 	echo "USB_PORT = 1, 2, 3, 4"
 	echo "PROC_PID = Process ID to send signal USR1 (i.e. kill -10)"
 	exit 1
@@ -86,7 +88,7 @@ fi
 trap state_change USR2
 exec 999>$LOCK
 rm -f /tmp/usb$PORT
-set_gpio_num $PORT
+set_gpio_num
 while true
 do
 	usleep 500
