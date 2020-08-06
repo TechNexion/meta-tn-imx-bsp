@@ -54,6 +54,7 @@ inherit core-image
 IMAGE_ROOTFS_SIZE = "0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 IMAGE_OVERHEAD_FACTOR = "1.0"
-INITRAMFS_MAXSIZE = "262144000"
+# Use the default 131072 KB setting, anything bigger will cause dd problem in rescue-loader
+# INITRAMFS_MAXSIZE = "262144000"
 
 XZ_INTEGRITY_CHECK = "crc32"
