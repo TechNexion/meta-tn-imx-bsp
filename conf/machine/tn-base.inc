@@ -122,5 +122,5 @@ HOSTTOOLS_NONFATAL += "git-lfs"
 DISTRO_FEATURES_append_virtualization = " virtualization"
 
 # technexion rescue-loader
-DISTRO_FEATURES_remove_rescue = "x11 wayland"
+DISTRO_FEATURES_remove_rescue = "irda alsa bluetooth wifi nfs 3g nfc ptest bluez bluez5 vulkan optee pulseaudio multiarch x11 wayland"
 DISTRO_FEATURES_append_rescue = " directfb"
