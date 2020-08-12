@@ -10,6 +10,6 @@ SRCBRANCH = "tn-imx_4.14.98_2.0.0_ga-next"
 LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('SRCBRANCH', True).split('_')[2:]).lower()}"
 KERNEL_SRC = "git://github.com/TechNexion/linux-tn-imx.git"
 SRC_URI = "${KERNEL_SRC};branch=${SRCBRANCH}"
-SRCREV = "13c263c8cc42ef66ae4c8e6010dcb14c6fc0ccdb"
+SRCREV = "ee417b4f315fd8388e841e506d127a6ec62640e5"
 
 S = "${WORKDIR}/git"
