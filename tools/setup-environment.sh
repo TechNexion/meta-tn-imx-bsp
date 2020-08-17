@@ -101,7 +101,6 @@ if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
       echo "BBLAYERS += \" \${BSPDIR}/sources/meta-openembedded/meta-filesystems \"" >> $PWD/conf/bblayers.conf
       echo "BBLAYERS += \" \${BSPDIR}/sources/meta-browser \"" >> $PWD/conf/bblayers.conf
       echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt5 \"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt4 \"" >> $PWD/conf/bblayers.conf
     fi
   fi
 fi
@@ -112,6 +111,14 @@ if [ $TNCONFIGS -gt 0 ] ; then
       echo "" >> $PWD/conf/bblayers.conf
       echo "# setup Technexion i.MX Yocto Project Release Layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
       echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-imx-bsp \"" >> $PWD/conf/bblayers.conf
+    fi
+  fi
+  # add meta-qt4 bsp layers to bblayers.conf
+  if [ -d $PWD/../sources/meta-qt4 ]; then
+    if ! grep -Fq "meta-qt4" $PWD/conf/bblayers.conf; then
+      echo "" >> $PWD/conf/bblayers.conf
+      echo "# setup meta-qt4 release layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-qt4 \"" >> $PWD/conf/bblayers.conf
     fi
   fi
   # add technexion nfc bsp layers (from nxp) to bblayers.conf
