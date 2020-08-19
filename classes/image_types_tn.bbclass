@@ -31,11 +31,13 @@ _generate_tn_boot_image() {
 	done
 
 	# Copy u-boot.img to first FAT partition
-	if [ "${SOC_TARGET}" != "iMX8M" -a "${SOC_TARGET}" != "iMX8MM" ]; then
+	case "${IMAGE_BOOTLOADER}" in
+	u-boot)
 		if [ -n "${SPL_BINARY}" ]; then
 			mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} ::/u-boot.img
 		fi
-	fi
+		;;
+	esac
 
 	# Copy device tree file
 	if test -n "${KERNEL_DEVICETREE}"; then
@@ -126,14 +128,10 @@ generate_tn_sdcard () {
 		if [ -n "${SPL_BINARY}" ]; then
 			if [ -n "${SPL_SEEK}" ]; then
 				dd if=${DEPLOY_DIR_IMAGE}/${SPL_BINARY} of=${SDCARD} conv=notrunc seek=${SPL_SEEK} bs=1K
-				if [ "${SOC_TARGET}" = "iMX8M" -o "${SOC_TARGET}" = "iMX8MM" ]; then
-					dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=${UBOOT_SEEK} bs=1K
-				fi
+				#dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=${UBOOT_SEEK} bs=1K
 			else
 				dd if=${DEPLOY_DIR_IMAGE}/${SPL_BINARY} of=${SDCARD} conv=notrunc seek=2 bs=512
-				if [ "${SOC_TARGET}" = "iMX8M" -o "${SOC_TARGET}" = "iMX8MM" ]; then
-					dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=69 bs=1K
-				fi
+				#dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=69 bs=1K
 			fi
 		else
 			dd if=${DEPLOY_DIR_IMAGE}/u-boot-${MACHINE}.${UBOOT_SUFFIX_SDCARD} of=${SDCARD} conv=notrunc seek=2 bs=512

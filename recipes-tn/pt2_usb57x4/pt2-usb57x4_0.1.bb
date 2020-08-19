@@ -9,8 +9,10 @@ inherit pkgconfig
 
 DEPENDS += "libusb1"
 RDEPENDS_${PN} += "libusb1"
+RDEPENDS_${PN}_append_tools = " bash"
 
-SRC_URI  = "file://pt2_usb57x4_linux_sdk_1.0.zip"
+SRC_URI = "file://pt2_usb57x4_linux_sdk_1.0.zip"
+SRC_URI_append_tools = " file://power-cycle.sh file://det-gpio.sh"
 
 S = "${WORKDIR}"
 
@@ -40,6 +42,11 @@ do_install() {
     for prj in ${USB57x4_EXAMPLES}; do
         install -m 0755 ${S}/examples/${prj}/out/* ${D}${sbindir}
     done
+}
+
+do_install_append_tools() {
+    install -m 0755 ${S}/power-cycle.sh ${D}${sbindir}
+    install -m 0755 ${S}/det-gpio.sh ${D}${sbindir}
 }
 
 INSANE_SKIP_${PN} = "ldflags"
