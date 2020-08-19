@@ -2,143 +2,197 @@ yocto-2.5 TechNexion BSP Release Notes
 ======================================
 
 Release Name: tn-sumo_4.14.98-2.0.1-patch_GA
-Release Revision: 20200331.1
+Release Revision: 20200630.1
 
 Features
 ============
-
-PICO-IMX6UL/IMX6ULL:
------
-* New supported boards: pi
-
-PICO-IMX6:
------
-* On-going supported boards: nymph pi
-
-EDM-IMX6:
------
-* On-going supported boards: fairy tc700 tc1000 gnome
 
 AXON-IMX6:
 -----
 * New supported boards: pi
 
-PICO-IMX7:
+AXON-IMX8MM:
 -----
-* On-going supported boards: nymph pi
+* New supported boards: pi
+
+EDM-IMX6:
+-----
+* On-going supported boards: fairy tc700 tc1000 gnome
 
 EDM-IMX7:
 -----
 * On-going supported boards: gnome
 
-PICO-IMX8MM:
+EDM-IMX8M:
 -----
-* On-going supported boards: pi
+* On-going supported boards: wizard
 
 FLEX-IMX8MM:
 -----
 * On-going supported boards: pi
 
+PICO-IMX6UL/IMX6ULL:
+-----
+* On-going supported boards: pi
+
+PICO-IMX6:
+-----
+* On-going supported boards: nymph pi
+
+PICO-IMX7:
+-----
+* On-going supported boards: nymph pi
+
+PICO-IMX8MM:
+-----
+* On-going supported boards: pi, wizard
+
 PICO-IMX8M:
 -----
 * On-going supported boards: pi
 
-EDM-IMX8M:
+TEK3-IMX6
 -----
-* On-going supported boards: wizard
+* New supported boards: tek3-imx6
+
+TEP5-IMX6
+-----
+* New supported boards: tep5-imx6
+
+TEP1-IMX7:
+-----
+* New supported boards: tep1-imx7
 
 XORE-IMX8MM:
 -----
-* New supported boards: wizard
+* On-going supported boards: wizard
 
-AXON-IMX8M:
------
-* New supported boards: pi wizard
 
 TechNexion Test Tool Packages:
 -------------------------------
+* Add hdparm to tools packagegroup
+* Add bashtop shell script tool for display system info
+* Add get-support-info shell script for bug report
+* Add spidev-test software test tools to test spi devices
 * ~~Add additional software test tools to thermal-imx-test cpulimit, dnf, memtester, iperf3, stress-ng~~
 * ~~Add voicehat test~~
 * ~~Add Technexion Test Image Recipe~~
-* Add additional software test tools: hdparm glmark2
-* Add utility software for controlling MicroChip USB5734 USB Controller on Flex-Wizard
-* Update axonfabric utility
+* ~~Add additional software test tools: hdparm glmark2~~
+* ~~Add utility software for controlling MicroChip USB5734 USB Controller on Flex-Wizard~~
+* ~~Update axonfabric utility~~
 
 Enhancements
 ============
-
-* Add NFC packagegroup to enable nxp-nfc packages
-  * Fix NFC packagegroup to package nxp-nfc-bin
-* Add WIC image support for TechNexion sdcard image
-  * Fix dependency for bundling M4 binary files
+* Modify ofono with embedded linux library support
+* Resize Terminal Icon on Weston Desktop
+* Modify fingerpaint example to full screen for touch panel test
+* Add Camera packagegroup fror building out-of-tree OV7251 kernel module
+* Merge Virtualization Layer for building docker os and docker containers
+  * Introduce 'cntnr' in OVERRIDES for building docker containers
+  * Introduce 'TN_CONTAINER_IMAGE', 'TN_DOCKER_PARTITION_SIZE', 'TN_DOCKER_PARTITION_MOUNT', and 'JENKINS_HOMEDIR' to modify container builds
+  * Use multiconfig to build docker containers
+  * Use docker daemon to download and store docker images
+  * Use wic image support to package docker os image with separate partition for docker images
+  * Add docker os, docker container, and  systemd container service recipes
+* ~~Add NFC packagegroup to enable nxp-nfc packages~~
+  * ~~Fix NFC packagegroup to package nxp-nfc-bin~~
+* ~~Add WIC image support for TechNexion sdcard image~~
+  * ~~Fix dependency for bundling M4 binary files~~
 * ~~Tidy up machine Configuration files - Separate common machine configurations to tn-base.inc file~~
-* Introduce 'tools' in OVERRIDES for including TechNexion software test tools
-* Use personal access token to access private Wifi/BT firmwares in gitlab
-* Modify EXTRA_OEMAKE parameters to build kernel Device Tree Overlay binaries
+* ~~Introduce 'tools' in OVERRIDES for including TechNexion software test tools~~
+* ~~Use personal access token to access private Wifi/BT firmwares in gitlab~~
+* ~~Modify EXTRA_OEMAKE parameters to build kernel Device Tree Overlay binaries~~
+
 
 Known Issues
 ============
 Yocto Builds:
 -------
+* Build docker os and containers requires repo init from imx-4.14.98-2.0.1_patch-virtualization.xml manifest
 * ~~Build Boot2qt using this meta-layer will fail on building glmark2 package of packagegroup-tn-tools recipe.~~
 * ~~NFC demo application is not installed correctly in the NFC software package.~~
-* Adjust BOOT_SPACE for imx6/7/8 boards
+* ~~Adjust BOOT_SPACE for imx6/7/8 boards~~
 
-PICO-IMX8MQ-PI:
--------
-* ~~BUG#168: Touch panel is not accurate, mouse pointer offsets at a distance proportional to touch displacements~~
-* BUG#212: Suspend on 1G and 4G RAM fails
+AXON-IMX6-PI:
+----------------
+* ~~BUG#244: Cannot start WI-FI features~~
 
-EDM-IMX8MQ-WIZARD:
-------------------
-* ~~BUG#166: WM8960 audio codec does not record~~
-* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
-* ~~BUG#170: Wifi AP Mode failed and disconnected shortly after successful connection~~
+AXON-IMX8MM-PI
+----------------
 
 EDM-IMX6P-FAIRY:
 ----------------
-* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
+* ~~BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work~~
 
 EDM-IMX6dl/solo-TOUCAN700:
 --------------------------
-* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
-* BUG#173: ~~irregular display on TOUCH 0700 panel from display configurations settings in bootarg~~
-* BUG#205: suspend the second time fails
+* ~~BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work~~
+* ~~BUG#173: irregular display on TOUCH 0700 panel from display configurations settings in bootarg~~
+* ~~BUG#205: suspend the second time fails~~
 
 EDM-IMX6P-TOUCAN1000:
 ---------------------
-* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
-* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
-* BUG#205: suspend the second time fails
+* ~~BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work~~
+* ~~BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control~~
+* ~~BUG#205: suspend the second time fails~~
+* BUG#250: Recognize 4G/LTE device (Huawei ME906s) but unable to control
 
 EDM-IMX6P-GNOME:
 ----------------
-* BUG#164: ~~DHCP cannot get IP address on NIC, setting static IP address does not work~~
-* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
-* BUG#205: suspend the second time fails
-
-PICO-IMX7D-NYMPH:
------------------
-* BUG#177: No desktop gui interface, command line only
-
-PICO-IMX7D-PI:
---------------
-* ~~BUG#177: No desktop gui interface, command line only~~
+* ~~BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work~~
+* ~~BUG#205: suspend the second time fails~~
 
 EDM-IMX7D-GNOME:
 ----------------
 * ~~BUG#164: DHCP cannot get IP address on NIC, setting static IP address does not work~~
 * ~~BUG#177: No desktop gui interface, command line only~~
-* BUG#187: EDM IMX7D mipi-csi camera fails
+* ~~BUG#187: EDM IMX7D mipi-csi camera fails~~
+
+EDM-IMX8MQ-WIZARD:
+------------------
+* ~~BUG#166: WM8960 audio codec does not record~~
+* ~~BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control~~
+* ~~BUG#170: Wifi AP Mode failed and disconnected shortly after successful connection~~
+
+FLEX-IMX8MM-PI:
+------------------
+
+FLEX-IMX8MM-WIZARD:
+------------------
+
+PICO-IMX6UL-PI:
+------------------
+
+PICO-IMX7D-NYMPH:
+-----------------
+* ~~BUG#177: No desktop gui interface, command line only~~
+
+PICO-IMX7D-PI:
+--------------
+* ~~BUG#177: No desktop gui interface, command line only~~
+
+PICO-IMX8MQ-PI:
+-------
+* ~~BUG#168: Touch panel is not accurate, mouse pointer offsets at a distance proportional to touch displacements~~
+* ~~BUG#212: Suspend on 1G and 4G RAM fails~~
+
+TEK3-IMX6
+----------------
+
+TEP5-IMX6
+----------------
+* BUG#252 : incorrect 15inch panel resolution
+* BUG#253 : no mPCIe2 available
 
 TEP1-IMX7
 ----------------
-* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
+* ~~BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control~~
+* BUG#250: Recognize 4G/LTE device (Huawei ME906s) but unable to control
 
 XORE-IMX8MM
 ----------------
-* BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control
-* BUG#229: MIPI 10inch g101uan02 (TN201) touch position is not accurate
+* ~~BUG#169: Recognize 4G/LTE device (Sierra Wireless inc,.) but unable to control~~
+* ~~BUG#229: MIPI 10inch g101uan02 (TN201) touch position is not accurate~~
 
 Hardware Limitation
 ===================
@@ -158,5 +212,10 @@ Fixes
 * ~~Rework setup scripts for passing additional variables to yocto build environment~~
 * ~~Introduce additional MACHINEOVERRIDES from environment variables to build different recipes/packagegroups~~
 * ~~Rework image_type_fsl_tn.bbclass to remove inheritance from image-types-fsl.bbclass and build our own yocto sdcard image~~
-* Fix XSERVER setting for imx7d machine
-* Fix GPU memory allocation issue on imx8mm with 4GB DDR
+* ~~Fix XSERVER setting for imx7d machine~~
+* ~~Fix GPU memory allocation issue on imx8mm with 4GB DDR~~
+* Fix invalid conditional expressions in image-types-fsl-tn.bbclass
+* Rework setup scripts for building docker os and docker containers
+
+Commits:
+caee7fcd5664c1fe8b41c714628048e061ae955c to e07ee0c715e751eb083ed7b9daa805d76b26a943
