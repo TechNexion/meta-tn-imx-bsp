@@ -64,7 +64,9 @@ if [ -z "$DISTRO" ]; then
   return 1
 fi
 
+# Get TechNexion MACHINE configs
 TNCONFIGS=$(ls $CWD/sources/meta-tn-imx-bsp/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
+# Get i.MX MACHINE configs
 FSLCONFIGS=$(ls $CWD/sources/meta-fsl-bsp-release/imx/meta-bsp/conf/machine/*.conf $CWD/sources/meta-freescale*/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
 # Set up the basic yocto environment by sourcing fsl community's setup-environment bash script with/without TEMPLATECONF
 if [ $TNCONFIGS -gt 0 ] ; then
@@ -72,11 +74,16 @@ if [ $TNCONFIGS -gt 0 ] ; then
   echo "    TEMPLATECONF=$CWD/sources/meta-tn-imx-bsp/conf MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY"
   echo ""
   TEMPLATECONF="$CWD/sources/meta-tn-imx-bsp/conf" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
-else
-  echo "Setup Other Yocto"
+elif [ $FSLCONFIGS -gt 0 ]; then
+  echo "Setup Freescale/i.MX Yocto"
   echo "    MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY"
   echo ""
   MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
+else
+  echo "Setup OpenEmbedded Yocto"
+  echo "    MACHINE=$MACHINE source $PROGNAME $BUILDDIRECTORY"
+  echo ""
+  MACHINE=$MACHINE source $PROGRAME $BUILDDIRECTORY
 fi
 
 #
@@ -85,7 +92,7 @@ fi
 # So workaround by appending additional layers
 #
 echo -e "\nTechNexion setup-environment.sh wrapper: Further modification to bblayers.conf and local.conf"
-if [ $TNCONFIGS -gt 0 ] || [ $FSLCONFIGS -gt 0 ]; then
+if [ $TNCONFIGS -gt 0 -o $FSLCONFIGS -gt 0 ]; then
   if [ -d $PWD/../sources/meta-fsl-bsp-release ]; then
     # copy new EULA into community so setup uses latest i.MX EULA
     cp $PWD/../sources/meta-fsl-bsp-release/imx/EULA.txt $PWD/../sources/meta-freescale/EULA
