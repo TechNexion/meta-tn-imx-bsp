@@ -15,6 +15,7 @@ PACKAGE_INSTALL = " \
 	udev \
 	firmware-imx-sdma \
 	packagegroup-core-boot \
+	kernel-modules \
 	rescue-loader \
 	qt4-embedded-plugin-iconengine-svgicon \
 	qt4-embedded-plugin-imageformat-svg \
