@@ -42,6 +42,7 @@ do_install_append() {
 	install -d ${D}${systemd_unitdir}/system/multi-user.target.wants/
 	install -d ${D}${sysconfdir}/profile.d/
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
+	install -d ${D}${sbindir}
 
 	# directfb config file
 	install -m 0644 ${S}/rescue_loader/directfbrc ${D}${sysconfdir}
@@ -54,19 +55,8 @@ do_install_append() {
 	install -m 0644 ${S}/rescue_loader/installerd.service ${D}${systemd_unitdir}/system/
 	ln -sf ${systemd_unitdir}/system/installerd.service ${D}${sysconfdir}/systemd/system/multi-user.target.wants/installerd.service
 
-	# guiclientd.conf
-	# for Portrait Panel, rotate qws and set touch input
-	# QWS_DISPLAY=transformed:rot270 directfb:0
-	# QWS_MOUSE_PROTO=linuxinput:/dev/input/event1
-	# otherwise, just sets the directfb:0, others settings follow qt4 defaults
-	echo "DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/dbus/session_bus_socket" > ${D}${sysconfdir}/systemd/guiclientd.conf
-	if [ -n ${DISPLAY_PANEL} -a ${DISPLAY_PANEL} = "ili9881c" ]; then
-		echo "QWS_DISPLAY=transformed:mmWidth140:mmHeight68:rot270 directfb:0" >> ${D}${sysconfdir}/systemd/guiclientd.conf
-		echo "QWS_MOUSE_PROTO=linuxinput:/dev/input/event1" >> ${D}${sysconfdir}/systemd/guiclientd.conf
-	else
-		echo "QWS_DISPLAY=directfb:0" >> ${D}${sysconfdir}/systemd/guiclientd.conf
-	fi
-	echo "ARG=-qws" >> ${D}${sysconfdir}/systemd/guiclientd.conf
+	#guiclientd.sh
+	install -m 755 ${S}/rescue_loader/guiclientd.sh ${D}${sbindir}/guiclientd.sh
 
 	# rescue-loader guiclientd systemd service files
 	install -m 0644 ${S}/rescue_loader/guiclientd.service ${D}${systemd_unitdir}/system/
@@ -89,11 +79,11 @@ do_install_append() {
 }
 
 FILES_${PN} += " \
+	${sbindir}/guiclientd.sh \
 	${sysconfdir}/directfbrc \
 	${sysconfdir}/installer.xml \
 	${systemd_unitdir}/system/installerd.service \
 	${sysconfdir}/systemd/system/multi-user.target.wants/installerd.service \
-	${sysconfdir}/systemd/system/guiclientd.conf \
 	${systemd_unitdir}/system/guiclientd.service \
 	${sysconfdir}/systemd/system/multi-user.target.wants/guiclientd.service \
 	${systemd_unitdir}/system/dbus-sess.socket \
