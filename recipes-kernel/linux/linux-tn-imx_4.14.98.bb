@@ -21,7 +21,7 @@ DO_CONFIG_V7_COPY_mx6 = "yes"
 DO_CONFIG_V7_COPY_mx7 = "yes"
 DO_CONFIG_V7_COPY_mx8 = "no"
 
-addtask copy_defconfig after do_unpack before do_preconfigure
+addtask copy_defconfig after do_patch before do_preconfigure
 
 # change do_copy_defconfig to use source code from our tn-kernel repository
 do_copy_defconfig () {
@@ -39,12 +39,20 @@ do_copy_defconfig () {
     fi
 }
 
+do_copy_defconfig_append_rescue () {
+    cp ${WORKDIR}/logo.ppm ${S}/drivers/video/logo/logo_linux_clut224.ppm
+}
+
 SRC_URI_append_rescue = " \
 	file://0001-imx8mm-patch-to-reduce-cma-size-to-100MB.patch \
 	file://0002-imx8mq-patch-to-reduce-cma-size-to-100MB.patch \
 	file://0001-imx7d-patch-to-reduce-cmd-size-to-50MB.patch \
 	file://0002-imx6dl-patch-to-reduce-cmd-size-to-50MB.patch \
 	file://0003-imx6q-patch-to-reduce-cmd-size-to-50MB.patch \
+	file://0001-fbdev-fbmem-add-config-option-to-center-the-bootup-l.patch \
+	file://0002-ARM64-config-enable-FB_LOGO_CENTER-for-rescue-bootup.patch \
+	file://0004-video-fbdev-core-fbmem-modify-to-a-single-graph.patch \
+	file://logo.ppm \
 	"
 
 COMPATIBLE_MACHINE = "(mx6|mx7|mx8)"
