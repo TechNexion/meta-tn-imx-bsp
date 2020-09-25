@@ -20,6 +20,7 @@ SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
 SRCREV = "8c116c6ed20a1e15ba0f74e0a15293f2caff94ee"
 SRC_URI_append = " file://splash.bmp"
+SRC_URI_append_rescue = " file://technexion.bmp"
 
 S = "${WORKDIR}/git"
 
@@ -32,6 +33,11 @@ BOOT_TOOLS = "imx-boot-tools"
 do_deploy_append () {
 	install -d ${DEPLOYDIR}
 	install ${WORKDIR}/splash.bmp ${DEPLOYDIR}/splash.bmp
+}
+
+do_deploy_append_rescue () {
+	install -d ${DEPLOYDIR}
+	install ${WORKDIR}/technexion.bmp ${DEPLOYDIR}/splash.bmp
 }
 
 do_deploy_append_mx8m () {
