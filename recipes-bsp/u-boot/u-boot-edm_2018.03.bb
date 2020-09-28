@@ -20,7 +20,11 @@ SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
 SRCREV = "8c116c6ed20a1e15ba0f74e0a15293f2caff94ee"
 SRC_URI_append = " file://splash.bmp"
-SRC_URI_append_rescue = " file://technexion.bmp"
+SRC_URI_append_rescue = " \
+	file://0001-pico-imx8mm-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
+	file://0002-pico-imx8mq-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
+	file://technexion.bmp \
+"
 
 S = "${WORKDIR}/git"
 
