@@ -1,0 +1,27 @@
+From 8b53c3e87d9fcec8cbc20e7e5a9e733c228fed06 Mon Sep 17 00:00:00 2001
+From: Po Cheng <po.cheng@technexion.com>
+Date: Tue, 29 Sep 2020 13:44:32 +0800
+Subject: [PATCH] edm-imx8mq: Relocate FDT to Address Before Kernel when
+ loading FIT image
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+ include/configs/edm-imx8mq.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/edm-imx8mq.h b/include/configs/edm-imx8mq.h
+index 81f9ef6..edf56cd 100644
+--- a/include/configs/edm-imx8mq.h
++++ b/include/configs/edm-imx8mq.h
+@@ -138,7 +138,7 @@
+ 	"splashpos=m,m\0" \
+ 	"splashsource=mmc_fs\0" \
+ 	"fdt_addr=0x43000000\0"			\
+-	"fdt_high=0xffffffffffffffff\0"		\
++	"fdt_high=0x40440000\0"		\
+ 	"boot_fdt=try\0" \
+ 	"fdt_file=imx8mq-edm-wizard.dtb\0" \
+ 	"initrd_addr=0x43800000\0"		\
+-- 
+2.7.4
+

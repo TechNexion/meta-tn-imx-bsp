@@ -23,6 +23,7 @@ SRC_URI_append = " file://splash.bmp"
 SRC_URI_append_rescue = " \
 	file://0001-pico-imx8mm-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
 	file://0002-pico-imx8mq-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
+	file://0001-edm-imx8mq-Relocate-FDT-to-Address-Before-Kernel-whe.patch \
 	file://technexion.bmp \
 "
 
