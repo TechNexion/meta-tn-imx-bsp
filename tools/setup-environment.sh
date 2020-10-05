@@ -157,6 +157,8 @@ EOF
       echo "BBMULTICONFIG = \"container\"" >> $PWD/conf/local.conf
       echo "setup BBMULTICONFIG in local.conf with conf/multiconfig/container.conf"
       cat $PWD/conf/multiconfig/container.conf
+      echo "BBMASK += \"meta-tn-imx-bsp/recipes-python/pyqt4/python3-pyqt_4.11.3.bb\"" >> $PWD/conf/local.conf
+      echo "BBMASK += \"meta-tn-imx-bsp/recipes-qt/qt4/qt4-embedded_%.bbappend\"" >> $PWD/conf/local.conf
     fi
   else
     # no meta-virtualization
