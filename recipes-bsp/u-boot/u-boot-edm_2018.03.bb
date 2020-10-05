@@ -18,7 +18,7 @@ SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git"
 SRCOPTIONS = ""
 SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "8c116c6ed20a1e15ba0f74e0a15293f2caff94ee"
+SRCREV = "c07b5ef88f2542e4af33ed96a96c11da814ea55b"
 SRC_URI_append = " file://splash.bmp"
 SRC_URI_append_rescue = " \
 	file://0001-pico-imx8mm-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
