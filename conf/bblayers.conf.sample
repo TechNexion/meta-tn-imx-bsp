@@ -27,6 +27,7 @@ BBLAYERS ?= " \
   \
   ##OEROOT##/../meta-python2 \
   ##OEROOT##/../meta-browser \
+  ##OEROOT##/../meta-clang \
   ##OEROOT##/../meta-rust \
   ##OEROOT##/../meta-qt5 \
   ##OEROOT##/../meta-qt4 \
