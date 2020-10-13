@@ -24,6 +24,7 @@ SRC_URI_append_rescue = " \
 	file://0001-pico-imx8mm-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
 	file://0002-pico-imx8mq-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
 	file://0001-edm-imx8mq-Relocate-FDT-to-Address-Before-Kernel-whe.patch \
+        file://0001-flex-imx8mm-Relocate-FDT-to-Address-Before-Kernel-wh.patch \
 	file://technexion.bmp \
 "
 
