@@ -35,6 +35,12 @@ RDEPENDS_${PN} = " \
     fb-test \
     linux-serial-test \
     stressapptest \
+    fbida \
+    ramsmp \
+    sysbench \
+    fio \
+    iozone3 \
+    lmbench \
     ${@bb.utils.contains('DISTRO_FEATURES', 'virtualization', 'sudo glmark2 net-tools opencv packagegroup-core-ssh-openssh wpa-supplicant wireless-tools bluez5 firmware-imx-sdma', '', d)} \
 "
 
