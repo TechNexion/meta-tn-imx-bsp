@@ -108,6 +108,8 @@ SDCARD_GENERATION_COMMAND_mx6q = "generate_tn_sdcard"
 SDCARD_GENERATION_COMMAND_mx7d = "generate_tn_sdcard"
 SDCARD_GENERATION_COMMAND_mx8m = "generate_tn_sdcard"
 LICENSE_FLAGS_WHITELIST += "commercial_qca commercial_brcm"
+MACHINE_FEATURES_BACKFILL_append_simcom = " nmcli"
+DISTRO_FEATURES_BACKFILL_append_simcom = " nmcli"
 
 # wic (sdcard) image
 WKS_FILE = "tn-spl-bootpart-rootfs.wks.in"
@@ -131,4 +133,7 @@ DISTRO_FEATURES_append_virtualization = " virtualization"
 # technexion rescue-loader
 DISTRO_FEATURES_remove_rescue = "irda alsa bluetooth wifi nfs 3g nfc ptest bluez bluez5 vulkan optee pulseaudio multiarch x11"
 USE_VT_rescue = "0"
+
+RDEPENDS_packagegroup-core-tools-testapps_remove_simcom = "mesa-demos connman-client connman-tools"
+RDEPENDS_packagegroup-base-3g_remove_simcom = "ofono"
 
