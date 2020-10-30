@@ -26,6 +26,14 @@ OVERRIDES_append = "${@':tools' if (d.getVar('DISTRO', True) == 'fsl-imx-xwaylan
 OVERRIDES_append = "${@':rescue' if (d.getVar('INITRAMFS_IMAGE', True) == 'tn-image-rescue-initramfs') else ''}"
 
 #
+# Release Info
+#
+DISTRO_NAME_tn = "TechNexion i.MX Release Distro"
+RELEASE_NAME := "${@'Q%s' % (lambda dt: (dt.datetime.now().month+2)//3)(__import__('datetime')) if (d.getVar('PREVIEW', True) is None) else 'Preview'}"
+INHERIT += "image-buildinfo"
+IMAGE_BUILDINFO_VARS_append = " RELEASE_NAME"
+
+#
 # Kernel Specifics
 #
 PREFERRED_PROVIDER_kernel_tn = "linux-tn-imx"
