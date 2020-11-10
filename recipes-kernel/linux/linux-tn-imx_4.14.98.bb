@@ -51,6 +51,7 @@ SRC_URI_append_rescue = " \
 	file://0003-imx6q-patch-to-reduce-cmd-size-to-50MB.patch \
 	file://0001-fbdev-fbmem-add-config-option-to-center-the-bootup-l.patch \
 	file://0002-ARM64-config-enable-FB_LOGO_CENTER-for-rescue-bootup.patch \
+	file://0001-ARM-config-enable-FB_LOGO_CENTER-for-rescue-bootup.patch \
 	file://0004-video-fbdev-core-fbmem-modify-to-a-single-graph.patch \
 	file://logo.ppm \
 	"
