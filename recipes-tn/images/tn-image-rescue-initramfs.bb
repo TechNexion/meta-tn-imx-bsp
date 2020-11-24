@@ -19,6 +19,7 @@ PACKAGE_INSTALL = " \
 	rescue-loader \
 	qt4-embedded-plugin-iconengine-svgicon \
 	qt4-embedded-plugin-imageformat-svg \
+	qt4-embedded-plugin-gfxdriver-screenlinuxfb \
 	qt4-embedded-plugin-gfxdriver-directfbscreen \
 	qt4-embedded-plugin-gfxdriver-gfxtransformed \
 	ttf-lato-font \
