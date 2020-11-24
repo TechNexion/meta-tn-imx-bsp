@@ -1,9 +1,11 @@
-QT_EMBEDDED_EXTRA_FLAGS_append = " -plugin-gfx-directfb"
+QT_EMBEDDED_EXTRA_FLAGS_append = " -plugin-gfx-directfb -plugin-gfx-linuxfb"
 DEPENDS_append = " directfb"
 
-QT_CONFIG_FLAGS_remove = "-webkit -pulseaudio -linuxfb -qvfb -eglfs -system-sqlite -qt3support -plugin-sql-sqlite -plugin-gfx-qvfb -plugin-gfx-vnc -qt-mouse-qvfb -xmlpatterns"
+QT_CONFIG_FLAGS_remove = "-webkit -pulseaudio -qvfb -eglfs -system-sqlite -qt3support -plugin-sql-sqlite -plugin-gfx-qvfb -plugin-gfx-vnc -qt-mouse-qvfb -xmlpatterns"
 
 QT_CONFIG_FLAGS_append = " -no-qt3support -no-webkit -no-audio-backend -no-qvfb -no-mouse-qvfb -no-libmng -svg -no-xmlpatterns"
+
+QT_CONFIG_FLAGS_append = " ${@bb.utils.contains('MACHINE_FEATURES', 'touchscreen', '-qt-mouse-tslib', '', d)}"
 
 # Reverse meta-freescale/dynamic-layers/qt4-layer/reciepes-qt4/qt4/qt4-imx-support.inc
 # of imxgpu2d overrides, specifically for building mx8 series which are wayland based
