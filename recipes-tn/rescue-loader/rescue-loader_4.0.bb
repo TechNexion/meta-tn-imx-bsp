@@ -11,7 +11,7 @@ S = "${WORKDIR}/git"
 
 RDEPENDS_${PN} = " \
 	bash \
-	directfb \
+	cairo \
 	libudev \
 	${PYTHON_PN}-debugger \
 	${PYTHON_PN}-threading \
@@ -27,6 +27,7 @@ RDEPENDS_${PN} = " \
 	${PYTHON_PN}-pyusb \
 	${PYTHON_PN}-pyqrcode \
 	${PYTHON_PN}-pyqt \
+	${PYTHON_PN}-pycairo \
 	"
 
 inherit setuptools3
@@ -43,10 +44,6 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/profile.d/
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
 	install -d ${D}${sbindir}
-
-	# directfb config file
-	install -m 0644 ${S}/rescue_loader/directfbrc ${D}${sysconfdir}
-	#install -m 0644 ${S}/rescue_loader/directfbrc-no-tslib ${D}${sysconfdir}/directfbrc
 
 	# rescue-loader xml config file
 	install -m 0644 ${S}/rescue_loader/installer.xml ${D}${sysconfdir}
@@ -73,14 +70,10 @@ do_install_append() {
 
 	# export DBUS_SESSION_BUS_ADDDRESS=unix:path=/var/run/dbus/session_bus_socket through dbus-export.sh in /etc/profile
 	install -m 0755 ${S}/rescue_loader/dbus-export.sh ${D}${sysconfdir}/profile.d/dbus-export.sh
-
-	# export QWS_DISPLAY=directfb:0 through qt4-export.sh in /etc/profile
-	install -m 0755 ${S}/rescue_loader/qt4-export.sh ${D}${sysconfdir}/profile.d/qt4-export.sh
 }
 
 FILES_${PN} += " \
 	${sbindir}/guiclientd.sh \
-	${sysconfdir}/directfbrc \
 	${sysconfdir}/installer.xml \
 	${systemd_unitdir}/system/installerd.service \
 	${sysconfdir}/systemd/system/multi-user.target.wants/installerd.service \

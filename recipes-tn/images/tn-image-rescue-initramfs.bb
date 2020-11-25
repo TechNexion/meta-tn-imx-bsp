@@ -11,7 +11,6 @@ TOUCH = ' ${@bb.utils.contains("MACHINE_FEATURES", "touchscreen", "tslib tslib-c
 # reassigned to RDEPNDS in image.bbclass
 PACKAGE_INSTALL = " \
 	${VIRTUAL-RUNTIME_base-utils} \
-	directfb \
 	udev \
 	firmware-imx-sdma \
 	packagegroup-core-boot \
@@ -20,7 +19,6 @@ PACKAGE_INSTALL = " \
 	qt4-embedded-plugin-iconengine-svgicon \
 	qt4-embedded-plugin-imageformat-svg \
 	qt4-embedded-plugin-gfxdriver-screenlinuxfb \
-	qt4-embedded-plugin-gfxdriver-directfbscreen \
 	qt4-embedded-plugin-gfxdriver-gfxtransformed \
 	ttf-lato-font \
 	mmc-utils \

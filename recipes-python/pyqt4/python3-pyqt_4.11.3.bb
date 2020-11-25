@@ -33,8 +33,6 @@ PARALLEL_MAKE = ""
 inherit qt4e python3native python3-dir distro_features_check
 # depends on qt4-embedded
 DISTRO_FEATURES_remove = "x11 wayland"
-DISTRO_FEATURES_append = " directfb"
-#REQUIRED_DISTRO_FEATURES = "directfb"
 
 DISABLED_FEATURES = "PyQt_Desktop_OpenGL PyQt_Accessibility PyQt_SessionManager PyQt_Shortcut PyQt_RawFont PyQt_OpenSSL PyQt_SQL PyQt_Script"
 

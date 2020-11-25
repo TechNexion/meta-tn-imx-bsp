@@ -1,5 +1,4 @@
-QT_EMBEDDED_EXTRA_FLAGS_append = " -plugin-gfx-directfb -plugin-gfx-linuxfb"
-DEPENDS_append = " directfb"
+QT_EMBEDDED_EXTRA_FLAGS_append = " -plugin-gfx-linuxfb"
 
 QT_CONFIG_FLAGS_remove = "-webkit -pulseaudio -qvfb -eglfs -system-sqlite -qt3support -plugin-sql-sqlite -plugin-gfx-qvfb -plugin-gfx-vnc -qt-mouse-qvfb -xmlpatterns"
 
