@@ -92,8 +92,7 @@ OPTEE_BIN_EXT_mx8mm = "8mm"
 # Extra Stuff for TechNexion
 #
 MACHINE_FIRMWARE_remove_mx8 = "linux-firmware-ath10k"
-MACHINE_FEATURES_append = " pci wifi bluetooth touchscreen"
-MACHINE_FEATURES_remove_mx8 = "touchscreen"
+MACHINE_FEATURES_append = " pci wifi bluetooth"
 MACHINE_EXTRA_RRECOMMENDS_append = " broadcom-bluetooth"
 MACHINE_EXTRA_RRECOMMENDS_remove_mx8 = "broadcom-bluetooth"
 IMAGE_INSTALL_append = " get-support-info"
@@ -130,6 +129,6 @@ HOSTTOOLS_NONFATAL += "git-lfs"
 DISTRO_FEATURES_append_virtualization = " virtualization"
 
 # technexion rescue-loader
-DISTRO_FEATURES_remove_rescue = "irda alsa bluetooth wifi nfs 3g nfc ptest bluez bluez5 vulkan optee pulseaudio multiarch x11 wayland"
+DISTRO_FEATURES_remove_rescue = "irda alsa bluetooth wifi nfs 3g nfc ptest bluez bluez5 vulkan optee pulseaudio multiarch x11"
 USE_VT_rescue = "0"
 
