@@ -4,6 +4,7 @@ SRC_URI += " \
 file://lvds15/pointercal \
 file://lvds10/pointercal \
 file://lvds7/pointercal \
+file://ttl5/pointercal \
 "
 
 do_install_append_rescue () {
@@ -14,6 +15,8 @@ do_install_append_rescue () {
 			install -m 0644 ${WORKDIR}/lvds10/pointercal ${D}${sysconfdir}/pointercal
 		elif [ "$disp" = "lvds7" ]; then
 			install -m 0644 ${WORKDIR}/lvds7/pointercal ${D}${sysconfdir}/pointercal
+		elif [ "$disp" = "ttl5" ]; then
+			install -m 0644 $${WORKDIR}/ttl5/pointercal ${D}${sysconfdir}/pointercal
 		fi
 	done
 }
