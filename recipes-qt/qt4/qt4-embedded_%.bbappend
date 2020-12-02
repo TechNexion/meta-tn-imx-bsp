@@ -1,3 +1,5 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
 QT_EMBEDDED_EXTRA_FLAGS_append = " -plugin-gfx-linuxfb"
 
 QT_CONFIG_FLAGS_remove = "-webkit -pulseaudio -qvfb -eglfs -system-sqlite -qt3support -plugin-sql-sqlite -plugin-gfx-qvfb -plugin-gfx-vnc -qt-mouse-qvfb -xmlpatterns"
@@ -12,3 +14,6 @@ QT_CONFIG_FLAGS_append = " ${@bb.utils.contains('MACHINE_FEATURES', 'touchscreen
 DEPENDS_remove = "virtual/libgles2"
 QT_GLFLAGS_remove = "-opengl es2 -openvg"
 QT_CONFIG_FLAGS_remove = "-DEGL_API_FB=1"
+
+SRC_URI += "file://0001-QWS-Change-default-QWS-background-brush-to-black.patch"
+

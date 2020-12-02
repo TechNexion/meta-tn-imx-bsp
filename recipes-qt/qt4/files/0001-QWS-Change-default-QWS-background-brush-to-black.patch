@@ -1,0 +1,26 @@
+From 998ab3a2568890a24b04e93733ab071cebe5e36c Mon Sep 17 00:00:00 2001
+From: Po Cheng <po.cheng@technexion.com>
+Date: Wed, 2 Dec 2020 13:00:09 +0800
+Subject: [PATCH] QWS: Change default QWS background brush to black
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+ src/gui/embedded/qwindowsystem_qws.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gui/embedded/qwindowsystem_qws.cpp b/src/gui/embedded/qwindowsystem_qws.cpp
+index 8be2b36..12f5801 100644
+--- a/src/gui/embedded/qwindowsystem_qws.cpp
++++ b/src/gui/embedded/qwindowsystem_qws.cpp
+@@ -1431,7 +1431,7 @@ void QWSServerPrivate::initServer(int flags)
+     clientMap[-1] = new QWSClient(q, 0, 0);
+ 
+     if (!bgBrush)
+-        bgBrush = new QBrush(QColor(0x20, 0xb0, 0x50));
++        bgBrush = new QBrush(QColor(0x00, 0x00, 0x00));
+ 
+     initializeCursor();
+ 
+-- 
+2.7.4
+
