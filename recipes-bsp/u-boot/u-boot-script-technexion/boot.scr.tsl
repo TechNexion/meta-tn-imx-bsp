@@ -1,0 +1,12 @@
+#
+# setup scan_dev_for_io_expander
+#
+setenv scan_dev_for_io_expander 'i2c dev 2; i2c probe 23 && setenv baseboard wizard || setenv baseboard pi'
+
+#
+# Start by i2c probe for io expander
+#
+run scan_dev_for_io_expander;
+run loadfit;
+run fitboot;
+
