@@ -1,0 +1,54 @@
+From 04e4c5aa1f499950b79c0cff4d235a1f8bcaeb0e Mon Sep 17 00:00:00 2001
+From: Po Cheng <po.cheng@technexion.com>
+Date: Tue, 7 Jul 2020 12:55:47 +0800
+Subject: [PATCH] imx8mq: patch to reduce cma size to 100MB
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-imx8mq.dtsi  | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mq-edm.dtsi  | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mq-pico.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-imx8mq.dtsi b/arch/arm64/boot/dts/freescale/fsl-imx8mq.dtsi
+index 4af7c8c..3c6aa45 100755
+--- a/arch/arm64/boot/dts/freescale/fsl-imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-imx8mq.dtsi
+@@ -83,7 +83,7 @@
+ 		linux,cma {
+ 			compatible = "shared-dma-pool";
+ 			reusable;
+-			size = <0 0x3c000000>;
++			size = <0 0x06000000>;
+ 			alloc-ranges = <0 0x40000000 0 0x40000000>;
+ 			linux,cma-default;
+ 		};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-edm.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-edm.dtsi
+index a0f71fb..42d0258 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-edm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq-edm.dtsi
+@@ -71,7 +71,7 @@
+     linux,cma {
+         compatible = "shared-dma-pool";
+         reusable;
+-        size = <0 0x30000000>;
++        size = <0 0x06000000>;
+         alloc-ranges = <0 0x40000000 0 0x40000000>;
+         linux,cma-default;
+     };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-pico.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-pico.dtsi
+index e1f198ea..ce29ad9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-pico.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq-pico.dtsi
+@@ -59,7 +59,7 @@
+ 	linux,cma {
+ 		compatible = "shared-dma-pool";
+ 		reusable;
+-		size = <0 0x30000000>;
++		size = <0 0x06000000>;
+ 		alloc-ranges = <0 0x40000000 0 0x40000000>;
+ 		linux,cma-default;
+ 	};
+-- 
+2.7.4
+

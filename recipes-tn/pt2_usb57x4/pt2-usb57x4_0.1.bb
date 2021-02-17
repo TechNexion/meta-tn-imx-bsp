@@ -11,8 +11,10 @@ DEPENDS += "libusb1"
 RDEPENDS_${PN} += "libusb1"
 RDEPENDS_${PN}_append_tools = " bash"
 
-SRC_URI = "file://pt2_usb57x4_linux_sdk_1.0.zip"
-SRC_URI_append_tools = " file://power-cycle.sh file://det-gpio.sh"
+SRC_URI = "file://pt2_usb57x4_linux_sdk_1.0.zip \
+           file://0001-libpt2-Modify-Interface-API-to-include-Device-ID-par.patch \
+           file://0002-Examples-Ensure-to-pass-in-device-id.patch "
+SRC_URI_append_tools = " file://power-cycle.sh file://det-gpio.sh file://pt2usb-util.sh"
 
 S = "${WORKDIR}"
 
@@ -47,6 +49,7 @@ do_install() {
 do_install_append_tools() {
     install -m 0755 ${S}/power-cycle.sh ${D}${sbindir}
     install -m 0755 ${S}/det-gpio.sh ${D}${sbindir}
+    install -m 0755 ${S}/pt2usb-util.sh ${D}${sbindir}
 }
 
 INSANE_SKIP_${PN} = "ldflags"

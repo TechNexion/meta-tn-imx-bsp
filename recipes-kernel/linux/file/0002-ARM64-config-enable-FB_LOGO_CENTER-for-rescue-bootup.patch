@@ -1,0 +1,27 @@
+From 422a70ac2684076cf5fd4c8114c183c74bb078a7 Mon Sep 17 00:00:00 2001
+From: Ray Chang <ray.chang@technexion.com>
+Date: Fri, 18 Sep 2020 10:30:53 +0800
+Subject: [PATCH 2/4] ARM64: config: enable FB_LOGO_CENTER for rescue bootup
+ logo
+
+---
+ arch/arm64/configs/tn_imx8_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/configs/tn_imx8_defconfig b/arch/arm64/configs/tn_imx8_defconfig
+index 90a70df..6b33949 100644
+--- a/arch/arm64/configs/tn_imx8_defconfig
++++ b/arch/arm64/configs/tn_imx8_defconfig
+@@ -417,7 +417,9 @@ CONFIG_BACKLIGHT_GENERIC=m
+ CONFIG_BACKLIGHT_PWM=y
+ CONFIG_BACKLIGHT_LP855X=m
+ CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+ CONFIG_LOGO=y
++CONFIG_FB_LOGO_CENTER=y
+ # CONFIG_LOGO_LINUX_MONO is not set
+ # CONFIG_LOGO_LINUX_VGA16 is not set
+ CONFIG_SOUND=y
+-- 
+2.7.4
+

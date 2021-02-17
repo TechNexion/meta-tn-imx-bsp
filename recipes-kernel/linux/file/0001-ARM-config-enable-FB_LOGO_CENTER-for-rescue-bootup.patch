@@ -1,0 +1,27 @@
+From c83622e35fb57c641fb8b55ae83ae7ea5a720998 Mon Sep 17 00:00:00 2001
+From: Po Cheng <po.cheng@technexion.com>
+Date: Tue, 10 Nov 2020 16:17:41 +0800
+Subject: [PATCH] ARM: config: enable FB_LOGO_CENTER for rescue bootup
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+ arch/arm/configs/tn_imx_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/configs/tn_imx_defconfig b/arch/arm/configs/tn_imx_defconfig
+index 77a3e4a..41935f0 100644
+--- a/arch/arm/configs/tn_imx_defconfig
++++ b/arch/arm/configs/tn_imx_defconfig
+@@ -339,7 +339,9 @@ CONFIG_LCD_PLATFORM=y
+ CONFIG_BACKLIGHT_PWM=y
+ CONFIG_BACKLIGHT_GPIO=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+ CONFIG_LOGO=y
++CONFIG_FB_LOGO_CENTER=y
+ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_ALOOP=m
+-- 
+2.7.4
+

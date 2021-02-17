@@ -23,12 +23,24 @@ OVERRIDES_append = "${@'' if (d.getVar('SOUNDCARD', True) is None or len(d.getVa
 OVERRIDES_append = "${@'' if (d.getVar('NFC', True) is None or len(d.getVar('NFC', True)) == 0) else ':%s' % d.getVar('NFC', True).lower()}"
 OVERRIDES_append = "${@bb.utils.contains('BBLAYERS', '${BSPDIR}/sources/meta-virtualization', ':virtualization', '', d)}"
 OVERRIDES_append = "${@':tools' if (d.getVar('DISTRO', True) == 'fsl-imx-xwayland' or d.getVar('DISTRO', True) == 'fsl-imx-wayland' or d.getVar('DISTRO', True) == 'fsl-imx-x11') else ''}"
+OVERRIDES_append = "${@':rescue' if (d.getVar('INITRAMFS_IMAGE', True) == 'tn-image-rescue-initramfs') else ''}"
+
+#
+# Release Info
+#
+DISTRO_NAME_tn = "TechNexion i.MX Release Distro"
+RELEASE_NAME := "${@'Q%s' % (lambda dt: (dt.datetime.now().month+2)//3)(__import__('datetime')) if (d.getVar('PREVIEW', True) is None) else 'Preview'}"
+INHERIT += "image-buildinfo"
+IMAGE_BUILDINFO_VARS_append = " RELEASE_NAME"
 
 #
 # Kernel Specifics
 #
 PREFERRED_PROVIDER_kernel_tn = "linux-tn-imx"
 PREFERRED_PROVIDER_virtual/kernel_tn = "linux-tn-imx"
+KERNEL_CLASSES_append_rescue = " kernel-fitimage"
+KERNEL_IMAGETYPES_append_rescue = " fitImage"
+RDEPENDS_${KERNEL_PACKAGE_NAME}-base_rescue = ""
 
 #
 # Bootloader Specifics
@@ -48,6 +60,9 @@ BOOT_SPACE_mx6 = "16384"
 BOOT_SPACE_mx7 = "16384"
 BOOT_SPACE_mx8 = "32768"
 LOADADDR_mx8 = ""
+# u-boot splash file
+SPLASH_FILENAME = "splash.bmp"
+BOOT_SCRIPTS_append = " ${SPLASH_FILENAME}:splash.bmp"
 
 #
 # u-boot env (uEnv.txt + boot.scr.uimg)
@@ -55,6 +70,8 @@ LOADADDR_mx8 = ""
 BOOT_SCRIPTS = ""
 UENV_FILENAME_uenv = "uEnv.txt"
 BOOT_SCRIPTS_append_uenv = " ${UENV_FILENAME}:uEnv.txt"
+UENV_SCRNAME_bootscr = "boot.scr.uimg"
+BOOT_SCRIPTS_append_bootscr = " ${UENV_SCRNAME}:boot.scr"
 
 #
 # DDR Firmware Name (NXP firmwares)
@@ -75,8 +92,7 @@ OPTEE_BIN_EXT_mx8mm = "8mm"
 # Extra Stuff for TechNexion
 #
 MACHINE_FIRMWARE_remove_mx8 = "linux-firmware-ath10k"
-MACHINE_FEATURES_append = " pci wifi bluetooth touchscreen"
-MACHINE_FEATURES_remove_mx8 = "touchscreen"
+MACHINE_FEATURES_append = " pci wifi bluetooth"
 MACHINE_EXTRA_RRECOMMENDS_append = " broadcom-bluetooth"
 MACHINE_EXTRA_RRECOMMENDS_remove_mx8 = "broadcom-bluetooth"
 IMAGE_INSTALL_append = " get-support-info"
@@ -92,13 +108,17 @@ SDCARD_GENERATION_COMMAND_mx6q = "generate_tn_sdcard"
 SDCARD_GENERATION_COMMAND_mx7d = "generate_tn_sdcard"
 SDCARD_GENERATION_COMMAND_mx8m = "generate_tn_sdcard"
 LICENSE_FLAGS_WHITELIST += "commercial_qca commercial_brcm"
+MACHINE_FEATURES_BACKFILL_append_simcom = " nmcli"
+DISTRO_FEATURES_BACKFILL_append_simcom = " nmcli"
 
 # wic (sdcard) image
 WKS_FILE = "tn-spl-bootpart-rootfs.wks.in"
 WKS_FILE_mx8 = "tn-imx8-imxboot-bootpart-rootfs.wks.in"
 WKS_FILE_DEPENDS += "u-boot-edm"
 WKS_FILE_DEPENDS_mx8 += "imx-boot"
+IMAGE_BOOT_FILES_append = " ${SPLASH_FILENAME}"
 IMAGE_BOOT_FILES_append_uenv = " ${UENV_FILENAME}"
+IMAGE_BOOT_FILES_append_bootscr = " ${UENV_SCRNAME};boot.scr"
 
 # xz compression options
 XZ_COMPRESSION_LEVEL = "-9"
@@ -106,4 +126,14 @@ XZ_INTEGRITY_CHECK = "crc64"
 
 # Additional BitBake/Yocto build tool
 HOSTTOOLS_NONFATAL += "git-lfs"
+
+# meta-virtualization
+DISTRO_FEATURES_append_virtualization = " virtualization"
+
+# technexion rescue-loader
+DISTRO_FEATURES_remove_rescue = "irda alsa bluetooth wifi nfs 3g nfc ptest bluez bluez5 vulkan optee pulseaudio multiarch x11"
+USE_VT_rescue = "0"
+
+RDEPENDS_packagegroup-core-tools-testapps_remove_simcom = "mesa-demos connman-client connman-tools"
+RDEPENDS_packagegroup-base-3g_remove_simcom = "ofono"
 

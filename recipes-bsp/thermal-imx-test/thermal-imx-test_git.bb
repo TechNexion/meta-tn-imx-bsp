@@ -11,7 +11,7 @@ THERMAL_IMX_TEST_SRC = "git://github.com/TechNexion-customization/thermal_imx_te
 SRC_URI = "${THERMAL_IMX_TEST_SRC};branch=${SRCBRANCH} \
            file://thermal-imx-test.sh \
 "
-SRCREV = "61a795b52d4ab5b184fd0b00871bef94fa118bd2"
+SRCREV = "bb17d9bcf05a0b3d4c3213af310bfa21cf74a2a6"
 
 S = "${WORKDIR}/git"
 

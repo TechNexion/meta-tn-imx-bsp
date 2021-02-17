@@ -8,6 +8,7 @@ inherit pythonnative
 PROVIDES += "u-boot"
 DEPENDS_append = " python dtc-native"
 RDEPENDS_${PN}_append_uenv = " u-boot-uenv"
+RDEPENDS_${PN}_append_bootscr = " u-boot-script-technexion"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://Licenses/gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
@@ -17,7 +18,11 @@ SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git"
 SRCOPTIONS = ""
 SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-stable"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "a5a39eea7f6762352c17a48d130a93f41a5362fd"
+SRCREV = "619d30ee2f6c878879e9a1f49440e07d5a95dc42"
+SRC_URI_append = " file://splash.bmp"
+SRC_URI_append_rescue = " \
+	file://technexion.bmp \
+"
 
 S = "${WORKDIR}/git"
 
@@ -26,6 +31,16 @@ inherit fsl-u-boot-localversion
 LOCALVERSION ?= "-${SRCREV}"
 
 BOOT_TOOLS = "imx-boot-tools"
+
+do_deploy_append () {
+	install -d ${DEPLOYDIR}
+	install ${WORKDIR}/splash.bmp ${DEPLOYDIR}/splash.bmp
+}
+
+do_deploy_append_rescue () {
+	install -d ${DEPLOYDIR}
+	install ${WORKDIR}/technexion.bmp ${DEPLOYDIR}/splash.bmp
+}
 
 do_deploy_append_mx8m () {
     # Deploy the mkimage, u-boot-nodtb.bin and fsl-imx8mq-XX.dtb for mkimage to generate boot binary

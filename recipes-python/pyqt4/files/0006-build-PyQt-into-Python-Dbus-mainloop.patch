@@ -1,0 +1,38 @@
+Patch File to Build PyQt4's qt.mainloop into python-dbus mainloop
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+Index: PyQt-x11-gpl-4.11.3/configure-ng.py
+===================================================================
+--- PyQt-x11-gpl-4.11.3.orig/configure-ng.py
++++ PyQt-x11-gpl-4.11.3/configure-ng.py
+@@ -1948,13 +1948,12 @@ def check_dbus(target_config, verbose):
+         elif f.startswith('-l'):
+             target_config.dbus_libs.append(f[2:])
+
+-    try:
+-        import dbus.mainloop
+-    except:
+-        inform("The Python dbus module doesn't seem to be installed.")
+-        return
+-
+-    target_config.pydbus_module_dir = dbus.mainloop.__path__[0]
++    #try:
++    #    import dbus.mainloop
++    #    target_config.pydbus_module_dir = dbus.mainloop.__path__[0]
++    #except:
++    #    inform("The Python dbus module doesn't seem to be installed.")
++    #    return
+
+     # Try and find dbus-python.h.  We don't use pkg-config because it is broken
+     # for dbus-python (at least for versions up to and including v0.81.0).
+@@ -1969,7 +1968,8 @@ def check_dbus(target_config, verbose):
+         if os.access(os.path.join(d, 'dbus', 'dbus-python.h'), os.F_OK):
+             if d not in target_config.dbus_inc_dirs:
+                 target_config.dbus_inc_dirs.append(d)
+-
++            inform("found dbus-python.h in {}".format(d))
++            target_config.pydbus_module_dir = target_config.pyqt_module_dir + '/dbus/mainloop'
+             break
+     else:
+         inform(

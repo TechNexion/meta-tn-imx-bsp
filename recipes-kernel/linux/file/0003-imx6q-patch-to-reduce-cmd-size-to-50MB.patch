@@ -1,0 +1,26 @@
+From 80a8e788fbc482115ce8f3784d33f993cf9c240d Mon Sep 17 00:00:00 2001
+From: Po Cheng <po.cheng@technexion.com>
+Date: Thu, 23 Jul 2020 16:32:20 +0800
+Subject: [PATCH 3/3] imx6q: patch to reduce cmd size to 50MB
+
+Signed-off-by: Po Cheng <po.cheng@technexion.com>
+---
+ arch/arm/boot/dts/imx6q.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 4dabb09..643a8a9 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -94,7 +94,7 @@
+ 		linux,cma {
+ 			compatible = "shared-dma-pool";
+ 			reusable;
+-			size = <0x14000000>;
++			size = <0x03000000>;
+ 			linux,cma-default;
+ 		};
+ 	};
+-- 
+2.7.4
+

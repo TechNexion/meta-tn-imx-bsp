@@ -154,6 +154,10 @@ if [ -n "$DISPLAY" ]; then
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_INFO"
   fi
 fi
+if [ -n "$PANEL" ]; then
+    export DISPLAY_PANEL=$PANEL
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DISPLAY_PANEL"
+fi
 if [ -n "$BASEBOARD" ]; then
   echo "Specified BASE_BOARD: $BASEBOARD"
   export BASE_BOARD=$BASEBOARD
@@ -161,6 +165,10 @@ if [ -n "$BASEBOARD" ]; then
     echo "Export BASE_BOARD=$BASEBOARD to yocto via BB_ENV_EXTRAWHITE"
     export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BASE_BOARD"
   fi
+fi
+if [ -n "$FDTNAME" ]; then
+    export ALT_FDTNAME=$FDTNAME
+    export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE ALT_FDTNAME"
 fi
 
 # Identify SOC type
@@ -171,18 +179,18 @@ if [ -z "${WIFI_FIRMWARE#"${WIFI_FIRMWARE%%[! ]*}"}" ]; then
     echo "WARNING - No WIFI_FIRMWARE specified"
     RF_FIRMWARES=""
 else
-    if [ "$WIFI_FIRMWARE" == "all" ]; then
-        if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
+    if [ "$WIFI_FIRMWARE" = "all" ]; then
+        if [ "$CPU_TYPE" = "imx8mq" -o "$CPU_TYPE" = "imx8mm" ]; then
             echo "WARNING - imx8mq/imx8mm SOM only supports qca wireless module, so load qca firmware"
             RF_FIRMWARES="qca ath-pci"
-        elif [ "$CPU_TYPE" == 'imx6' ] || [ "$CPU_TYPE" == "imx7" ] || [ "$CPU_TYPE" == 'imx6ul' ]; then
+        elif [ "$CPU_TYPE" = "imx6" -o "$CPU_TYPE" = "imx7" -o "$CPU_TYPE" = "imx6ul" ]; then
             RF_FIRMWARES="qca brcm ath-pci"
         else
             echo "WARNING - No matched CPU_TYPE: $CPU_TYPE, hence no WIFI_FIRMWARE"
             RF_FIRMWARES=""
         fi
-    elif [ "$WIFI_FIRMWARE" == "y" ] || [ "$WIFI_FIRMWARE" == "Y" ]; then
-        if [ "$CPU_TYPE" == 'imx8mq' ] || [ "$CPU_TYPE" == 'imx8mm' ]; then
+    elif [ "$WIFI_FIRMWARE" = "y" -o "$WIFI_FIRMWARE" = "Y" ]; then
+        if [ "$CPU_TYPE" = "imx8mq" -o "$CPU_TYPE" = "imx8mm" ]; then
             echo "WARNING - imx8mq/imx8mm SOM only supports qca wireless module, so load qca firmware"
             RF_FIRMWARES="qca"
         else
