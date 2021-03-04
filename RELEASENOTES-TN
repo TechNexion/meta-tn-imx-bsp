@@ -2,7 +2,7 @@ yocto-2.5 TechNexion BSP Release Notes
 ======================================
 
 Release Name: tn-sumo_4.14.98-2.0.1-patch_GA
-Release Revision: 20210207.1
+Release Revision: 20210207.2
 
 Features
 ============
@@ -181,6 +181,8 @@ FLEX-IMX8MM-WIZARD:
 
 PICO-IMX6UL-PI:
 ------------------
+* ~~BUG#442: CANBUS can't work on Yocto 2.5~~
+* ~~BUG#422: U-boot can't boot after replacing Hynix DDR3L with Kingston DDR3L~~
 
 PICO-IMX7D-NYMPH:
 -----------------
@@ -238,6 +240,8 @@ IMX8MM/IMX8MQ:
 
 Fixes
 =====
+* Fix CAN bus does not work in the kernel
+* Move the offset address of SPL to 2k after the original address
 * Fix setup script to follow bash posix convention
 * Fix memory leak in desktop-shell and compositor-drm
 * ~~update qcacld firmwares~~
@@ -251,4 +255,4 @@ Fixes
 * ~~Rework setup scripts for building docker os and docker containers~~
 
 Commits:
-e07ee0c715e751eb083ed7b9daa805d76b26a943 to 21a0111ebcae93aa20969e1c78fa5f6f9d8a73b3
+e07ee0c715e751eb083ed7b9daa805d76b26a943 to 614dcf524d4bd818bfc1715ea465ba6e78278726
