@@ -1,0 +1,5 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+EXTRA_OECMAKE =  "-DPYBIND11_TEST=OFF \
+	-DPYTHON_EXECUTABLE=${RECIPE_SYSROOT_NATIVE}/usr/bin/python3-native/python3.7 \
+"
