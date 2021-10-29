@@ -101,11 +101,12 @@ IMAGE_INSTALL_append_tools = " packagegroup-tn-tools"
 IMAGE_INSTALL_append_voicehat = " packagegroup-tn-voicehat"
 IMAGE_INSTALL_append_nfc = " packagegroup-tn-nfc"
 IMAGE_INSTALL_append_ubuntu = " tn-growpart-helper glmark2 tn-ubuntu-custom"
+DISTRO_FEATURES_remove_ubuntu = "pulseaudio"
+
 IMAGE_FSTYPES_append = " ext4 wic.md5sum wic.xz"
 LICENSE_FLAGS_WHITELIST += "commercial_qca commercial_brcm commercial_tn"
 MACHINE_FEATURES_BACKFILL_append_simcom = " nmcli"
 DISTRO_FEATURES_BACKFILL_append_simcom = " nmcli"
-
 # wic (sdcard) image
 WKS_FILE = "imx-uboot-spl-bootpart.wks.in"
 WKS_FILE_mx8 = "imx-imx-boot-bootpart.wks.in"
