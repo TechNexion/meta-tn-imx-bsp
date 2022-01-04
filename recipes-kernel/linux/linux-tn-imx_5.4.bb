@@ -24,7 +24,7 @@ SRC_URI = "${KERNEL_SRC};branch=${KERNEL_BRANCH}${SRCOPTIONS}"
 
 SRC_URI_append_virtualization = " file://0001-ARM64-configs-tn_imx8_defconfig-btrfs-fuse-overlayfs.patch"
 
-SRCREV = "65d36c699c1624e9b5cd3e137569b5071af023bc"
+SRCREV = "2cfd41e7060b0c3d5dde8fcd6bc6abfaff5aa1ab"
 
 FILES_${KERNEL_PACKAGE_NAME}-base += "${nonarch_base_libdir}/modules/${KERNEL_VERSION}/modules.builtin.modinfo "
 
