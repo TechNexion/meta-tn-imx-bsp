@@ -7,7 +7,7 @@ inherit module
 
 SRCREV = "ccf1bfb763e315b76a6ad7562ecae26ee9ef41bd"
 
-SRC_URI = "git://github.com/TechNexion/qcacld-2.0.git;branch=${SRCBRANCH} \
+SRC_URI = "git://github.com/TechNexion/qcacld-2.0.git;protocol=https;branch=${SRCBRANCH} \
 "
 SRCBRANCH = "tn-CNSS.LEA.NRT_3.0"
 
