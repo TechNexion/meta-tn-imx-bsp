@@ -4,7 +4,7 @@ do_replace () {
 }
 
 #copy from "meta-imx/meta-bsp/recipes-bsp/imx-mkimage/imx-boot_1.0.bb"
-compile_mx8m() {
+compile:mx8m() {
     bbnote 8MQ/8MM/8MN/8MP boot binary build
     for ddr_firmware in ${DDR_FIRMWARE_NAME}; do
         bbnote "Copy ddr_firmware: ${ddr_firmware} from ${DEPLOY_DIR_IMAGE} -> ${BOOT_STAGING} "
