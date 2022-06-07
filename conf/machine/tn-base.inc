@@ -75,6 +75,11 @@ UENV_SCRNAME_bootscr = "boot.scr"
 BOOT_SCRIPTS_append_bootscr = " ${UENV_SCRNAME}:boot.scr"
 
 #
+# SDMA Firmware (NXP firmware)
+#
+MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS_append = "${MACHINE_FIRMWARE} firmwared"
+
+#
 # DDR Firmware Name (NXP firmwares)
 #
 DDR_FIRMWARE_NAME_mx8 = "lpddr4_pmu_train_1d_imem.bin lpddr4_pmu_train_1d_dmem.bin lpddr4_pmu_train_2d_imem.bin lpddr4_pmu_train_2d_dmem.bin"
