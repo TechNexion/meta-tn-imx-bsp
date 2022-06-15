@@ -40,6 +40,7 @@ RDEPENDS_${PN} = " \
     libgpiod \
     libgpiod-tools \
     libsocketcan \
+    linux-serial-test \
     lmbench \
     memtester \
     mmc-utils \
