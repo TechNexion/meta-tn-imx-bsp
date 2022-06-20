@@ -1,0 +1,34 @@
+yocto-3.0 Zeus 2021Q4 TechNexion BSP Release Notes
+
+Release Name: tn-zeus_5.4.70-2.3.0_20211018
+Release Revision: 20211018
+
+Supported TechNexion products:
+
+ARM64:
+EDM-G-IMX8MP (DRAM 1/2/4/6/8 GB) with WB
+EDM-G-IMX8MM (DRAM 1/2/4/8 GB) with WB
+EDM-G-IMX8MN (DRAM 2GB) with WB
+PICO-IMX8MQ (DRAM 1/2/4 GB) with PI/Wizard
+PICO-IMX8MM (DRAM 1/2/3/ 4GB) with PI/Wizard
+EDM-IMX8MQ (DRAM 1/2/4 GB) with Wizard
+FLEX-IMX8MM (DRAM 1/2/3/4 GB) with PI
+
+ARM32:
+PICO-IMX6 with Nymph/PI
+PICO-IMX7D with PI
+PICO-IMX6UL with PI
+PICO-IMX6ULL with PI
+EDM-IMX6 with Fairy/TC0700
+WANDBOARD
+TEP1-IMX7
+TEP1010
+TEP1560
+TEK3-IMX6
+
+BSP version:
+
+Tag name on github: tn-zeus_5.4.70-2.3.0_20211018
+u-boot-tn-imx :f8619d84fb3fcaea248cf197a7ea6134b2fb1dfe
+linux-tn-imx :65d36c699c1624e9b5cd3e137569b5071af023bc
+meta-tn-imx-bsp :446371ca0155e11cabd5e5b30450da16986826ca
