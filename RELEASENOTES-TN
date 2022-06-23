@@ -1,0 +1,83 @@
+yocto-3.3 Hardknott 2022Q1 TechNexion BSP Release Notes
+
+======================================
+
+Release Name: tn-hardknott_5.10.72-2.2.0
+
+Release Revision: 20220207
+
+Supported TechNexion products:
+
+ARM64:
+
+EDM-G-IMX8MP (DRAM 1/2/4/6/8 GB) with WB/WIZARD
+
+EDM-G-IMX8MM (DRAM 1/2/4/8 GB) with WB/WIZARD
+
+EDM-G-IMX8MN (DRAM 2GB) with WB/WIZARD
+
+PICO-IMX8MQ (DRAM 1/2/4 GB) with PI/WIZARD
+
+PICO-IMX8MM (DRAM 1/2/3/4 GB) with PI/WIZARD
+
+AXON-IMX8MP (DRAM 1/2/4/6/8 GB) with PI/WIZARD
+
+ARM32:
+
+PICO-IMX6 with Nymph/PI
+
+PICO-IMX7D with PI
+
+PICO-IMX6UL with PI
+
+PICO-IMX6ULL with PI
+
+EDM-IMX6 with Fairy
+
+TEP1-IMX7
+
+New feature:
+
+    New boards: EDM-G-WIZARD for edm-g-imx8 series, AXON-IMX8MP with AXON-WIZARD
+
+    u-boot-fw-utils: You can see/change u-boot env in linux user space now
+
+    New camera sensors: OV7251 for pico-imx8mq and pico-imx8mm
+
+    Add vizionlink support for tevi series on edm-g-imx8mp
+
+Bug fix: bug tracing number
+
+    pico-imx7d: fix: bpp error of splash screen
+
+    pico-imx8mm-wizard: fix gpio-led active way
+
+    edm-g-imx8mp: fix: VISIONLINK-HDMI block wm8960 sound card
+
+    edm-g-imx8mp: fix bugs for tevi-ar series cameras
+
+    tevi-ar0144/tevi-ar0234: fix image flipped issue
+
+    fix rproc support
+
+    drm/panel: ILI9881c: add drm_panel backlight support
+
+BUG673: Intermittent issue on TEVI-AR0521 startup with Gstreamer
+
+BUG674: TEVI-AR0521 5MP resolution shows distortion on display
+
+BUG675: Better handling of resolutions
+
+BUG680: Initial capture at 1280x720 gstreamer fails to start
+
+BUG681: TEVI-AR0234 no default resolution set for Gstreamer
+
+BSP version:
+
+Tag name on github: tn-hardknott_5.10.72-2.2.0_20220118
+
+u-boot-tn-imx :3930a84e3a765be1a4e0fad2f42c027daaf1b816
+
+linux-tn-imx :acb7450af693635ffcd70c5d5544478c9b725d26
+
+meta-tn-imx-bsp :d5f7ede985ffe8079d5bb2fe7a49aac182a66617
