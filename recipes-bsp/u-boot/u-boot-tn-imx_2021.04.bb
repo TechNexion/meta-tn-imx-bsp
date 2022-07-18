@@ -23,7 +23,7 @@ SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git;protocol=https"
 SRCOPTIONS = ""
 SRCBRANCH = "tn-imx_v2021.04_5.10.72_2.2.0-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "e541d8646828d44a8b29e4cbac47e6d7cf729613"
+SRCREV = "89f6d937de79615a3fb591750d09f8f86db14ccb"
 SRC_URI_append = " file://splash.bmp"
 SRC_URI_append_rescue += " file://rescue-fragment-uboot.cfg"
 
