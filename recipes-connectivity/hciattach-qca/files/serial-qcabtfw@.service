@@ -2,8 +2,8 @@
 Description=QCA Bluetooth firmware service on %I
 ConditionPathIsDirectory=/sys/bus/platform/drivers/imx-sdma
 BindsTo=dev-%i.device
-Requires=firmwared.device
-After=dev-%i.device firmwared.device
+Requires=firmwared.service
+After=dev-%i.device firmwared.service
 Before=bluetooth.service
 
 [Service]
