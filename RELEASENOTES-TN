@@ -1,10 +1,10 @@
-yocto-3.3 Hardknott 2022Q1 TechNexion BSP Release Notes
+yocto-3.3 Hardknott 2022Q2 TechNexion BSP Release Notes
 
 ======================================
 
 Release Name: tn-hardknott_5.10.72-2.2.0
 
-Release Revision: 20220207
+Release Revision: 20220811
 
 Supported TechNexion products:
 
@@ -16,15 +16,15 @@ EDM-G-IMX8MM (DRAM 1/2/4/8 GB) with WB/WIZARD
 
 EDM-G-IMX8MN (DRAM 2GB) with WB/WIZARD
 
-PICO-IMX8MQ (DRAM 1/2/4 GB) with PI/WIZARD
+PICO-IMX8MQ (DRAM 1/2/4 GB) with PI-8M/WIZARD
 
-PICO-IMX8MM (DRAM 1/2/3/4 GB) with PI/WIZARD
+PICO-IMX8MM (DRAM 1/2/4 GB) with PI-8M/WIZARD
 
-AXON-IMX8MP (DRAM 1/2/4/6/8 GB) with PI/WIZARD
+AXON-IMX8MP (DRAM 2/4/8 GB) with WIZARD
 
 ARM32:
 
-PICO-IMX6 with Nymph/PI
+PICO-IMX6 with Nymph
 
 PICO-IMX7D with PI
 
@@ -34,50 +34,81 @@ PICO-IMX6ULL with PI
 
 EDM-IMX6 with Fairy
 
-TEP1-IMX7
+TEP1-IMX7(TEP0500-IMX7 / TEP0700-IMX7)
+
+TEK3-IMX6(TEP1010-IMX6 / TEP1560-IMX6)
+
 
 New feature:
 
-    New boards: EDM-G-WIZARD for edm-g-imx8 series, AXON-IMX8MP with AXON-WIZARD
+    Software Migration for products with Realtek PHY:
+    EDM-G-IMX8MP
+    EDM-G-IMX8MM
+    PICO-IMX8MQ-PI
+    PICO-IMX8MM-PI
+    AXON-IMX8MP
+    EDM-IMX6
+    TEP1-IMX7
+    https://developer.technexion.com/docs/software-migration-for-products-with-realtek-phy
 
-    u-boot-fw-utils: You can see/change u-boot env in linux user space now
+    New camera sensors for edm-g-imx8mp
+    TEVI-AR0821
+    TEVI-AR1335
+    TEVI-AR1820
 
-    New camera sensors: OV7251 for pico-imx8mq and pico-imx8mm
+    New vizionlink support for tevi series on edm-g-imx8mp
+    TEVI-AR0821
+    TEVI-AR1335
 
-    Add vizionlink support for tevi series on edm-g-imx8mp
 
 Bug fix: bug tracing number
 
-    pico-imx7d: fix: bpp error of splash screen
+BUG735: The Wayland desktop display issue for the first boot after flashing OS image to the iMX8 SOM module equipped with native HDMI output.
 
-    pico-imx8mm-wizard: fix gpio-led active way
+BUG720: EDM-G-IMX8MP: MIPI CSI 0/1 + VIZIONLINK HOST_4 + TEVI-AR CAMERA test screen shake and noise problems.
 
-    edm-g-imx8mp: fix: VISIONLINK-HDMI block wm8960 sound card
+BUG742: The sensor image distortion with cyan lines when the AR0521 camera is in low light conditions.
 
-    edm-g-imx8mp: fix bugs for tevi-ar series cameras
+BUG745: Camera - Vizionlink + TEVI-AR0234, No sensor image on the screen after launch gstreamer with HD resolution (1280x720).
 
-    tevi-ar0144/tevi-ar0234: fix image flipped issue
+BUG746: The ov5640 + Vizionlink can't display the resolution lower than HD (1280x720).
 
-    fix rproc support
+BUG739: AXON-IMX8MP: System can't boot due to failed to load the dtbo - vizionlink-tevi-ar0144-dual.
 
-    drm/panel: ILI9881c: add drm_panel backlight support
+BUG743: AXON-IMX8MP: TEVI-AR CAM and VIZIONLINK-TEVI TEVI-AR CAMS are failed to be probed in the CSI2 interface.
 
-BUG673: Intermittent issue on TEVI-AR0521 startup with Gstreamer
+BUG744: AXON-IMX8MP: Test failure for dual TEVI-AR camera / Vizionlink-TEVI camera case.
 
-BUG674: TEVI-AR0521 5MP resolution shows distortion on display
+BUG521: System failed to wake up from sleep state with the display device is 5" MIPI touch panel.
 
-BUG675: Better handling of resolutions
+BUG798: PICO-IMX7 + PICO-PI Wake on LAN does not work.
 
-BUG680: Initial capture at 1280x720 gstreamer fails to start
+BUG770: System is not allowed to activate the wifi tethering mode for testing WIFI AP and concurrent mode.
 
-BUG681: TEVI-AR0234 no default resolution set for Gstreamer
+BUG769: EDM-IMX6: System took long time (around 1:20, count from power up) to boot into the prompt mode
+
+BUG776: PICO-NYMPH: launching GStreamer to test ov5640 camera and then trigger oom killer warning message.
+
+
+Known issue:
+
+1. EDM-G-IMX8MP: MAC not working when system resume back with WoL enabled
+
+2. PICO-IMX8MQ: TEVI-OV5640 - no sensor image (CSI1/CSI2) displays on the screen after launching gstreamer test command
+
+3. PICO-IMX6: Poor Download (RX) performance for iMX6DL/Solo with Nymph baseboard ((Nymph PCB datecode : 2024)
+
+4. PICO-NYMPH: RJ45 - LED indicator - issue for the color of speed definition
+
+5. PICO-IMX6UL: suspend/resume test causes system reset
+
 
 BSP version:
 
-Tag name on github: tn-hardknott_5.10.72-2.2.0_20220118
+Tag name on github: tn-hardknott_5.10.72-2.2.0_20220811
 
-u-boot-tn-imx :3930a84e3a765be1a4e0fad2f42c027daaf1b816
+u-boot-tn-imx: 9368a0d86d83bedf4a8b4bb28b6e7763c6c1cc02
 
-linux-tn-imx :acb7450af693635ffcd70c5d5544478c9b725d26
+linux-tn-imx: 6fa6a3011b8cd06a2e1632447dcb975a6996174d
 
-meta-tn-imx-bsp :d5f7ede985ffe8079d5bb2fe7a49aac182a66617
+meta-tn-imx-bsp: 00d44e05d8d51accf8195625dbf452ff3a3d773f
