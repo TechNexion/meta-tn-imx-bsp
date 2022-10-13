@@ -81,6 +81,10 @@ BOOT_SCRIPTS:append:bootscr = " ${UENV_SCRNAME}:boot.scr"
 #
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS:append = "${MACHINE_FIRMWARE} firmwared"
 
+# DDR Firmware Name (NXP firmwares)
+#
+DDR_FIRMWARE_NAME:mx8-nxp-bsp = "lpddr4_pmu_train_1d_imem.bin lpddr4_pmu_train_1d_dmem.bin lpddr4_pmu_train_2d_imem.bin lpddr4_pmu_train_2d_dmem.bin"
+
 #
 # IMX-BOOT specifics (NXP u-boot packaged binary, i.e. a.k.a flash.bin)
 #
