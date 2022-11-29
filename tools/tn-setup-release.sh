@@ -52,11 +52,6 @@ clean_up()
     exit_message clean_up
 }
 
-echo
-echo Apply patches to change other meta layers
-patch -Np1 -r - sources/meta-imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc < sources/meta-tn-imx-bsp/patches/0001-fsl-imx-preferred-env.inc-change-to-use-weak-assignm.patch
-
-
 # get command line options
 OLD_OPTIND=$OPTIND
 unset FSLDISTRO
