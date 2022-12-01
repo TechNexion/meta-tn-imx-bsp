@@ -2,9 +2,12 @@ yocto-3.3 Hardknott 2022Q2 TechNexion BSP Release Notes
 
 ======================================
 
+Please refer to 'TechNexion developer portal' for detailed support list and demo images:
+https://developer.technexion.com/docs/release-notes-yp33-2022q2
+
 Release Name: tn-hardknott_5.10.72-2.2.0
 
-Release Revision: 20220811
+Release Revision: 20221202
 
 Supported TechNexion products:
 
@@ -54,11 +57,13 @@ New feature:
     New camera sensors for edm-g-imx8mp
     TEVI-AR0821
     TEVI-AR1335
-    TEVI-AR1820
 
-    New vizionlink support for tevi series on edm-g-imx8mp
+    New vizionlink support for TEVI-AR series on edm-g-imx8mp
     TEVI-AR0821
     TEVI-AR1335
+
+    TEVI-AR series and vizionlink support on 8MPLUSLPD4-EVK
+    https://developer.technexion.com/docs/tevi-ar-cam-on-nxp-8mpluslpd4-evk-board
 
 
 Bug fix: bug tracing number
@@ -89,12 +94,16 @@ BUG769: EDM-IMX6: System took long time (around 1:20, count from power up) to bo
 
 BUG776: PICO-NYMPH: launching GStreamer to test ov5640 camera and then trigger oom killer warning message.
 
+BUG949: Random i2c transfer error failure rate for VIZIONLINK-FAKRA1-D + VIZIONLINK-CAM + AR CAMs
+
+BUG878: EDM-G-WB: System can't probe the vizionlink-cam-TEVI-OV5640
+
 
 Known issue:
 
-1. EDM-G-IMX8MP: MAC not working when system resume back with WoL enabled
+1. BUG894: EDM-G-IMX8MP: MAC not working when system resume back with WoL enabled
 
-2. PICO-IMX8MQ: TEVI-OV5640 - no sensor image (CSI1/CSI2) displays on the screen after launching gstreamer test command
+2. BUG732: PICO-IMX8MQ: TEVI-OV5640 - no sensor image (CSI1/CSI2) displays on the screen after launching gstreamer test command
 
 3. PICO-IMX6: Poor Download (RX) performance for iMX6DL/Solo with Nymph baseboard ((Nymph PCB datecode : 2024)
 
@@ -102,13 +111,23 @@ Known issue:
 
 5. PICO-IMX6UL: suspend/resume test causes system reset
 
+6. BUG880: EDM-G-WB: The frame rate performance issue for tevi-ap1302 sensors
+
+7. BUG889: EDM-G-IMX8MP: CAN-FD couldn't return to normal operation mode after set to loopback mode
+
+8. BUG897: EDM1-FAIRY: SPDIF cannot play sound
+
+9. BUG918: EDM-G-IMX8MM: Noise and cracking sound issue for tc358743(VIZIONLINK-HDMI) audio input while converting the audio to wm8960
+
+10. BUG925: TEP1-IMX7 Rev A2 or D: The WLAN device disappeared after testing M.2/PCIE WIFI suspend/resume
+
 
 BSP version:
 
-Tag name on github: tn-hardknott_5.10.72-2.2.0_20220811
+Tag name on github: tn-hardknott_5.10.72-2.2.0_20221202
 
-u-boot-tn-imx: 9368a0d86d83bedf4a8b4bb28b6e7763c6c1cc02
+u-boot-tn-imx: 0be2e8fe02b92305142675e2094c9c2a91d4540f
 
-linux-tn-imx: 6fa6a3011b8cd06a2e1632447dcb975a6996174d
+linux-tn-imx: 392461bbb7e55be8727df7a57bdbe0a4b4d34e41
 
-meta-tn-imx-bsp: 00d44e05d8d51accf8195625dbf452ff3a3d773f
+meta-tn-imx-bsp: 96e0a1209b701a144a577ecb8bca76a931024042
