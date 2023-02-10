@@ -18,7 +18,7 @@ SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git"
 SRCOPTIONS = ""
 SRCBRANCH = "tn-imx_v2018.03_4.14.98_2.0.0_ga-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "ce1e3c9d29948853203c8a5805e93908daa8fa2a"
+SRCREV = "e48cdb30a1aac5bd4ccd1574b451a29f7e1c10d5"
 SRC_URI_append = " file://splash.bmp"
 SRC_URI_append_rescue = " \
 	file://technexion.bmp \
