@@ -8,8 +8,8 @@ inherit module
 
 SRCREV = "f29dc977bfcc7098e23e241362db0ea1d4968819"
 SRCBRANCH = "tn-DIN_v6.5.5"
-SRC_URI = "git://github.com/TechNexion/tfa98xx.git;branch=${SRCBRANCH} \
-           https://source.codeaurora.org/external/imxsupport/meta-avs-demos/plain/recipes-kernel/tfa98xx/files/TFA9892N1A_stereo_32FS.cnt?h=imx-alexa-sdk;downloadfilename=TFA9892N1A_stereo_32FS.cnt \
+SRC_URI = "git://github.com/TechNexion/tfa98xx.git;protocol=https;branch=${SRCBRANCH} \
+           https://github.com/nxp-imx-support/meta-avs-demos/raw/imx-alexa-sdk/recipes-kernel/tfa98xx/files/TFA9892N1A_stereo_32FS.cnt;downloadfilename=TFA9892N1A_stereo_32FS.cnt \
            file://0001-fix-start_time-uninitialize-error.patch \
 "
 
