@@ -175,6 +175,10 @@ fi
 # Additional Settings to local.conf and bblayer.conf
 #
 
+# Workaround for qt5 fetcher failure
+echo >> conf/local.conf
+echo "QT_MODULE_BRANCH_PARAM:append = \";nobranch=1\"" >> conf/local.conf
+
 # for zeus
 echo >> conf/local.conf
 echo "PACKAGE_CLASSES = \"package_deb\"" >> conf/local.conf
