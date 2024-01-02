@@ -23,7 +23,7 @@ SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git;protocol=https"
 SRCOPTIONS = ""
 SRCBRANCH = "tn-imx_v2020.04_5.4.70_2.3.0-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "a38da13ff48e90747ea290b2299c3788da39b453"
+SRCREV = "e7d920e67658b51bf183f68039fbc37f99a1d649"
 SRC_URI_append = " file://splash.bmp"
 
 S = "${WORKDIR}/git"
