@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "\
 SRCBRANCH = "master"
 TN_QCA_FCC_FIRMWARE_SRC = "git://gitlab.com/technexion-imx/qca_fcc_firmware.git;protocol=https;user=oauth2:${PA_TOKEN}"
 SRC_URI = "${TN_QCA_FCC_FIRMWARE_SRC};branch=${SRCBRANCH}"
-SRCREV = "c62b776f4f5442c9ee1fc8ac57304e767dd1df50"
+SRCREV = "68747dad15a48f06bbc167ee1b7290948357df6c"
 
 do_check() {
     if [ -z "${PA_TOKEN}" ]; then
