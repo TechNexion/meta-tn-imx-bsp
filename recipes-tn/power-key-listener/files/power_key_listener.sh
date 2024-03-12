@@ -1,6 +1,7 @@
 #!/bin/bash
 
-DEVICE=/dev/input/event0
+INPUT_INDEX=$(dmesg |grep gpio_keys | grep -Poi "input\d" | rev| cut -c 1)
+DEVICE=/dev/input/event${INPUT_INDEX}
 
 INFO="POWER KEY Listener:"
 
