@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INPUT_INDEX=$(dmesg |grep gpio_keys | grep -Poi "input\d" | rev| cut -c 1)
+INPUT_INDEX=$(dmesg |grep gpio_keys | grep -Eoi "input[[:digit:]]" | rev| cut -c 1)
 DEVICE=/dev/input/event${INPUT_INDEX}
 
 INFO="POWER KEY Listener:"
@@ -21,7 +21,10 @@ toggle_led(){
 
 do_long_pressed_job(){
         # reset device
-        gpioset 1 5=0
+	# gpiochip1=32~63, number=5 =>37
+	echo 37 > /sys/class/gpio/export
+	echo out > /sys/class/gpio/gpio37/direction
+	echo 0 > /sys/class/gpio/gpio37/value
 }
 
 do_job(){
