@@ -9,6 +9,7 @@ SRC_URI += " \
     file://LICENSE \
     file://rc-local.service \
     file://rc.local \
+    file://20-wired.network \
 "
 
 S = "${WORKDIR}"
@@ -21,9 +22,12 @@ do_install () {
 
     install -d ${D}${sysconfdir}
     install -m 0755 ${S}/rc.local ${D}${sysconfdir}
+
+    install -d ${D}${sysconfdir}/systemd/network/
+    install -m 0644 ${WORKDIR}/20-wired.network ${D}${sysconfdir}/systemd/network/
 }
 
-FILES:${PN} = "${sysconfdir}/rc.local"
+FILES:${PN} = "${sysconfdir}/rc.local ${sysconfdir}/systemd/network/20-wired.network"
 
 SYSTEMD_SERVICE:${PN} = "rc-local.service"
 RDEPENDS:${PN} += "bash"
