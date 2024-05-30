@@ -3,14 +3,14 @@ SUMMARY = "WiFi firmware files for TechNexion QCA PCIe module"
 SECTION = "kernel"
 LICENSE = "Proprietary"
 LICENSE_FLAGS = "commercial_qca"
-HOMEPAGE = "https://github.com/kvalo/ath10k-firmware.git"
+HOMEPAGE = "https://git.codelinaro.org/clo/ath-firmware/ath10k-firmware.git"
 
-LIC_FILES_CHKSUM = "file://ath10k/LICENSE.qca_firmware;md5=35657eea665397848d5e3c6d8fa6710d"
+LIC_FILES_CHKSUM = "file://ath10k/LICENSE.qca_firmware;md5=74852b14e2b35d8052226443d436a244"
 
-SRCREVATH10K = "2dd48ff50858e2561d020bc72887efbb8cff77bf"
+SRCREVATH10K = "ca0916244fb9ae75242585f3bb8397c5732b910c"
 SRCREVQCABT = "be98108d402e3aa76e78b978a986db052497014d"
 
-SRC_URI = "git://github.com/kvalo/ath10k-firmware.git;rev=${SRCREVATH10K};destsuffix=ath10k \
+SRC_URI = "git://git.codelinaro.org/clo/ath-firmware/ath10k-firmware.git;protocol=https;branch=main;rev=${SRCREVATH10K};destsuffix=ath10k \
            ${SRCSERVER};branch=${SRCBRANCH}${SRCOPTION};rev=${SRCREVQCABT};subpath=qca;destsuffix=qca \
 "
 
