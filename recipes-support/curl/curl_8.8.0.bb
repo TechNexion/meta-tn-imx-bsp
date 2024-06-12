@@ -20,7 +20,7 @@ SRC_URI[sha256sum] = "0f58bb95fc330c8a46eeb3df5701b0d90c9d9bfcc42bd1cd08791d1255
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
 
-inherit autotools pkgconfig binconfig multilib_header ptest
+inherit autotools pkgconfig binconfig multilib_header
 
 # Entropy source for random PACKAGECONFIG option
 RANDOM ?= "/dev/urandom"
