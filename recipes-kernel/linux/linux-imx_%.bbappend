@@ -5,5 +5,5 @@ SRC_URI:append:tn-camera = " \
        "
 SRCBRANCH:tn-camera = "tn-imx_6.1.55_2.2.0-next"
 KERNEL_SRC:tn-camera = "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;branch=${SRCBRANCH}"
-SRCREV:tn-camera = "57eba74e53e5ec914ad87b524d121fb8a5f78be1"
+SRCREV:tn-camera = "c271cb61f96a6f27acc32ebd9c27aa2c91e980d1"
 DELTA_KERNEL_DEFCONFIG:tn-camera = "tn-camera.cfg"
