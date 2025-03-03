@@ -1,6 +1,6 @@
 
 do_replace () {
-	sed -i 's|dtbs = evk.dtb|dtbs = ${UBOOT_DTB_NAME}|g' ${BOOT_STAGING}/soc.mak
+	sed -i 's|dtb = evk.dtb|dtb = ${UBOOT_DTB_NAME}|g' ${BOOT_STAGING}/soc.mak
 }
 
 #copy from "meta-imx/meta-imx-bsp/recipes-bsp/imx-mkimage/imx-boot_1.0.bb"
