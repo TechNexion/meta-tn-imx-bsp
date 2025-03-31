@@ -11,15 +11,18 @@ inherit packagegroup
 RDEPENDS:${PN}:append:mx9-nxp-bsp = " \
     tn-apt-list \
     vizionsdk-dev \
+    pyvizionsdk-dev \
     vizionviewer \
 "
 RDEPENDS:${PN}:append:mx8mp-nxp-bsp = " \
     tn-apt-list \
     vizionsdk-dev \
+    pyvizionsdk-dev \
     vizionviewer \
 "
 RDEPENDS:${PN}:append:mx8mm-nxp-bsp = " \
     tn-apt-list \
     vizionsdk-dev \
+    pyvizionsdk-dev \
     vizionviewer \
 "
