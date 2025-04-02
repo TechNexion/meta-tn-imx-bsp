@@ -1,10 +1,10 @@
-yocto-5.0 Scarthgap 2025Q1 TechNexion BSP Release Notes
+yocto-5.0 Scarthgap 2025Q2 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/release-notes-yp50-2025q1
+https://developer.technexion.com/docs/release-notes-yp50-2025q2
 Release Name: tn-scarthgap_6.6.52-2.2.0
-Release Revision: 20241230
+Release Revision: 20250402
 
 Supported TechNexion products:
 ARM64:
@@ -14,6 +14,8 @@ PICO-IMX8MM (DRAM 1/2/4 GB) with PI-8M/WIZARD
 AXON-IMX8MP (DRAM 2/4/8 GB) with WIZARD
 AXON-IMX93 (DRAM 2 GB) with WB
 EDM-IMX93 (DRAM 2 GB) with WB
+AXON-IMX91 (DRAM 2 GB) with WB
+EDM-IMX91 (DRAM 1 GB) with WB
 
 ARM32:
 PICO-IMX7D (DRAM 512MB/1GB/2GB) with PI-GL
@@ -21,30 +23,32 @@ PICO-IMX6 (DRAM Solo:512MB DL/Quad:1GB) with Nymph
 PICO-IMX6UL/ULL (DRAM 256MB/512MB) with PI-FL
 EDM-IMX6 (DRAM Solo:512MB DL:1GB Quad:2GB) with Fairy
 TC-0700/1010 (DRAM Solo:512MB DL:1GB Quad:2GB)
+TEP1-IMX7 (DRAM 512MB/1GB)
 
 Camera on EVK:
 IMX8MP-EVK (DDR4/ LPDDR4) with tevs
 IMX93-EVK (LPDDR4) with tevs
-IMX93-EVK (LPDDR5) with tevs
+IMX95-EVK (LPDDR5) with tevs
 
 Support list table:
-https://developer.technexion.com/docs/release-notes-yp50-2025q1
+https://developer.technexion.com/docs/release-notes-yp50-2025q2
 
 New feature:
 
 Known issue:
-1. EDM-G-IMX8MM - 21.5-inch panel not working
+1. EDM-G-IMX8MM - 21.5-inch panel not working.
+2. PICO-IMX8MM - SDCARD boot AVL issue.
 
 Bug fixed:
-1. AXON-IMX93 - watch dog missing
-2. IMX8MP series - System cannot boot up with TEVS camera connected.Fail rate:1/2(pcie crash)
-3. EDM-G-IMX8MM - 10.1-inch panel not working
-4. ALL - DSI panel suspend/ resume failed
-5. ARM32 and IMX9 series - terminal icon is missong on menu bar
-6. ARM32 series - 2GB sku CMA alloc not match the device-tree setting
+1. AXON-IMX93/EDM-IMX93: A pop-up noise during reboot or beginning play.
+2. AXON-IMX93/EDM-IMX93: Camera failed to read from register while changing resolution frequently.
+3. PICO-IMX8MM: Device tree setting not persisting when booting from SD Card.
+4. PICO-IMX6UL(ULL)/PICO-IMX7D: QCA Bluetooth device disappears after reset or system reboot.
+5. EDM-G-IMX8MM: TEVS camera cannot display the image when any resolution is selected.
+6. PICO-IMX7D: Cannot load kernel from boot media when set boot config to boot from SDCARD.
 
 BSP version:
-Tag name on github: tn-scarthgap_6.6.52_2.2.0_20241230
-u-boot-tn-imx: 153e8e48579c3f0c15a16a3d2649354868ba7912
-linux-tn-imx: c8aa74583f0a56a2237e047a07f9508d0be6fc1f
-meta-tn-imx-bsp: 610a8a78db47dc1f100f8a3e5228ad990de61fd4
+Tag name on github: tn-scarthgap_6.6.52_2.2.0_20250402
+u-boot-tn-imx: 9aaf88cfe4234d6c40d3aade29da8e046d566988
+linux-tn-imx: 3c6660b7ae5b03ba4303a7d58b3c723a8d03881c
+meta-tn-imx-bsp: 8e4aee4cc50e746473777b2216ad0fac7fb80a0d
