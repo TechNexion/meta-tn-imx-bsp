@@ -53,7 +53,6 @@ RDEPENDS:${PN} = " \
     stressapptest \
     sysbench \
     v4l-utils \
-    wireless-tools \
     cloud-utils-growpart \
     udev \
     trace-cmd \
