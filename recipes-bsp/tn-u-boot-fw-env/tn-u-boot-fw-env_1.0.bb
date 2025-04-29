@@ -8,7 +8,8 @@ SRC_URI += " \
     file://tn-u-boot-fw-env.service \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit systemd allarch
 

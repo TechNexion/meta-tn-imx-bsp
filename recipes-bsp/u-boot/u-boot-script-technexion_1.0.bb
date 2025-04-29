@@ -15,7 +15,8 @@ COMPATIBLE_MACHINE = "(imx-nxp-bsp)"
 SRC_URI = "file://README \
 		   file://bootscript-tsl-arm64.txt \
 		  "
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile:rescue () {
 	mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
