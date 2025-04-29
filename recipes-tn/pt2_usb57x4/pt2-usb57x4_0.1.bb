@@ -16,7 +16,8 @@ SRC_URI = "file://pt2_usb57x4_linux_sdk_1.0.zip \
            file://0002-Examples-Ensure-to-pass-in-device-id.patch "
 SRC_URI:append:tools = " file://power-cycle.sh file://det-gpio.sh file://pt2usb-util.sh"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
     cd ${S}/libpt2

@@ -10,7 +10,8 @@ SRC_URI = "file://hciattach-qca \
           file://serial-qcabtfw@.service \
           file://serial-qcabtfw@.timer \
 "
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 inherit features_check
