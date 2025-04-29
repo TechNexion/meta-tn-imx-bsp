@@ -11,7 +11,8 @@ SRC_URI = "file://ntag-i2c-tool.cpp \
 "
 
 INSANE_SKIP:${PN} = "ldflags"
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
 	${CXX} ntag-i2c-tool.cpp -o ntag-i2c-tool
