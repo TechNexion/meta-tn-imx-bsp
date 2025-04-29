@@ -14,7 +14,8 @@ SRC_URI = "file://enable_lanbypass_eth.service;md5sum=cb2e351f71fcd0faddd133c2eb
 	file://disable_lanbypass_eth.sh;md5sum=dbef7d3884c851aa38ef2db3fe477a2f \
 	"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install () {
     install -d ${D}${systemd_unitdir}/system

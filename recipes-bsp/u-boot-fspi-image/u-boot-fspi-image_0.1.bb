@@ -8,7 +8,8 @@ SRC_URI += "file://tek-imx8mp_fspi_u-boot.bin \
 	file://tep-imx8mp_fspi_u-boot.bin \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit deploy
 

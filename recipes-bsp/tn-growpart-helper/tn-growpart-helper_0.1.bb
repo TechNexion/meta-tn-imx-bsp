@@ -12,7 +12,8 @@ SRC_URI += " \
     file://tn-growpart-helper_gnome.service \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit systemd allarch
 
