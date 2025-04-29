@@ -13,7 +13,8 @@ SRC_URI = "file://power_key_listener.service;md5sum=6fe9afeed4d2e8fb390a2963f7bf
 	file://power_key_listener.sh;md5sum=9f37abdb36a3259d3f2662b73c8f3a93 \
 	"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install () {
     install -d ${D}${systemd_unitdir}/system
