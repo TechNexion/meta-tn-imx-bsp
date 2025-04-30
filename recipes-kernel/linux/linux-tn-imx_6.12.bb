@@ -1,13 +1,11 @@
 # Copyright 2013-2016 Freescale Semiconductor
-# Copyright 2017-2023 NXP
-# Copyright 2024 TechNexion Ltd.
+# Copyright 2017-2024 NXP
+# Copyright 2025 TechNexion Ltd.
 # Copyright 2018 O.S. Systems Software LTDA.
 # Released under the MIT license (see COPYING.MIT for the terms)
 #
 # SPDX-License-Identifier: MIT
 #
-
-FILESEXTRAPATHS:prepend := "${THISDIR}/file:"
 
 SUMMARY = "Linux Kernel provided and supported by NXP"
 DESCRIPTION = "Linux Kernel provided and supported by NXP with focus on \
@@ -18,27 +16,25 @@ require recipes-kernel/linux/linux-imx.inc
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
-DEPENDS += "lzop-native bc-native"
+DEPENDS += "coreutils-native"
 
-SRC_URI = "${KERNEL_SRC}"
-KERNEL_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;branch=${SRCBRANCH}"
+SRC_URI = "${LINUX_IMX_SRC}"
+LINUX_IMX_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;branch=${SRCBRANCH}"
+SRCBRANCH = "tn-imx_6.12.3_1.0.0-next"
 KBRANCH = "${SRCBRANCH}"
-SRCBRANCH = "tn-imx_6.6.52_2.2.0-next"
 LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('KBRANCH', True).split('_')[2:]).lower()}"
-SRCREV = "3c6660b7ae5b03ba4303a7d58b3c723a8d03881c"
-
-SRC_URI:append:virtualization = " file://0001-ARM64-configs-tn_imx8_defconfig-btrfs-fuse-overlayfs.patch"
+SRCREV = "504800ba9455c37c384993152c17b9ec7b6c6207"
 
 # PV is defined in the base in linux-imx.inc file and uses the LINUX_VERSION definition
 # required by kernel-yocto.bbclass.
 #
 # LINUX_VERSION define should match to the kernel version referenced by SRC_URI and
 # should be updated once patchlevel is merged.
-LINUX_VERSION = "6.6.52"
+LINUX_VERSION = "6.12.3"
+# FIXME: Drop this line once LINUX_VERSION is stable
+KERNEL_VERSION_SANITY_SKIP = "1"
 
 KERNEL_CONFIG_COMMAND = "oe_runmake_call -C ${S} CC="${KERNEL_CC}" O=${B} olddefconfig"
-
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 DEFAULT_PREFERENCE = "1"
 
@@ -88,8 +84,8 @@ do_merge_delta_config() {
         if [ -f ${S}/arch/${ARCH}/configs/${deltacfg} ]; then
             ${KERNEL_CONFIG_COMMAND}
             oe_runmake_call -C ${S} CC="${KERNEL_CC}" O=${B} ${deltacfg}
-        elif [ -f "${WORKDIR}/${deltacfg}" ]; then
-            ${S}/scripts/kconfig/merge_config.sh -m .config ${WORKDIR}/${deltacfg}
+        elif [ -f "${UNPACKDIR}/${deltacfg}" ]; then
+            ${S}/scripts/kconfig/merge_config.sh -m .config ${UNPACKDIR}/${deltacfg}
         elif [ -f "${deltacfg}" ]; then
             ${S}/scripts/kconfig/merge_config.sh -m .config ${deltacfg}
         fi
@@ -98,7 +94,4 @@ do_merge_delta_config() {
 }
 addtask merge_delta_config before do_kernel_localversion after do_copy_defconfig
 
-do_kernel_configcheck[noexec] = "1"
-
-KERNEL_VERSION_SANITY_SKIP="1"
 COMPATIBLE_MACHINE = "(imx-nxp-bsp)"
