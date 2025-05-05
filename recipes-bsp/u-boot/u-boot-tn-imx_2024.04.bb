@@ -47,7 +47,7 @@ UUU_BOOTLOADER:mx9-generic-bsp = ""
 
 do_deploy:append () {
 	install -d ${DEPLOYDIR}
-	install ${WORKDIR}/splash.bmp ${DEPLOYDIR}/splash.bmp
+	install ${UNPACKDIR}/splash.bmp ${DEPLOYDIR}/splash.bmp
 }
 
 do_deploy:append:mx8m-generic-bsp() {
