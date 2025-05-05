@@ -10,7 +10,7 @@ UNPACKDIR = "${S}"
 
 do_install:append() {
 	install -d ${D}${bindir}
-	install -p -m 0755 ${WORKDIR}/setup-weston-init.sh ${D}${bindir}
+	install -p -m 0755 ${S}/setup-weston-init.sh ${D}${bindir}
 
 	sed -i '/^ExecStart=\/usr\/bin\/weston*/i ExecStartPre=-\/usr\/bin\/setup-weston-init.sh' ${D}${systemd_system_unitdir}/weston.service
 }
