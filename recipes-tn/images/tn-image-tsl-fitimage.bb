@@ -17,7 +17,7 @@ IMAGE_BOOT_FILES = "tnrescue.itb;tnrescue.itb"
 IMAGE_BOOT_FILES:append:arm = " u-boot-${MACHINE}.${UBOOT_SUFFIX};u-boot.img"
 
 # We do not want to install anything, only need the wic packaging"
-IMAGE_INSTALL:remove = "packagegroup-core-boot packagegroup-base-extended get-support-info packagegroup-tn-wlan packagegroup-tn-tools packagegroup-tn-voicehat packagegroup-tn-nfc"
+IMAGE_INSTALL:remove = "packagegroup-core-boot packagegroup-base-extended get-support-info packagegroup-tn-wlan packagegroup-tn-tools packagegroup-tn-voicehat"
 
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = ""
