@@ -28,7 +28,7 @@ PACKAGE_INSTALL = " \
 	"
 
 # remove unneeded technexion packagegroups
-IMAGE_INSTALL:remove = "packagegroup-tn-tools packagegroup-tn-nfc packagegroup-tn-voicehat"
+IMAGE_INSTALL:remove = "packagegroup-tn-tools packagegroup-tn-voicehat"
 
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = "empty-root-password"
