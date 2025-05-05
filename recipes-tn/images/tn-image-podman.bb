@@ -12,7 +12,6 @@ CORE_IMAGE_BASE_INSTALL:append = " \
 IMAGE_INSTALL:remove = " \
     packagegroup-tn-vizionsdk \
     packagegroup-tn-tools \
-    packagegroup-tn-nfc \
     docker \
 "
 
