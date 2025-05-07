@@ -25,7 +25,7 @@ KERNEL_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;branc
 KBRANCH = "${SRCBRANCH}"
 SRCBRANCH = "tn-imx_6.6.52_2.2.0-next"
 LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('KBRANCH', True).split('_')[2:]).lower()}"
-SRCREV = "3c6660b7ae5b03ba4303a7d58b3c723a8d03881c"
+SRCREV = "9dea8cf4dd1d15e6e80c73c925bac381ad6d5273"
 
 SRC_URI:append:virtualization = " file://0001-ARM64-configs-tn_imx8_defconfig-btrfs-fuse-overlayfs.patch"
 
