@@ -1,0 +1,24 @@
+SUMMARY = "i.MX M33 core Demo binaries"
+DESCRIPTION = "Prebuilt FreeRTOS firmware for Cortex-M core"
+SECTION = "app"
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+
+SRCBRANCH = "freertos_2.16.0"
+M4_SRC = "git://github.com/TechNexion/imx-m4-demos-tn.git;protocol=https"
+SRC_URI = "${M4_SRC};branch=${SRCBRANCH}"
+SRCREV = "a7e87c5cec8c677ff5f5d3670c146423f43db293"
+
+S = "${WORKDIR}/git"
+
+inherit deploy
+
+do_deploy() {
+	install -d ${DEPLOYDIR}
+	install ${S}/${M33_MACHINE}/* ${DEPLOYDIR}/
+}
+
+addtask deploy after do_install
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+COMPATIBLE_MACHINE = "(mx93-nxp-bsp)"
