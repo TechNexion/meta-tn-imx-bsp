@@ -1,0 +1,33 @@
+From b3a0d65a372da27c8ebd2fd9c37c7bbf50f0ff31 Mon Sep 17 00:00:00 2001
+From: Ray Chang <ray.chang@technexion.com>
+Date: Fri, 16 May 2025 10:56:55 +0800
+Subject: [PATCH] engine/DemoPage: add the code for parse TechNexion boards
+
+Upstream-Status: Pending
+---
+ engine/DemoPage.cpp | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/engine/DemoPage.cpp b/engine/DemoPage.cpp
+index 34ddb6d..8840fa0 100644
+--- a/engine/DemoPage.cpp
++++ b/engine/DemoPage.cpp
+@@ -121,7 +121,17 @@ void DemoPage::loadJsonData()
+     // If Demo Launcher is not running on i.MX board, set it to 7ulp
+     if (!board.contains("imx"))
+         board = "imx7ulpevk";
+-    if (board.contains("-"))
++    if (board.startsWith("axon"))
++        board = board.remove("axon-");
++    else if (board.startsWith("edm-g"))
++        board = board.remove("edm-g-");
++    else if (board.startsWith("edm"))
++        board = board.remove("edm-");
++    else if (board.startsWith("pico"))
++        board = board.remove("pico-");
++    else if (board.startsWith("tek")||board.startsWith("tep"))
++        board = board.split("-")[1];
++    else if (board.contains("-"))
+         board = board.split("-")[0];
+     else if (board.endsWith("evk"))
+         board = board.remove("evk");
