@@ -12,7 +12,7 @@ DEPENDS += "libsdl2"
 
 
 SRC_URI = " \
-	gitsm://github.com/lvgl/lv_sim_eclipse_sdl.git;protocol=https;"
+	gitsm://github.com/lvgl/lv_sim_eclipse_sdl.git;protocol=https;branch=master;"
 
 SRCREV = "b4a74a7316ae0cb06bc1b656243640454e050e3c"
 
