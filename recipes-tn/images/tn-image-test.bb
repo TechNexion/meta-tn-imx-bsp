@@ -11,7 +11,6 @@ inherit core-image
 
 ## Select Image Features
 IMAGE_FEATURES += " \
-    debug-tweaks \
     tools-profile \
     splash \
     nfs-server \
