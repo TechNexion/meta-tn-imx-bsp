@@ -1,7 +1,7 @@
 # Copyright (C) 2013-2016 Freescale Semiconductor
 # Copyright 2018 (C) O.S. Systems Software LTDA.
-# Copyright 2017-2024 NXP
-# Copyright (C) 2024 TechNexion.
+# Copyright 2017-2025 NXP
+# Copyright (C) 2025 TechNexion.
 
 DESCRIPTION = "i.MX U-Boot suppporting TechNexion i.MX boards."
 HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
@@ -20,9 +20,9 @@ LIC_FILES_CHKSUM = "file://Licenses/gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a
 PR = "r0"
 SRCSERVER = "git://github.com/TechNexion/u-boot-tn-imx.git;protocol=https"
 SRCOPTIONS = ""
-SRCBRANCH = "tn-imx_v2024.04_6.6.52_2.2.0-next"
+SRCBRANCH = "tn-imx_v2025.04_6.12.20_2.0.0-next"
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}${SRCOPTIONS}"
-SRCREV = "9aaf88cfe4234d6c40d3aade29da8e046d566988"
+SRCREV = "e065345fffa9113ad13d16249668c899c03ab7bd"
 SRC_URI:append = " file://splash.bmp"
 SRC_URI:append:rescue = " file://rescue-fragment-uboot.cfg"
 
