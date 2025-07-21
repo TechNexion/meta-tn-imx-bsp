@@ -1,0 +1,2 @@
+# Rule to start Weston service on HDMI hotplug connect event.
+ACTION=="change", SUBSYSTEM=="drm", KERNEL=="card[0-9]*", ENV{HOTPLUG}=="1", TAG+="systemd", ENV{SYSTEMD_WANTS}+="weston.service"
