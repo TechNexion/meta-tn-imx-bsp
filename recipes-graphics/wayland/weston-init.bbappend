@@ -17,6 +17,9 @@ do_install:append() {
 	install -p -m 0644 ${S}/90-hdmi-hotplug.rules ${D}${sysconfdir}/udev/rules.d
 
 	sed -i '/^ExecStart=\/usr\/bin\/weston*/i ExecStartPre=-\/usr\/bin\/setup-weston-init.sh' ${D}${systemd_system_unitdir}/weston.service
+
+	insert_line_after "After=plymouth-quit-wait.service" "# If Psplash is used, terminate psplash before starting weston" ${D}${systemd_system_unitdir}/weston.service
+	insert_line_after "# If Psplash is used, terminate psplash before starting weston" "After=psplash-quit.service" ${D}${systemd_system_unitdir}/weston.service
 }
 
 FILES:${PN} += "${bindir}/setup-weston-init.sh"
