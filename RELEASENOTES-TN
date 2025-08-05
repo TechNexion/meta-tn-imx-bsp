@@ -1,21 +1,22 @@
-yocto-5.0 Scarthgap 2025Q2 TechNexion BSP Release Notes
+yocto-5.2 Walnascar 2025Q3 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/release-notes-yp50-2025q2
-Release Name: tn-scarthgap_6.6.52-2.2.0
-Release Revision: 20250402
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q3
+Release Name: tn-walnascar_6.12.20-2.0.0
+Release Revision: 20250805
 
 Supported TechNexion products:
 ARM64:
+EDM-IMX93 (DRAM 2 GB) with WB
+EDM-IMX91 (DRAM 1 GB) with WB
 EDM-G-IMX8MP (DRAM 1/2/4/8 GB) with WB/WIZARD
 EDM-G-IMX8MM (DRAM 1/2/4/8 GB) with WB/WIZARD
+PICO-IMX93 (DRAM 2 GB) with SK-PICO-CARRIER
 PICO-IMX8MM (DRAM 1/2/4 GB) with PI-8M/WIZARD
-AXON-IMX8MP (DRAM 2/4/8 GB) with WIZARD
 AXON-IMX93 (DRAM 2 GB) with WB
-EDM-IMX93 (DRAM 2 GB) with WB
 AXON-IMX91 (DRAM 2 GB) with WB
-EDM-IMX91 (DRAM 1 GB) with WB
+AXON-IMX8MP (DRAM 2/4/8 GB) with WIZARD
 
 ARM32:
 PICO-IMX7D (DRAM 512MB/1GB/2GB) with PI-GL
@@ -25,30 +26,19 @@ EDM-IMX6 (DRAM Solo:512MB DL:1GB Quad:2GB) with Fairy
 TC-0700/1010 (DRAM Solo:512MB DL:1GB Quad:2GB)
 TEP1-IMX7 (DRAM 512MB/1GB)
 
-Camera on EVK:
-IMX8MP-EVK (DDR4/ LPDDR4) with tevs
-IMX93-EVK (LPDDR4) with tevs
-IMX95-EVK (LPDDR5) with tevs
-
 Support list table:
-https://developer.technexion.com/docs/release-notes-yp50-2025q2
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q3
 
 New feature:
+Support new platform PICO-IMX93.
 
 Known issue:
-1. EDM-G-IMX8MM - 21.5-inch panel not working.
-2. PICO-IMX8MM - SDCARD boot AVL issue.
-
-Bug fixed:
-1. AXON-IMX93/EDM-IMX93: A pop-up noise during reboot or beginning play.
-2. AXON-IMX93/EDM-IMX93: Camera failed to read from register while changing resolution frequently.
-3. PICO-IMX8MM: Device tree setting not persisting when booting from SD Card.
-4. PICO-IMX6UL(ULL)/PICO-IMX7D: QCA Bluetooth device disappears after reset or system reboot.
-5. EDM-G-IMX8MM: TEVS camera cannot display the image when any resolution is selected.
-6. PICO-IMX7D: Cannot load kernel from boot media when set boot config to boot from SDCARD.
+1. EDM-IMX93/PICO-IMX93/AXON-IMX93 - The TEVS camera fails to initialize from VizionViewer (additional media control configuration is required).
+ - However, the TEVS camera works via gstreamer with manually configured media control.
+2. PICO-IMX6UL/PICO-IMX7/EDM1-IMX6P - Wi-Fi concurrent mode doesn't work.
 
 BSP version:
-Tag name on github: tn-scarthgap_6.6.52_2.2.0_20250402
-u-boot-tn-imx: 9aaf88cfe4234d6c40d3aade29da8e046d566988
-linux-tn-imx: 3c6660b7ae5b03ba4303a7d58b3c723a8d03881c
-meta-tn-imx-bsp: 8e4aee4cc50e746473777b2216ad0fac7fb80a0d
+Tag name on github: tn-walnascar_6.12.20_2.0.0_20250805
+u-boot-tn-imx: 35c671ce5b3b4d70841282e9cd575bec924ca16d
+linux-tn-imx: ffc8d1087868c92f4232f691f02bdd6635f850d8
+meta-tn-imx-bsp: a7d307e2e61cbb4905158aa78dfa0cf424a33e37
