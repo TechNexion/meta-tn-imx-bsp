@@ -1,0 +1,28 @@
+From 547233feeb400e81996e4183287d98abe31431b3 Mon Sep 17 00:00:00 2001
+From: Ray Chang <ray.chang@technexion.com>
+Date: Wed, 6 Aug 2025 11:10:37 +0800
+Subject: [PATCH] plugins/ofono: remove strict lte interface check
+
+Upstream-Status: Pending
+---
+ plugins/ofono.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/plugins/ofono.c b/plugins/ofono.c
+index 062905c..1e770fe 100644
+--- a/plugins/ofono.c
++++ b/plugins/ofono.c
+@@ -997,10 +997,6 @@ static bool try_create_device(struct modem_data *modem)
+ 	if (!modem->imsi)
+ 		return false;
+ 
+-	if ((modem->capabilities & LTE_CAPABLE) &&
+-			!has_interface(modem->interfaces, OFONO_API_LTE))
+-		return false;
+-
+ 	/*
+ 	 * Create the device and register it at the core. Enabling (setting
+ 	 * it online is done through the modem_enable() callback.
+-- 
+2.50.1
+
