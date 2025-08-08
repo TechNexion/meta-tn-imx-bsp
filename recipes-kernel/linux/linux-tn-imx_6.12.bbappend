@@ -7,5 +7,5 @@ SRC_URI:append:rescue = " \
 DELTA_KERNEL_DEFCONFIG:rescue = "rescue-fragment.cfg"
 
 do_copy_defconfig:append:rescue () {
-    cp ${WORKDIR}/logo.ppm ${S}/drivers/video/logo/logo_linux_clut224.ppm
+    cp ${UNPACKDIR}/logo.ppm ${S}/drivers/video/logo/logo_linux_clut224.ppm
 }
