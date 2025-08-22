@@ -1,0 +1,56 @@
+From 9bc9b072184eab7bc702518fb8f223c7128d4026 Mon Sep 17 00:00:00 2001
+From: Dennis Tseng <dennis.tseng@technexion.com>
+Date: Mon, 25 Aug 2025 03:16:35 +0000
+Subject: [PATCH] Delete the set camera framerate to pipline and change to use
+ video output a specific frame amount. Make it more flexible when using
+ high-spec cameras.
+
+---
+ scripts/machine_learning/dms/dms_demo.py                  | 3 ++-
+ .../machine_learning/selfie_segmenter/selfie_segmenter.py | 8 +++++---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/machine_learning/dms/dms_demo.py b/scripts/machine_learning/dms/dms_demo.py
+index c33fe6a..3849784 100644
+--- a/scripts/machine_learning/dms/dms_demo.py
++++ b/scripts/machine_learning/dms/dms_demo.py
+@@ -172,8 +172,9 @@ class DMSDemo:
+         cam_pipeline = (
+             "v4l2src device="
+             + video_device
+-            + " ! video/x-raw,framerate=30/1,"
++            + " ! video/x-raw,"
+             + "height=480,width=640,format=YUY2 ! "
++            + "videorate ! video/x-raw,framerate=30/1 ! "
+             + videocrop
+             + videoconvert
+             + "video/x-raw,height=1072,width=1072,format=RGB16 ! "
+diff --git a/scripts/machine_learning/selfie_segmenter/selfie_segmenter.py b/scripts/machine_learning/selfie_segmenter/selfie_segmenter.py
+index 1a9af29..fa85fdc 100644
+--- a/scripts/machine_learning/selfie_segmenter/selfie_segmenter.py
++++ b/scripts/machine_learning/selfie_segmenter/selfie_segmenter.py
+@@ -584,7 +584,8 @@ class SelfieSegmenter:
+                 # Define camera source pipeline
+                 "v4l2src device="
+                 + device
+-                + " ! video/x-raw,width=640,height=480,framerate=30/1 ! "
++                + " ! video/x-raw,width=640,height=480! "
++                + "videorate ! video/x-raw,framerate=30/1 ! "
+                 + "aspectratiocrop aspect-ratio="
+                 + self.aspect_ratio
+                 + " ! "
+@@ -659,8 +660,9 @@ class SelfieSegmenter:
+                 # Define camera source pipeline
+                 + "v4l2src device="
+                 + device
+-                + " ! video/x-raw,width=640,height=480,framerate="
+-                + "30/1 ! aspectratiocrop aspect-ratio="
++                + " ! video/x-raw,width=640,height=480 ! "
++                + "videorate ! video/x-raw,framerate=30/1 ! "
++                + "aspectratiocrop aspect-ratio="
+                 + self.aspect_ratio
+                 + " ! "
+                 + self.nxp_converter
+--
+2.25.1
+
