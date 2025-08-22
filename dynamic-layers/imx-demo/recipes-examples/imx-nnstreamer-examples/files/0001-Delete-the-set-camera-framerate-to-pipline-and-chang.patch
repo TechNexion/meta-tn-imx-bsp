@@ -1,0 +1,34 @@
+From ca030f904d1889f5341e0730f54434fd6990333e Mon Sep 17 00:00:00 2001
+From: Dennis Tseng <dennis.tseng@technexion.com>
+Date: Mon, 18 Aug 2025 05:19:05 +0000
+Subject: [PATCH] Delete the set camera framerate to pipline and change to use
+ video output a specific frame amount. Make it more flexible when using
+ high-spec cameras.
+
+---
+ common/cpp/src/gst_source_imx.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/common/cpp/src/gst_source_imx.cpp b/common/cpp/src/gst_source_imx.cpp
+index 7d63707..4ff6edb 100644
+--- a/common/cpp/src/gst_source_imx.cpp
++++ b/common/cpp/src/gst_source_imx.cpp
+@@ -57,7 +57,7 @@ void GstCameraImx::addCameraToPipeline(GstPipelineImx &pipeline)
+   cmd += "v4l2src name=" + name + " device=" + device.string();
+   cmd += " num-buffers=-1 ! video/x-raw,width=";
+   cmd += std::to_string(width) + ",height=" + std::to_string(height);
+-  cmd += ",framerate=" + std::to_string(framerate) + "/1 ! ";
++  cmd += " ! videorate ! video/x-raw,framerate=30/1 ! ";
+   pipeline.addToPipeline(cmd);
+
+   if ((format.length() != 0) or flip)
+@@ -219,4 +219,4 @@ void GstAppSrcImx::addAppSrcToPipeline(GstPipelineImx &pipeline)
+
+   cmd += " ! " + caps + " ! ";
+   pipeline.addToPipeline(cmd);
+-}
+\ No newline at end of file
++}
+--
+2.25.1
+

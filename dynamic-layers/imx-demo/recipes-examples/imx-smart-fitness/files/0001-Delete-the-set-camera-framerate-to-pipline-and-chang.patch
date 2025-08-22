@@ -1,0 +1,28 @@
+From 7db0e4beca48a5e5907a13880b485735cb80b4bf Mon Sep 17 00:00:00 2001
+From: Dennis Tseng <dennis.tseng@technexion.com>
+Date: Fri, 22 Aug 2025 09:11:04 +0000
+Subject: [PATCH]  Delete the set camera framerate to pipline and change to use
+ video output a specific frame amount. Make it more flexible when using
+ high-spec cameras.
+
+---
+ src/main.cc | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/main.cc b/src/main.cc
+index e793c50..9c5b16c 100644
+--- a/src/main.cc
++++ b/src/main.cc
+@@ -426,7 +426,8 @@ int main(int argc, char *argv[]) {
+   // Create pipeline
+   gchar *pipeline_cmd = g_strdup_printf(
+       "v4l2src device=%s ! "
+-      "video/x-raw,width=%d,height=%d,framerate=30/1,format=YUY2 ! "
++      "video/x-raw,width=%d,height=%d ! "
++      "videorate ! video/x-raw,framerate=30/1 ! "
+       "tee name=t "
+       // Pose detection
+       "t. ! queue max-size-buffers=1 leaky=1 ! "
+--
+2.25.1
+
