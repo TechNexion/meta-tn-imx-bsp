@@ -22,5 +22,16 @@ do_install:append() {
 	insert_line_after "# If Psplash is used, terminate psplash before starting weston" "After=psplash-quit.service" ${D}${systemd_system_unitdir}/weston.service
 }
 
+SOFTWARE_RENDER = "true"
+SOFTWARE_RENDER:imxgpu2d = "false"
+SOFTWARE_RENDER:imxgpu3d = "false"
+
+do_install:append:rescue() {
+	if [ "${SOFTWARE_RENDER}" = "true" ]; then
+		sed -i 's/^use-g2d=true/#use-g2d=true/' ${D}${sysconfdir}/xdg/weston/weston.ini
+		sed -i '/^#use-g2d=true/a renderer=pixman' ${D}${sysconfdir}/xdg/weston/weston.ini
+	fi
+}
+
 FILES:${PN} += "${bindir}/setup-weston-init.sh"
 FILES:${PN} += "${sysconfdir}/udev/rules.d/90-hdmi-hotplug.rules"
