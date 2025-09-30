@@ -25,6 +25,7 @@ OVERRIDES:append = "${@':tools' if (d.getVar('DISTRO', True) == 'fsl-imx-xwaylan
 OVERRIDES:append = "${@':rescue:bootscr' if (d.getVar('INITRAMFS_IMAGE', True) == 'tn-image-loader-initramfs') else ''}"
 OVERRIDES:append = "${@bb.utils.contains_any('DISTRO', 'imx-desktop-xwayland imx-desktop-x11', ':ubuntu', '', d)}"
 OVERRIDES:append = "${@':tn-vizionsdk' if bb.utils.contains('BBLAYERS', '%s/sources/meta-tn-vizionsdk' % d.getVar('BSPDIR'), True, False, d) else ''}"
+OVERRIDES:append = "${@bb.utils.contains('DISTRO_FEATURES', 'swu-single', ':swu:swu-single', '', d)}"
 
 #
 # Release Info
