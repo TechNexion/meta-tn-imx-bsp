@@ -1,0 +1,46 @@
+software =
+{
+	version = "@@DISTRO_VERSION@@";
+	hardware-compatibility: [ "1.0"];
+	@@MACHINE@@: {
+		files: (
+			{
+				filename = "Image-@@MACHINE@@.bin";
+				path = "/Image";
+				filesystem = "vfat";
+				device = "/dev/@@SWU_TARGET_BLOCK_DEVICE@@p1";
+				sha256 = "$swupdate_get_sha256(Image-@@MACHINE@@.bin)";
+			},
+			{
+				filename = "@@SWU_DEFAULT_KERNEL_DEVICETREE@@";
+				path = "/@@SWU_DEFAULT_KERNEL_DEVICETREE@@";
+				filesystem = "vfat";
+				device = "/dev/@@SWU_TARGET_BLOCK_DEVICE@@p1";
+				sha256 = "$swupdate_get_sha256(@@SWU_DEFAULT_KERNEL_DEVICETREE@@)";
+			},
+		);
+		images: (
+			{
+				filename = "@@SWU_TARGET_IMAGE@@-@@MACHINE@@.rootfs.ext4.gz";
+				type = "raw";
+				compressed = "zlib";
+				device = "/dev/@@SWU_TARGET_BLOCK_DEVICE@@p2";
+				sha256 = "$swupdate_get_sha256(@@SWU_TARGET_IMAGE@@-@@MACHINE@@.rootfs.ext4.gz)";
+			},
+		);
+		bootenv: (
+			{
+				name = "upgrade_available";
+				value = "1";
+			},
+			{
+				name = "bootslot";
+				value = "singlenormal";
+			},
+			{
+				name = "ustate";
+				value = "1";
+			},
+		);
+	}
+}

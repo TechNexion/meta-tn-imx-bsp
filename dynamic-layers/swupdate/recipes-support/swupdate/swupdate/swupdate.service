@@ -1,0 +1,13 @@
+[Unit]
+Description=SWUpdate daemon
+Documentation=https://github.com/sbabic/swupdate
+Documentation=https://sbabic.github.io/swupdate
+After=tn-u-boot-fw-env.service
+
+[Service]
+Type=exec
+ExecStart=@LIBDIR@/swupdate/swupdate.sh
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+# short-description: Create SD card image with a boot partition
+# long-description:
+# Create an image that can be written onto a SD card using dd for use
+# with i.MX SoC family
+# It uses u-boot + other binaries gathered together on imx-boot file
+#
+# The disk layout used is:
+#  - ---------- -------------- ----------- --------------- -------------- --------------
+# | | imx-boot | recov-kernel | recov-dtb | recov-ramdisk |     boot     |    rootfs    |
+#  - ---------- -------------- ----------- --------------- -------------- --------------
+# ^ ^          ^              ^           ^               ^              ^              ^
+# | |          |              |           |               |              |              |
+# 0 |        8MiB           50MiB       54MiB           120MiB         240MiB         240MiB + rootfs + IMAGE_EXTRA_SPACE (default 10MiB)
+#   ${IMX_BOOT_SEEK} 32 or 33kiB, see reference manual
+#
+part u-boot --source rawcopy --sourceparams="file=imx-boot.tagged" --ondisk mmcblk --no-table --align ${IMX_BOOT_SEEK}
+part rc-kernel --source rawcopy --sourceparams="file=Image" --ondisk mmcblk --no-table --align 8192
+part rc-dtb --source rawcopy --sourceparams="file=${SWU_DEFAULT_KERNEL_DEVICETREE}" --ondisk mmcblk --no-table --align 51200
+part rc-ramdisk --source rawcopy --sourceparams="file=swupdate-image-${MACHINE}.rootfs.cpio.gz.u-boot" --ondisk mmcblk --no-table --align 55296
+part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat --label boot --active --align 122880 --fixed-size 120
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 122880
+
+bootloader --ptable msdos
