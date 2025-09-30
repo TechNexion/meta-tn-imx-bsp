@@ -1,0 +1,14 @@
+rootfs=`swupdate -g`
+
+upgrade_available=$(fw_printenv -n upgrade_available || echo "0")
+if [ "$upgrade_available" -eq 1 ]; then
+	fw_setenv upgrade_available 0
+	fw_setenv bootcount 0
+fi
+
+state=$(fw_printenv ustate | cut -f 2 -d'=' || echo "0")
+if [ $state -eq 1 ]; then
+	SWUPDATE_SURICATTA_ARGS="-c 2"
+else
+	SWUPDATE_SURICATTA_ARGS=" "
+fi
