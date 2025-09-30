@@ -15,7 +15,9 @@ else
 fi
 
 if [ ${ARCH} == 'aarch64' ];then
-	echo -e "/dev/${BOOT_DEV}\t0x400000\t0x4000" > /etc/fw_env.config
+	echo -e "/dev/${BOOT_DEV}\t0x700000\t0x4000" > /etc/fw_env.config
+	echo -e "/dev/${BOOT_DEV}\t0x704000\t0x4000" >> /etc/fw_env.config
 else
 	echo -e "/dev/${BOOT_DEV}\t0xc0000\t0x2000" > /etc/fw_env.config
+	echo -e "/dev/${BOOT_DEV}\t0xc2000\t0x2000" >> /etc/fw_env.config
 fi
