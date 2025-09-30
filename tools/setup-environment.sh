@@ -165,6 +165,14 @@ fi
 
 # TechNexion MACHINE configs
 if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ] ; then
+  # add SWupdate layers to bblayers.conf
+  if [ -d $PWD/../sources/meta-swupdate ]; then
+    if ! grep -Fq "meta-swupdate" $PWD/conf/bblayers.conf; then
+      echo "" >> $PWD/conf/bblayers.conf
+      echo "# setup swupdate layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-swupdate \"" >> $PWD/conf/bblayers.conf
+    fi
+  fi
   # add TechNexion bsp layers to bblayers.conf
   if [ -d $PWD/../sources/meta-tn-imx-bsp ]; then
     if ! grep -Fq "meta-tn-imx-bsp" $PWD/conf/bblayers.conf; then
@@ -187,19 +195,6 @@ if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ] ; then
       echo "" >> $PWD/conf/bblayers.conf
       echo "# setup TechNexion vizionsdk layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
       echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-vizionsdk \"" >> $PWD/conf/bblayers.conf
-    fi
-  fi
-  # add SWupdate layers to bblayers.conf
-  if [ -d $PWD/../sources/meta-swupdate ]; then
-    if ! grep -Fq "meta-swupdate" $PWD/conf/bblayers.conf; then
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "# setup swupdate layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-swupdate \"" >> $PWD/conf/bblayers.conf
-    fi
-  fi
-  if [ -d $PWD/../sources/meta-swupdate-imx ]; then
-    if ! grep -Fq "meta-swupdate-imx" $PWD/conf/bblayers.conf; then
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-swupdate-imx \"" >> $PWD/conf/bblayers.conf
     fi
   fi
   # add TechNexion nfc bsp layers (from nxp) to bblayers.conf
