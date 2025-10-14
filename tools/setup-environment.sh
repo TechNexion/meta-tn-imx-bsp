@@ -144,6 +144,7 @@ if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ]; then
       echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-gnome\"" >> $PWD/conf/bblayers.conf
       echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-networking\"" >> $PWD/conf/bblayers.conf
       echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-filesystems\"" >> $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-perl\"" >> $PWD/conf/bblayers.conf
 
       echo "BBLAYERS += \"\${BSPDIR}/sources/meta-qt6\"" >> $PWD/conf/bblayers.conf
 
