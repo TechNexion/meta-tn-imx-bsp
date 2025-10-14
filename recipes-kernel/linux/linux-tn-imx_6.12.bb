@@ -20,17 +20,17 @@ DEPENDS += "coreutils-native"
 
 SRC_URI = "${LINUX_IMX_SRC}"
 LINUX_IMX_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;nobranch=1;branch=${SRCBRANCH}"
-SRCBRANCH = "tn-imx_6.12.20_2.0.0-next"
+SRCBRANCH = "tn-imx_6.12.34_2.1.0-next"
 KBRANCH = "${SRCBRANCH}"
 LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('KBRANCH', True).split('_')[2:]).lower()}"
-SRCREV = "ffc8d1087868c92f4232f691f02bdd6635f850d8"
+SRCREV = "bc125d4e89991f98609863f55293cc6f66a36476"
 
 # PV is defined in the base in linux-imx.inc file and uses the LINUX_VERSION definition
 # required by kernel-yocto.bbclass.
 #
 # LINUX_VERSION define should match to the kernel version referenced by SRC_URI and
 # should be updated once patchlevel is merged.
-LINUX_VERSION = "6.12.20"
+LINUX_VERSION = "6.12.34"
 # FIXME: Drop this line once LINUX_VERSION is stable
 KERNEL_VERSION_SANITY_SKIP = "1"
 
