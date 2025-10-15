@@ -26,6 +26,7 @@ software =
 				compressed = "zlib";
 				device = "/dev/@@SWU_TARGET_BLOCK_DEVICE@@p2";
 				sha256 = "$swupdate_get_sha256(@@SWU_TARGET_IMAGE@@-@@MACHINE@@.rootfs.ext4.gz)";
+				installed-directly = true;
 			},
 		);
 		bootenv: (
