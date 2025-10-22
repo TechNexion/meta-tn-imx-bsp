@@ -82,7 +82,7 @@ usermod -a -G sudo,users,plugdev,docker technexion; \
 "
 
 inherit core-image extrausers
-inherit distro_features_check ${@bb.utils.contains('BBFILE_COLLECTIONS', 'qt5-layer', 'populate_sdk_qt5', '', d)}
+inherit features_check ${@bb.utils.contains('BBFILE_COLLECTIONS', 'qt5-layer', 'populate_sdk_qt5', '', d)}
 
 
 IMAGE_FEATURES:append:mender-image = " package-management "
