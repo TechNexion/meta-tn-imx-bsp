@@ -106,6 +106,7 @@ IMX_BOOT_SEEK:mx8-nxp-bsp = "33"
 #
 MACHINE_FIRMWARE:remove:mx8-nxp-bsp = "linux-firmware-ath10k"
 MACHINE_FEATURES:append = " pci wifi bluetooth touchscreen nxpwifi-all-sdio"
+MACHINE_FEATURES:append:mx9-nxp-bsp = " optee"
 MACHINE_FEATURES:remove:mx8-nxp-bsp = "touchscreen"
 IMAGE_INSTALL:append = " get-support-info"
 IMAGE_INSTALL:append = " packagegroup-tn-wlan"
