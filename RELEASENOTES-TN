@@ -1,13 +1,14 @@
-yocto-5.2 Walnascar 2025Q3 TechNexion BSP Release Notes
+yocto-5.2 Walnascar 2025Q4 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q3
-Release Name: tn-walnascar_6.12.20-2.0.0
-Release Revision: 20250805
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q4
+Release Name: tn-walnascar_6.12.34-2.1.0
+Release Revision: 20251117
 
 Supported TechNexion products:
 ARM64:
+EDM-IMX95 (DRAM 4/8/16 GB) with EVM
 EDM-IMX93 (DRAM 2 GB) with WB
 EDM-IMX91 (DRAM 1 GB) with WB
 EDM-G-IMX8MP (DRAM 1/2/4/8 GB) with WB/WIZARD
@@ -27,18 +28,18 @@ TC-0700/1010 (DRAM Solo:512MB DL:1GB Quad:2GB)
 TEP1-IMX7 (DRAM 512MB/1GB)
 
 Support list table:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q3
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q4
 
 New feature:
-Support new platform PICO-IMX93.
+Support new platform EDM-IMX95.
+Support swupdate
 
 Known issue:
-1. EDM-IMX93/PICO-IMX93/AXON-IMX93 - The TEVS camera fails to initialize from VizionViewer (additional media control configuration is required).
- - However, the TEVS camera works via gstreamer with manually configured media control.
-2. PICO-IMX6UL/PICO-IMX7/EDM1-IMX6P - Wi-Fi concurrent mode doesn't work.
+1. TEP-IMX7D - No PCIe function.
+2. PICO-IMX6UL/PICO-IMX7/EDM1-IMX6P/PICO-IMX93 - Wi-Fi concurrent mode doesn't work.
 
 BSP version:
-Tag name on github: tn-walnascar_6.12.20_2.0.0_20250805
-u-boot-tn-imx: 35c671ce5b3b4d70841282e9cd575bec924ca16d
-linux-tn-imx: ffc8d1087868c92f4232f691f02bdd6635f850d8
-meta-tn-imx-bsp: a7d307e2e61cbb4905158aa78dfa0cf424a33e37
+Tag name on github: tn-walnascar_6.12.34_2.1.0_20251117
+u-boot-tn-imx: 196893265f58ab2bae96592a6318614f35c28d71
+linux-tn-imx: d6a0cc44767774c6872718ae97b8afd6c165e942
+meta-tn-imx-bsp: d00e7647ee912484efc1c80227b5a4d9f380beab
