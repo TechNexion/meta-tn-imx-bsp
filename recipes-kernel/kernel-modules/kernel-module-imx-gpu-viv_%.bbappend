@@ -6,4 +6,4 @@
 LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('SRCBRANCH', True).split('_')[2:]).lower()}"
 LINUX_IMX_SRC = "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;branch=${SRCBRANCH}"
 SRCBRANCH = "tn-imx_6.12.34_2.1.0-next"
-SRCREV = "f2c12b057db42b6eca93d11fde9d4add4c4e2068"
+SRCREV = "d6a0cc44767774c6872718ae97b8afd6c165e942"
