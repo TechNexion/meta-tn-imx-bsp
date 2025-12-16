@@ -137,6 +137,7 @@ if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ]; then
       hook_in_layer meta-security
       hook_in_layer meta-security/meta-tpm
       hook_in_layer meta-security/meta-parsec
+      hook_in_layer meta-freescale-ml
 
       echo "" >> $PWD/conf/bblayers.conf
       echo "BBLAYERS += \"\${BSPDIR}/sources/meta-browser/meta-chromium\"" >> $PWD/conf/bblayers.conf
