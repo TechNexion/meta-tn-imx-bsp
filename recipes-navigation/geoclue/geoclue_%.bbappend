@@ -1,0 +1,1 @@
+PACKAGECONFIG:remove = "${@bb.utils.contains('DISTRO_FEATURES', '3g', '3g modem-gps cdma', '', d)}"
