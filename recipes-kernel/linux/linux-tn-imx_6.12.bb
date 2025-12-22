@@ -1,5 +1,5 @@
 # Copyright 2013-2016 Freescale Semiconductor
-# Copyright 2017-2024 NXP
+# Copyright 2017-2025 NXP
 # Copyright 2025 TechNexion Ltd.
 # Copyright 2018 O.S. Systems Software LTDA.
 # Released under the MIT license (see COPYING.MIT for the terms)
@@ -30,7 +30,7 @@ SRCREV = "c2aeaa26480f1939e6d8ff44436345649ac05a17"
 #
 # LINUX_VERSION define should match to the kernel version referenced by SRC_URI and
 # should be updated once patchlevel is merged.
-LINUX_VERSION = "6.12.34"
+LINUX_VERSION = "6.12.49"
 # FIXME: Drop this line once LINUX_VERSION is stable
 KERNEL_VERSION_SANITY_SKIP = "1"
 
@@ -93,5 +93,17 @@ do_merge_delta_config() {
     cp .config ${WORKDIR}/defconfig
 }
 addtask merge_delta_config before do_kernel_localversion after do_copy_defconfig
+
+do_deploy:append() {
+    if [ ${@bb.utils.filter('UBOOT_CONFIG', 'crrm', d)} ]; then
+        baseName=${KERNEL_IMAGETYPE}-${KERNEL_IMAGE_NAME}
+        gzip -c ${DEPLOYDIR}/$baseName${KERNEL_IMAGE_BIN_EXT} > \
+            ${DEPLOYDIR}/$baseName${KERNEL_IMAGE_BIN_EXT}.gz
+        ln -sf $baseName${KERNEL_IMAGE_BIN_EXT}.gz $deployDir/${KERNEL_IMAGETYPE}.gz
+        # FIXME: For now, the CRRM kernel is just a copy of the regular kernel
+        ln -sf $baseName${KERNEL_IMAGE_BIN_EXT}    $deployDir/${KERNEL_IMAGETYPE}_crrm
+        ln -sf $baseName${KERNEL_IMAGE_BIN_EXT}.gz $deployDir/${KERNEL_IMAGETYPE}_crrm.gz
+    fi
+}
 
 COMPATIBLE_MACHINE = "(imx-nxp-bsp)"
