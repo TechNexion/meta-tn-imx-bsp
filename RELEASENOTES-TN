@@ -1,9 +1,9 @@
-yocto-5.2 Walnascar 2025Q4 TechNexion BSP Release Notes
+yocto-5.2 Walnascar 2026Q1 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q4
-Release Name: tn-walnascar_6.12.34-2.1.0
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2026q1
+Release Name: tn-walnascar_6.12.49-2.2.0
 Release Revision: 20251117
 
 Supported TechNexion products:
@@ -28,18 +28,16 @@ TC-0700/1010 (DRAM Solo:512MB DL:1GB Quad:2GB)
 TEP1-IMX7 (DRAM 512MB/1GB)
 
 Support list table:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2025q4
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2026q1
 
 New feature:
-Support new platform EDM-IMX95.
-Support swupdate
 
 Known issue:
 1. TEP-IMX7D - No PCIe function.
 2. PICO-IMX6UL/PICO-IMX7/EDM1-IMX6P/PICO-IMX93 - Wi-Fi concurrent mode doesn't work.
 
 BSP version:
-Tag name on github: tn-walnascar_6.12.34_2.1.0_20251117
-u-boot-tn-imx: 196893265f58ab2bae96592a6318614f35c28d71
-linux-tn-imx: d6a0cc44767774c6872718ae97b8afd6c165e942
-meta-tn-imx-bsp: d00e7647ee912484efc1c80227b5a4d9f380beab
+Tag name on github: tn-walnascar_6.12.49_2.2.0_20260105
+u-boot-tn-imx: acf05b014fee3f6b87f574f2f68bd1cd6e03476d
+linux-tn-imx: 55f4720198f6c05b568613127a21b157aa025b24
+meta-tn-imx-bsp: 7dd92efe4acb7a521424096d90b3460bb8a8986a
