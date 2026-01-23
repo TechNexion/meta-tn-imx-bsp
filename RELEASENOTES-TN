@@ -1,10 +1,10 @@
-yocto-5.0 Scarthgap 2025Q2 TechNexion BSP Release Notes
+yocto-5.0 Scarthgap 2026Q1 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/release-notes-yp50-2025q2
-Release Name: tn-scarthgap_6.6.52-2.2.0
-Release Revision: 20250402
+https://developer.technexion.com/docs/release-notes-yp50-2026q1
+Release Name: tn-scarthgap_6.6.52-2.2.2
+Release Revision: 20260123
 
 Supported TechNexion products:
 ARM64:
@@ -31,24 +31,16 @@ IMX93-EVK (LPDDR4) with tevs
 IMX95-EVK (LPDDR5) with tevs
 
 Support list table:
-https://developer.technexion.com/docs/release-notes-yp50-2025q2
+https://developer.technexion.com/docs/release-notes-yp50-2026q1
 
 New feature:
 
 Known issue:
-1. EDM-G-IMX8MM - 21.5-inch panel not working.
-2. PICO-IMX8MM - SDCARD boot AVL issue.
 
 Bug fixed:
-1. AXON-IMX93/EDM-IMX93: A pop-up noise during reboot or beginning play.
-2. AXON-IMX93/EDM-IMX93: Camera failed to read from register while changing resolution frequently.
-3. PICO-IMX8MM: Device tree setting not persisting when booting from SD Card.
-4. PICO-IMX6UL(ULL)/PICO-IMX7D: QCA Bluetooth device disappears after reset or system reboot.
-5. EDM-G-IMX8MM: TEVS camera cannot display the image when any resolution is selected.
-6. PICO-IMX7D: Cannot load kernel from boot media when set boot config to boot from SDCARD.
 
 BSP version:
-Tag name on github: tn-scarthgap_6.6.52_2.2.0_20250402
-u-boot-tn-imx: 9aaf88cfe4234d6c40d3aade29da8e046d566988
-linux-tn-imx: 3c6660b7ae5b03ba4303a7d58b3c723a8d03881c
-meta-tn-imx-bsp: 8e4aee4cc50e746473777b2216ad0fac7fb80a0d
+Tag name on github: tn-scarthgap_6.6.52_2.2.2_20260123
+u-boot-tn-imx: cc1e05701ca55a80c9e919947a9a5ed03382ec5a
+linux-tn-imx: 0097bc9e46f86333fcc5852ce7dfac3bc32a04b1
+meta-tn-imx-bsp: d9bc41ed73702e294d83706c78bb1f573c646c7a
