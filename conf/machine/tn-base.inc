@@ -145,7 +145,7 @@ HOSTTOOLS_NONFATAL += "git-lfs"
 #DISTRO_FEATURES:append:virtualization = " virtualization"
 
 # technexion rescue-loader
-DISTRO_FEATURES:remove:rescue = "irda alsa bluetooth wifi nfs 3g ptest bluez bluez5 vulkan optee pulseaudio multiarch \
+DISTRO_FEATURES:remove:rescue = "irda alsa bluetooth wifi nfs 3g ptest bluez bluez5 optee pulseaudio multiarch \
                                  acl argp ext2 pcmcia usbgadget xattr zeroconf pci jailhouse virtualization"
 USE_VT:rescue = "0"
 
