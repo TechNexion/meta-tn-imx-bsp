@@ -43,6 +43,7 @@ RDEPENDS:${PN} = " \
     memtester \
     mmc-utils \
     net-tools \
+    netperf \
     openssh-sftp-server \
     picocom \
     ramsmp \
