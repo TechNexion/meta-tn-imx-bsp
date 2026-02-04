@@ -146,7 +146,6 @@ if [ ! -e $BUILD_DIR/conf/local.conf ]; then
 fi
 
 # When run tn-setup-release.sh script for the first time, backup the local.conf file
-# For consecutive script runs, it restores the backup and changes are appended on this one.
 if [ ! -e $BUILD_DIR/conf/local.conf.org ]; then
     cp $BUILD_DIR/conf/local.conf $BUILD_DIR/conf/local.conf.org
 else
