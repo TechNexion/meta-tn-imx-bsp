@@ -20,24 +20,39 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# Automatically appends a meta-layer to bblayers.conf if it exists and isn't already present.
+# Arguments: $1 (pwd) - Project root, $2 (id) - Release ID, $3 (name) - Layer folder name
+auto_append_layer() {
+  local pwd=$1 id=$2 name=$3
+
+  [[ -d $pwd/../sources/$name ]] || return
+  grep -qF "$name" "$pwd/conf/bblayers.conf" && return
+
+  printf "\n# setup NXP $id release layer in bblayers.conf\n" >> "$pwd/conf/bblayers.conf"
+  printf "BBLAYERS += \" \${BSPDIR}/sources/$name \"\n" >> "$pwd/conf/bblayers.conf"
+  cp -f $pwd/conf/bblayers.conf $pwd/conf/bblayers.conf.org
+}
+
+
 . sources/meta-imx/tools/setup-utils.sh
 
-CWD=`pwd`
-if [ -d "$CWD/sources/meta-boot2qt" ]; then
+ROOT_DIR=`pwd`
+
+if [ -d "$ROOT_DIR/sources/meta-boot2qt" ]; then
   # Check if MACHINE has already been exported, if not fail out
   ENVVARS=`printenv`
   if grep -q "MACHINE=" <<< $ENVVARS; then
-	PROGNAME="$CWD/sources/meta-boot2qt/scripts/setup-environment.sh"
-	# Get TechNexion MACHINE configs from boot2qt
-	TNCONFIGS=$(ls $CWD/sources/meta-boot2qt/meta-boot2qt-distro/conf/distro/include/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
+  PROGNAME="$ROOT_DIR/sources/meta-boot2qt/scripts/setup-environment.sh"
+  # Get TechNexion MACHINE configs from boot2qt
+  TNCONFIGS=$(ls $ROOT_DIR/sources/meta-boot2qt/meta-boot2qt-distro/conf/distro/include/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
   else
     echo -e "Try to setup boot2qt build environment. Please export MACHINE=xxx first."
     return 1
   fi
 else
-  PROGNAME="$CWD/sources/base/setup-environment"
+  PROGNAME="$ROOT_DIR/sources/base/setup-environment"
   # Get TechNexion MACHINE configs from yocto
-  TNCONFIGS=$(ls $CWD/sources/meta-tn-imx-bsp/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
+  TNCONFIGS=$(ls $ROOT_DIR/sources/meta-tn-imx-bsp/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
 fi
 
 usage ()
@@ -74,7 +89,7 @@ if [ -z "$MACHINE" ]; then
   return 1
 fi
 
-if [ ! -d "$CWD/sources/meta-boot2qt" ]; then
+if [ ! -d "$ROOT_DIR/sources/meta-boot2qt" ]; then
   if [ -z "$DISTRO" ]; then
       echo "Error: DISTRO environment variable not defined"
       return 1
@@ -82,14 +97,14 @@ if [ ! -d "$CWD/sources/meta-boot2qt" ]; then
 fi
 
 # Get i.MX MACHINE configs
-FSLCONFIGS=$(ls $CWD/sources/meta-imx/meta-imx-bsp/conf/machine/*.conf $CWD/sources/meta-freescale*/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
+FSLCONFIGS=$(ls $ROOT_DIR/sources/meta-imx/meta-imx-bsp/conf/machine/*.conf $ROOT_DIR/sources/meta-freescale*/conf/machine/*.conf | xargs -n 1 basename | grep -E -c "$MACHINE")
 # Set up the basic yocto environment by sourcing fsl community's setup-environment bash script with/without TEMPLATECONF
 if [ -n "${DISTRO}" ]; then
   if [ ${TNCONFIGS} != 0 ]; then
     echo "Setup TechNexion Yocto"
-    echo "    TEMPLATECONF=$CWD/sources/meta-tn-imx-bsp/conf/templates/default MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY"
+    echo "    TEMPLATECONF=$ROOT_DIR/sources/meta-tn-imx-bsp/conf/templates/default MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY"
     echo ""
-    TEMPLATECONF="$CWD/sources/meta-tn-imx-bsp/conf/templates/default" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
+    TEMPLATECONF="$ROOT_DIR/sources/meta-tn-imx-bsp/conf/templates/default" MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY
   elif [ ${FSLCONFIGS} != 0 ]; then
     echo "Setup Freescale/i.MX Yocto"
     echo "    MACHINE=$MACHINE DISTRO=$DISTRO source $PROGNAME $BUILDDIRECTORY"
@@ -111,6 +126,8 @@ else
   fi
 fi
 
+WORK_DIR=$PWD
+
 #
 # For some reason, our modified original bblayers.conf.sample are replaced by
 # FSL community's base/conf/bblayer.conf
@@ -121,12 +138,12 @@ fi
 echo -e "\n# TechNexion setup-environment.sh wrapper: Further modification to bblayers.conf and local.conf" | tee -a conf/local.conf
 
 if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ]; then
-  if [ -d $PWD/../sources/meta-imx ]; then
+  if [ -d $WORK_DIR/../sources/meta-imx ]; then
     # copy new EULA(LICENSE.txt) into community so setup uses latest i.MX EULA
-    cp $PWD/../sources/meta-imx/LICENSE.txt $PWD/../sources/meta-freescale/EULA
-    if ! grep -Fq "meta-imx" $PWD/conf/bblayers.conf; then
+    cp $WORK_DIR/../sources/meta-imx/LICENSE.txt $WORK_DIR/../sources/meta-freescale/EULA
+    if ! grep -Fq "meta-imx" $WORK_DIR/conf/bblayers.conf; then
       # add i.MX bsp layers to bblayers.conf
-      echo -e "\n# setup i.MX Yocto Project Release layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
+      echo -e "\n# setup i.MX Yocto Project Release layers in bblayers.conf" | tee -a $WORK_DIR/conf/bblayers.conf
       hook_in_layer meta-imx/meta-imx-bsp
       hook_in_layer meta-imx/meta-imx-sdk
       hook_in_layer meta-imx/meta-imx-ml
@@ -139,28 +156,28 @@ if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ]; then
       hook_in_layer meta-security/meta-parsec
       hook_in_layer meta-freescale-ml
 
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-browser/meta-chromium\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-clang\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-gnome\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-networking\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-filesystems\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-perl\"" >> $PWD/conf/bblayers.conf
+      echo "" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-browser/meta-chromium\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-clang\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-gnome\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-networking\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-filesystems\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-perl\"" >> $WORK_DIR/conf/bblayers.conf
 
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-qt6\"" >> $PWD/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-qt6\"" >> $WORK_DIR/conf/bblayers.conf
 
       # Enable docker for mx8 machines
       echo "BBLAYERS += \"\${BSPDIR}/sources/meta-virtualization\"" >> conf/bblayers.conf
 
     fi
   fi
-  if [ -d ${PWD}/../sources/meta-ivi ]; then
-	if ! grep -Fq "meta-ivi" $PWD/conf/bblayers.conf; then
-      echo -e "\n# setup Genivi layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-gplv2\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-bsp\"" >> $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-test\"" >> $PWD/conf/bblayers.conf
+  if [ -d ${WORK_DIR}/../sources/meta-ivi ]; then
+  if ! grep -Fq "meta-ivi" $WORK_DIR/conf/bblayers.conf; then
+      echo -e "\n# setup Genivi layers in bblayers.conf" | tee -a $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-gplv2\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-bsp\"" >> $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-test\"" >> $WORK_DIR/conf/bblayers.conf
     fi
   fi
 fi
@@ -168,89 +185,64 @@ fi
 # TechNexion MACHINE configs
 if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ] ; then
   # add SWupdate layers to bblayers.conf
-  if [ -d $PWD/../sources/meta-swupdate ]; then
-    if ! grep -Fq "meta-swupdate" $PWD/conf/bblayers.conf; then
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "# setup swupdate layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-swupdate \"" >> $PWD/conf/bblayers.conf
-    fi
-  fi
+  auto_append_layer "$WORK_DIR" "swupdate" "meta-swupdate"
+
   # add TechNexion bsp layers to bblayers.conf
-  if [ -d $PWD/../sources/meta-tn-imx-bsp ]; then
-    if ! grep -Fq "meta-tn-imx-bsp" $PWD/conf/bblayers.conf; then
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "# setup TechNexion i.MX Yocto Project Release Layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-imx-bsp \"" >> $PWD/conf/bblayers.conf
-    fi
-  fi
+  auto_append_layer "$WORK_DIR" "i.MX Yocto Project Release" "meta-tn-imx-bsp"
+
   # add TechNexion wifi layers to bblayers.conf
-  if [ -d $PWD/../sources/meta-tn-wifi ]; then
-    if ! grep -Fq "meta-tn-wifi" $PWD/conf/bblayers.conf; then
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "# setup TechNexion wifi layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-wifi \"" >> $PWD/conf/bblayers.conf
-    fi
-  fi
+  auto_append_layer "$WORK_DIR" "wifi" "meta-tn-wifi"
+
   # add TechNexion vizionsdk layers to bblayers.conf
-  if [ -d $PWD/../sources/meta-tn-vizionsdk ]; then
-    if ! grep -Fq "meta-tn-vizionsdk" $PWD/conf/bblayers.conf; then
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "# setup TechNexion vizionsdk layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-tn-vizionsdk \"" >> $PWD/conf/bblayers.conf
-    fi
-  fi
+  auto_append_layer "$WORK_DIR" "vizionsdk" "meta-tn-vizionsdk"
+
   # add TechNexion nfc bsp layers (from nxp) to bblayers.conf
-  if [ -d $PWD/../sources/meta-nxp-nfc ]; then
-    if ! grep -Fq "meta-nxp-nfc" $PWD/conf/bblayers.conf; then
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "# setup NXP nfc release layer in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-nxp-nfc \"" >> $PWD/conf/bblayers.conf
-    fi
-  fi
+  auto_append_layer "$WORK_DIR" "nfc" "meta-nxp-nfc"
+
   # add TechNexion virtualization bsp layers (virtualization/boot2qt) to bblayers.conf
-  #if [ -d $PWD/../sources/meta-virtualization ]; then
+  #if [ -d $WORK_DIR/../sources/meta-virtualization ]; then
   if false; then
     # has meta-virtualization
-    if ! grep -Fq "meta-virtualization" $PWD/conf/bblayers.conf; then
-      echo "" >> $PWD/conf/bblayers.conf
-      echo "# setup i.MX Container OS and OTA layers in bblayers.conf" | tee -a $PWD/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $PWD/conf/bblayers.conf
+    if ! grep -Fq "meta-virtualization" $WORK_DIR/conf/bblayers.conf; then
+      echo "" >> $WORK_DIR/conf/bblayers.conf
+      echo "# setup i.MX Container OS and OTA layers in bblayers.conf" | tee -a $WORK_DIR/conf/bblayers.conf
+      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $WORK_DIR/conf/bblayers.conf
     fi
-    if ! grep -Fq "BBMULTICONFIG" $PWD/conf/local.conf; then
-      mkdir -p $PWD/conf/multiconfig
-      cat > $PWD/conf/multiconfig/container.conf << EOF
+    if ! grep -Fq "BBMULTICONFIG" $WORK_DIR/conf/local.conf; then
+      mkdir -p $WORK_DIR/conf/multiconfig
+      cat > $WORK_DIR/conf/multiconfig/container.conf << EOF
 MACHINE = "tn-container"
 DISTRO = "fsl-imx-xwayland"
 DISTRO_FEATURES:append = " virtualization"
 TMPDIR = "\${TOPDIR}/tmp-container"
 TN_CONTAINER_IMAGE_TYPE ?= "tar.gz"
 EOF
-      echo "TN_CONTAINER_IMAGE_TYPE = \"tar.gz\"" >> $PWD/conf/local.conf
-      echo "BBMULTICONFIG = \"container\"" >> $PWD/conf/local.conf
+      echo "TN_CONTAINER_IMAGE_TYPE = \"tar.gz\"" >> $WORK_DIR/conf/local.conf
+      echo "BBMULTICONFIG = \"container\"" >> $WORK_DIR/conf/local.conf
       echo "# setup BBMULTICONFIG in local.conf with conf/multiconfig/container.conf"
-      cat $PWD/conf/multiconfig/container.conf
+      cat $WORK_DIR/conf/multiconfig/container.conf
     fi
   else
     # no meta-virtualization
-    if ! grep -Fq "meta-tn-imx-bsp/recipes-containers/docker-disk/docker-disk.bb" $PWD/conf/local.conf; then
-      echo "BBMASK += \"meta-tn-imx-bsp/recipes-containers/docker-disk/docker-disk.bb\"" >> $PWD/conf/local.conf
+    if ! grep -Fq "meta-tn-imx-bsp/recipes-containers/docker-disk/docker-disk.bb" $WORK_DIR/conf/local.conf; then
+      echo "BBMASK += \"meta-tn-imx-bsp/recipes-containers/docker-disk/docker-disk.bb\"" >> $WORK_DIR/conf/local.conf
     fi
-    if ! grep -Fq "meta-tn-imx-bsp/recipes-containers/docker/docker-ce_%.bbappend" $PWD/conf/local.conf; then
-      echo "BBMASK += \"meta-tn-imx-bsp/recipes-containers/docker/docker-ce_%.bbappend\"" >> $PWD/conf/local.conf
+    if ! grep -Fq "meta-tn-imx-bsp/recipes-containers/docker/docker-ce_%.bbappend" $WORK_DIR/conf/local.conf; then
+      echo "BBMASK += \"meta-tn-imx-bsp/recipes-containers/docker/docker-ce_%.bbappend\"" >> $WORK_DIR/conf/local.conf
     fi
     # for boot2qt
-    if grep -Fq "DISTRO ?= \"b2qt\"" $PWD/conf/local.conf; then
-      if ! grep -Fq "meta-tn-imx-bsp/recipes-graphics/wayland/weston_%.bbappend" $PWD/conf/local.conf; then
-        echo "BBMASK += \"meta-tn-imx-bsp/recipes-graphics/wayland/weston_%.bbappend\"" >> $PWD/conf/local.conf
+    if grep -Fq "DISTRO ?= \"b2qt\"" $WORK_DIR/conf/local.conf; then
+      if ! grep -Fq "meta-tn-imx-bsp/recipes-graphics/wayland/weston_%.bbappend" $WORK_DIR/conf/local.conf; then
+        echo "BBMASK += \"meta-tn-imx-bsp/recipes-graphics/wayland/weston_%.bbappend\"" >> $WORK_DIR/conf/local.conf
       fi
-      if ! grep -Fq "meta-tn-imx-bsp/recipes-qt/qt5/qtbase_%.bbappend" $PWD/conf/local.conf; then
-        echo "BBMASK += \"meta-tn-imx-bsp/recipes-qt/qt5/qtbase_%.bbappend\"" >> $PWD/conf/local.conf
+      if ! grep -Fq "meta-tn-imx-bsp/recipes-qt/qt5/qtbase_%.bbappend" $WORK_DIR/conf/local.conf; then
+        echo "BBMASK += \"meta-tn-imx-bsp/recipes-qt/qt5/qtbase_%.bbappend\"" >> $WORK_DIR/conf/local.conf
       fi
     fi
   fi
 fi
 
-unset CWD
+unset WORK_DIR
 unset PROGNAME
 unset THIS_SCRIPT
 unset TNCONFIGS
