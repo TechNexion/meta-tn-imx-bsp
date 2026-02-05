@@ -18,13 +18,24 @@ SRC_URI = "file://README \
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
 
-do_compile:rescue () {
-	mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
-		-n "TechNexion boot script" -d ${S}/bootscript-tsl-arm64.txt \
-		${S}/boot.scr
+inherit deploy
+
+do_compile() {
+    mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
+        -n "TechNexion boot script" -d ${S}/bootscript-tsl-arm64.txt \
+        ${B}/boot.scr
 }
 
-do_install:rescue () {
-	install -d ${DEPLOY_DIR_IMAGE}
-	install -m 0644 ${S}/boot.scr ${DEPLOY_DIR_IMAGE}
+do_install() {
+    install -d ${D}/boot
+    install -m 0644 ${B}/boot.scr ${D}/boot/boot.scr
 }
+
+FILES:${PN} += "/boot /boot/boot.scr"
+
+do_deploy() {
+    install -d ${DEPLOYDIR}
+    install -m 0644 ${B}/boot.scr ${DEPLOYDIR}/boot.scr
+}
+
+addtask deploy after do_install before do_build
