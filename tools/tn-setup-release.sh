@@ -23,6 +23,8 @@
 CALLER=`caller`
 CWD=`pwd`
 PROGNAME="$CWD/sources/meta-tn-imx-bsp/tools/setup-environment.sh"
+. $CWD/sources/meta-tn-imx-bsp/tools//tn-setup-utils.sh
+
 exit_message ()
 {
    echo "To return to this build environment later please run:"
@@ -135,9 +137,10 @@ if [ $? != 0 ]; then
   return 1
 fi
 
-echo -e "\n# TechNexion Setup BSP Release: Further modification to local.conf and bblayers.conf" | tee -a conf/local.conf
 # source setup-environment.sh changes to the build directory, so re-set $BUILD_DIR to current build directory
-BUILD_DIR=.
+BUILD_DIR=$(pwd)
+
+tn_append_conf $BUILD_DIR "yes" "\n# TechNexion Setup BSP Release: Further modification to local.conf and bblayers.conf"
 
 if [ ! -e $BUILD_DIR/conf/local.conf ]; then
     echo -e "\nERROR - No build directory is set yet. Run the 'setup-environment' script before running this script to create " $BUILD_DIR
@@ -145,31 +148,18 @@ if [ ! -e $BUILD_DIR/conf/local.conf ]; then
     return 1
 fi
 
-# When run tn-setup-release.sh script for the first time, backup the local.conf file
-if [ ! -e $BUILD_DIR/conf/local.conf.org ]; then
-    cp $BUILD_DIR/conf/local.conf $BUILD_DIR/conf/local.conf.org
-else
-    cp $BUILD_DIR/conf/local.conf.org $BUILD_DIR/conf/local.conf
-fi
-
-if [ ! -e $BUILD_DIR/conf/bblayers.conf.org ]; then
-    cp $BUILD_DIR/conf/bblayers.conf $BUILD_DIR/conf/bblayers.conf.org
-else
-    cp $BUILD_DIR/conf/bblayers.conf.org $BUILD_DIR/conf/bblayers.conf
-fi
-
 #
 # Additional Settings to local.conf and bblayer.conf
 #
 
 # for zeus
-echo >> conf/local.conf
-echo "PACKAGE_CLASSES = \"package_deb\"" >> conf/local.conf
-echo "EXTRA_IMAGE_FEATURES += \"package-management\"" >> conf/local.conf
+tn_append_conf $BUILD_DIR "" ""
+tn_append_conf $BUILD_DIR "" "PACKAGE_CLASSES = \"package_deb\""
+tn_append_conf $BUILD_DIR "" "EXTRA_IMAGE_FEATURES += \"package-management\""
 
 # for scarthgap, need to increase the fetch retry
-echo >> conf/local.conf
-echo "BBFETCH_RETRYCOUNT = \"5\"" >> conf/local.conf
+tn_append_conf $BUILD_DIR "" ""
+tn_append_conf $BUILD_DIR "" "BBFETCH_RETRYCOUNT = \"5\""
 
 # for mender, note: below should really be in tn-setup-mender.sh
 if grep -q "tn-setup-mender" <<< $CALLER; then
@@ -230,31 +220,31 @@ fi
 # Include meta-nxp-desktop for building imx-image-desktop
 if [ "$DISTRO" = "imx-desktop-xwayland" ]; then
     if [ -f conf/local.conf ]; then
-        echo ""                                                                       >> conf/local.conf
-        echo "# Include ubuntu environment and packages settings"                     >> conf/local.conf
-        echo "require conf/machine/include/ubuntubasics.inc"                          >> conf/local.conf
-        echo ""                                                                       >> conf/local.conf
-        echo "# Switch to rpm packaging to avoid rootfs build break"                  >> conf/local.conf
-        echo "PACKAGE_CLASSES = \"package_rpm\""                                      >> conf/local.conf
-        echo ""                                                                       >> conf/local.conf
-        echo "# Save lots of disk space"                                              >> conf/local.conf
-        echo "INHERIT += \"rm_work\""                                                 >> conf/local.conf
-        echo ""                                                                       >> conf/local.conf
-        echo "# Set your proxy if necessary"                                          >> conf/local.conf
-        echo "#ENV_HOST_PROXIES = \"http_proxy=\""                                    >> conf/local.conf
-        echo ""                                                                       >> conf/local.conf
-        echo "# Set user account and password"                                        >> conf/local.conf
-        echo "#APTGET_ADD_USERS = \"user:password:shell\""                            >> conf/local.conf
-        echo "#  format 'name:password:shell'."                                       >> conf/local.conf
-        echo "#    'name' is the user name."                                          >> conf/local.conf
-        echo "#    'password' is an encrypted password (e.g. generated with"          >> conf/local.conf
-        echo "#    \`echo \"P4sSw0rD\" \| openssl passwd -stdin\`)."                  >> conf/local.conf
-        echo "#    If empty or missing, they'll get an empty password."               >> conf/local.conf
-        echo "#    'shell' is the default shell (if empty, default is /bin/sh)."      >> conf/local.conf
-        echo -e "\n# Change the default user to 'ubuntu'"                             >> conf/local.conf
-        echo "APTGET_ADD_USERS = \"ubuntu:xA5hQLsgw2DlE:/bin/bash\""                  >> conf/local.conf
+        tn_append_conf $BUILD_DIR "" ""
+        tn_append_conf $BUILD_DIR "" "# Include ubuntu environment and packages settings"
+        tn_append_conf $BUILD_DIR "" "require conf/machine/include/ubuntubasics.inc"
+        tn_append_conf $BUILD_DIR "" ""
+        tn_append_conf $BUILD_DIR "" "# Switch to rpm packaging to avoid rootfs build break"
+        tn_append_conf $BUILD_DIR "" "PACKAGE_CLASSES = \"package_rpm\""
+        tn_append_conf $BUILD_DIR "" ""
+        tn_append_conf $BUILD_DIR "" "# Save lots of disk space"
+        tn_append_conf $BUILD_DIR "" "INHERIT += \"rm_work\""
+        tn_append_conf $BUILD_DIR "" ""
+        tn_append_conf $BUILD_DIR "" "# Set your proxy if necessary"
+        tn_append_conf $BUILD_DIR "" "#ENV_HOST_PROXIES = \"http_proxy=\""
+        tn_append_conf $BUILD_DIR "" ""
+        tn_append_conf $BUILD_DIR "" "# Set user account and password"
+        tn_append_conf $BUILD_DIR "" "#APTGET_ADD_USERS = \"user:password:shell\""
+        tn_append_conf $BUILD_DIR "" "#  format 'name:password:shell'."
+        tn_append_conf $BUILD_DIR "" "#    'name' is the user name."
+        tn_append_conf $BUILD_DIR "" "#    'password' is an encrypted password (e.g. generated with"
+        tn_append_conf $BUILD_DIR "" "#    \`echo \"P4sSw0rD\" \| openssl passwd -stdin\`)."
+        tn_append_conf $BUILD_DIR "" "#    If empty or missing, they'll get an empty password."
+        tn_append_conf $BUILD_DIR "" "#    'shell' is the default shell (if empty, default is /bin/sh)."
+        tn_append_conf $BUILD_DIR "" "\n# Change the default user to 'ubuntu'"
+        tn_append_conf $BUILD_DIR "" "APTGET_ADD_USERS = \"ubuntu:xA5hQLsgw2DlE:/bin/bash\""
 
-        echo "BBLAYERS += \"\${BSPDIR}/sources/meta-nxp-desktop\""                    >> conf/bblayers.conf
+        tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-nxp-desktop\""
 
         echo ""
         echo "IMX Desktop setup complete!"
@@ -279,6 +269,15 @@ if grep -q "tn-setup-mender" <<< $CALLER; then
     if [ -d ../sources/meta-mender-community/meta-mender-update-modules ]; then
       echo "BBLAYERS += \" \${BSPDIR}/sources/meta-mender-community/meta-mender-update-modules \"" >> conf/bblayers.conf
     fi
+fi
+
+# When run tn-setup-release.sh script for the first time, backup the local.conf file
+if [ ! -e $BUILD_DIR/conf/local.conf.org ]; then
+    cp $BUILD_DIR/conf/local.conf $BUILD_DIR/conf/local.conf.org
+fi
+
+if [ ! -e $BUILD_DIR/conf/bblayers.conf.org ]; then
+    cp $BUILD_DIR/conf/bblayers.conf $BUILD_DIR/conf/bblayers.conf.org
 fi
 
 cd $BUILD_DIR
