@@ -20,21 +20,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Automatically appends a meta-layer to bblayers.conf if it exists and isn't already present.
-# Arguments: $1 (pwd) - Project root, $2 (id) - Release ID, $3 (name) - Layer folder name
-auto_append_layer() {
-  local pwd=$1 id=$2 name=$3
-
-  [[ -d $pwd/../sources/$name ]] || return
-  grep -qF "$name" "$pwd/conf/bblayers.conf" && return
-
-  printf "\n# setup NXP $id release layer in bblayers.conf\n" >> "$pwd/conf/bblayers.conf"
-  printf "BBLAYERS += \" \${BSPDIR}/sources/$name \"\n" >> "$pwd/conf/bblayers.conf"
-  cp -f $pwd/conf/bblayers.conf $pwd/conf/bblayers.conf.org
-}
-
-
 . sources/meta-imx/tools/setup-utils.sh
+. sources/meta-tn-imx-bsp/tools/tn-setup-utils.sh
 
 ROOT_DIR=`pwd`
 
@@ -135,7 +122,7 @@ WORK_DIR=$PWD
 #
 
 # both imx and TechNexion MACHINE configs
-echo -e "\n# TechNexion setup-environment.sh wrapper: Further modification to bblayers.conf and local.conf" | tee -a conf/local.conf
+tn_append_conf $WORK_DIR $HAVE_CONF_ORG "yes" "\n# TechNexion setup-environment.sh wrapper: Further modification to bblayers.conf and local.conf"
 
 if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ]; then
   if [ -d $WORK_DIR/../sources/meta-imx ]; then
@@ -156,28 +143,28 @@ if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ]; then
       hook_in_layer meta-security/meta-parsec
       hook_in_layer meta-freescale-ml
 
-      echo "" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-browser/meta-chromium\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-clang\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-gnome\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-networking\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-filesystems\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-perl\"" >> $WORK_DIR/conf/bblayers.conf
+      tn_append_layer $WORK_DIR "" ""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-browser/meta-chromium\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-clang\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-gnome\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-networking\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-filesystems\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-perl\""
 
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-qt6\"" >> $WORK_DIR/conf/bblayers.conf
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-qt6\""
 
       # Enable docker for mx8 machines
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-virtualization\"" >> conf/bblayers.conf
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-virtualization\""
 
     fi
   fi
   if [ -d ${WORK_DIR}/../sources/meta-ivi ]; then
   if ! grep -Fq "meta-ivi" $WORK_DIR/conf/bblayers.conf; then
-      echo -e "\n# setup Genivi layers in bblayers.conf" | tee -a $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-gplv2\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-bsp\"" >> $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-test\"" >> $WORK_DIR/conf/bblayers.conf
+      tn_append_layer $WORK_DIR "yes" "\n# setup Genivi layers in bblayers.conf"
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-gplv2\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-bsp\""
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \"\${BSPDIR}/sources/meta-ivi/meta-ivi-test\""
     fi
   fi
 fi
@@ -185,28 +172,28 @@ fi
 # TechNexion MACHINE configs
 if [ ${TNCONFIGS} != 0 -o ${FSLCONFIGS} != 0 ] ; then
   # add SWupdate layers to bblayers.conf
-  auto_append_layer "$WORK_DIR" "swupdate" "meta-swupdate"
+  tn_auto_append_layer "$WORK_DIR" "swupdate" "meta-swupdate"
 
   # add TechNexion bsp layers to bblayers.conf
-  auto_append_layer "$WORK_DIR" "i.MX Yocto Project Release" "meta-tn-imx-bsp"
+  tn_auto_append_layer "$WORK_DIR" "i.MX Yocto Project Release" "meta-tn-imx-bsp"
 
   # add TechNexion wifi layers to bblayers.conf
-  auto_append_layer "$WORK_DIR" "wifi" "meta-tn-wifi"
+  tn_auto_append_layer "$WORK_DIR" "wifi" "meta-tn-wifi"
 
   # add TechNexion vizionsdk layers to bblayers.conf
-  auto_append_layer "$WORK_DIR" "vizionsdk" "meta-tn-vizionsdk"
+  tn_auto_append_layer "$WORK_DIR" "vizionsdk" "meta-tn-vizionsdk"
 
   # add TechNexion nfc bsp layers (from nxp) to bblayers.conf
-  auto_append_layer "$WORK_DIR" "nfc" "meta-nxp-nfc"
+  tn_auto_append_layer "$WORK_DIR" "nfc" "meta-nxp-nfc"
 
   # add TechNexion virtualization bsp layers (virtualization/boot2qt) to bblayers.conf
   #if [ -d $WORK_DIR/../sources/meta-virtualization ]; then
   if false; then
     # has meta-virtualization
     if ! grep -Fq "meta-virtualization" $WORK_DIR/conf/bblayers.conf; then
-      echo "" >> $WORK_DIR/conf/bblayers.conf
-      echo "# setup i.MX Container OS and OTA layers in bblayers.conf" | tee -a $WORK_DIR/conf/bblayers.conf
-      echo "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \"" >> $WORK_DIR/conf/bblayers.conf
+      tn_append_layer $WORK_DIR "" ""
+      tn_append_layer $WORK_DIR "yes" "# setup i.MX Container OS and OTA layers in bblayers.conf"
+      tn_append_layer $WORK_DIR "" "BBLAYERS += \" \${BSPDIR}/sources/meta-virtualization \""
     fi
     if ! grep -Fq "BBMULTICONFIG" $WORK_DIR/conf/local.conf; then
       mkdir -p $WORK_DIR/conf/multiconfig
