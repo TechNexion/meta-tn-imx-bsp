@@ -21,16 +21,19 @@ python __anonymous () {
         # 4. Define the items to be re-ordered/moved to the front
         target_items = ['nxp/neo', 'imx8-isi']
 
-        # 5. Filter out target items from the current list to prevent duplicates
-        remaining_items = [p for p in pipelines_list if p not in target_items]
+        # 5. Filter target items to only include those already in the original list
+        items_to_prioritize = [item for item in target_items if item in pipelines_list]
 
-        # 6. Prepend the target items to the front of the list
-        final_pipelines_list = target_items + remaining_items
+        # 6. Filter out target items from the current list to prevent duplicates
+        remaining_items = [p for p in pipelines_list if p not in items_to_prioritize]
 
-        # 7. Construct the new parameter string
+        # 7. Prepend the target items to the front of the list
+        final_pipelines_list = items_to_prioritize + remaining_items
+
+        # 8. Construct the new parameter string
         new_pipelines_param = "-Dpipelines=" + ",".join(final_pipelines_list)
 
-        # 8. Replace the old segment with the new one in EXTRA_OEMESON
+        # 9. Replace the old segment with the new one in EXTRA_OEMESON
         new_oem_meson = oem_meson.replace(match.group(0), new_pipelines_param)
         d.setVar('EXTRA_OEMESON', new_oem_meson)
 }
