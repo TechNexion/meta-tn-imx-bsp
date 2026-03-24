@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/LGPL-2.1;md5=1a6d268fd218675ffe
 
 
 SRC_URI = "${SRCSERVER};branch=${SRCBRANCH}"
-S = "${WORKDIR}/git"
 
 RDEPENDS:${PN} = " \
 	bash \

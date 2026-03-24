@@ -7,8 +7,6 @@ RDEPENDS:${PN} += "bash"
 SRC_URI = "git://github.com/TechNexion-customization/get-support-info.git;protocol=https;branch=master"
 SRCREV = "9f05701334f92e169aecf68b718042cf0eb80b85"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     # Copy get-support-info.sh to ${sbindir} i.e. /usr/sbin
     install -d ${D}${sbindir}

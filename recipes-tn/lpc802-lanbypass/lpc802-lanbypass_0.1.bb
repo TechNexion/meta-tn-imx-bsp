@@ -8,9 +8,6 @@ SRC_URI += " \
     file://lanbypass_on.sh \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
-
 do_install () {
     install -d ${D}${sbindir}
     install -m 0755 ${S}/lanbypass_on.sh ${D}${sbindir}

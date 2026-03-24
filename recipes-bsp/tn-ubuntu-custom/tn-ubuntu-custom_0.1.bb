@@ -10,10 +10,6 @@ SRC_URI += " \
     file://rc-local.service \
     file://rc.local \
 "
-
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
-
 inherit systemd allarch
 
 do_install () {

@@ -13,9 +13,6 @@ SRC_URI = "${TN_VOICEHAT_TEST_SRC};branch=${SRCBRANCH} \
 "
 SRCREV = "f349770eeaa8696c66557035f56f993b89273e63"
 
-S = "${WORKDIR}/git"
-
-
 do_install() {
     install -d "${D}/opt/${PN}"
     install -m 755 *.sh "${D}/opt/${PN}"
