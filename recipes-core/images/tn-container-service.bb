@@ -18,7 +18,7 @@ do_install () {
 	# add the service to systemd
 	install -d ${D}${systemd_unitdir}/system/
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
-	install -m 0644 ${WORKDIR}/tn-container.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${S}/tn-container.service ${D}${systemd_unitdir}/system/
 	sed -e "s|\@TN_DOCKER_REPOSITORY\@|${TN_DOCKER_REPOSITORY}|g" -i ${D}${systemd_unitdir}/system/tn-container.service
 	sed -e "s|\@TN_DOCKER_TAG\@|${TN_DOCKER_TAG}|g" -i ${D}${systemd_unitdir}/system/tn-container.service
 	sed -e "s|\@TN_DOCKER_APPLICATION\@|${TN_DOCKER_APPLICATION}|g" -i ${D}${systemd_unitdir}/system/tn-container.service

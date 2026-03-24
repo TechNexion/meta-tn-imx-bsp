@@ -13,9 +13,9 @@ SRC_URI = "http://sources.buildroot.net/ramsmp-${PV}.tar.gz \
 SRC_URI[md5sum] = "c26b32c752c603e17c28a1cab4348682"
 SRC_URI[sha256sum] = "39fb15493fb3c293575746d56f6ab9faaa1d876d8b1f0d8e5a4042d2ace95839"
 
-S = "${WORKDIR}/ramsmp-${PV}"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 do_install(){
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/${PN}-${PV}/ramsmp  ${D}${bindir}
+    install -m 0755 ${S}/ramsmp  ${D}${bindir}
 }

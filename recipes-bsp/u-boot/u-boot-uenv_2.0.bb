@@ -7,8 +7,6 @@ LIC_FILES_CHKSUM = "file://README;md5=84bf3d71eb40db8daf2ba7e156e31099"
 SRC_URI += " \
    file://README \
 "
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
 
 inherit deploy
 

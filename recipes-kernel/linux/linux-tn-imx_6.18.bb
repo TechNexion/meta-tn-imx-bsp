@@ -20,17 +20,17 @@ DEPENDS += "coreutils-native"
 
 SRC_URI = "${LINUX_IMX_SRC}"
 LINUX_IMX_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;nobranch=1;branch=${SRCBRANCH}"
-SRCBRANCH = "tn-imx_6.12.49_2.2.0-next"
+SRCBRANCH = "tn-imx_6.18.2_1.0.0-next"
 KBRANCH = "${SRCBRANCH}"
 LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('KBRANCH', True).split('_')[2:]).lower()}"
-SRCREV = "c2aeaa26480f1939e6d8ff44436345649ac05a17"
+SRCREV = "b74950a61353bb554a2f68b73850b878158b7d8a"
 
 # PV is defined in the base in linux-imx.inc file and uses the LINUX_VERSION definition
 # required by kernel-yocto.bbclass.
 #
 # LINUX_VERSION define should match to the kernel version referenced by SRC_URI and
 # should be updated once patchlevel is merged.
-LINUX_VERSION = "6.12.49"
+LINUX_VERSION = "6.18.2"
 # FIXME: Drop this line once LINUX_VERSION is stable
 KERNEL_VERSION_SANITY_SKIP = "1"
 
@@ -48,10 +48,10 @@ DO_CONFIG_V7_COPY:mx9-nxp-bsp = "no"
 IMX_KERNEL_CONFIG_AARCH32 = "tn_imx_defconfig"
 IMX_KERNEL_CONFIG_AARCH64 = "tn_imx_v8_defconfig"
 KBUILD_DEFCONFIG ?= ""
-KBUILD_DEFCONFIG:mx6-nxp-bsp= "${IMX_KERNEL_CONFIG_AARCH32}"
-KBUILD_DEFCONFIG:mx7-nxp-bsp= "${IMX_KERNEL_CONFIG_AARCH32}"
-KBUILD_DEFCONFIG:mx8-nxp-bsp= "${IMX_KERNEL_CONFIG_AARCH64}"
-KBUILD_DEFCONFIG:mx9-nxp-bsp= "${IMX_KERNEL_CONFIG_AARCH64}"
+KBUILD_DEFCONFIG:mx6-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH32}"
+KBUILD_DEFCONFIG:mx7-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH32}"
+KBUILD_DEFCONFIG:mx8-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH64}"
+KBUILD_DEFCONFIG:mx9-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH64}"
 
 
 # Use a verbatim copy of the defconfig from the linux-imx repo.
@@ -90,7 +90,7 @@ do_merge_delta_config() {
             ${S}/scripts/kconfig/merge_config.sh -m .config ${deltacfg}
         fi
     done
-    cp .config ${WORKDIR}/defconfig
+    cp .config ${S}/defconfig
 }
 addtask merge_delta_config before do_kernel_localversion after do_copy_defconfig
 

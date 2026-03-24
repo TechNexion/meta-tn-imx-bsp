@@ -10,9 +10,7 @@ PV = "0.9.25+git${SRCPV}"
 SRC_URI = "git://github.com/aristocratos/bashtop.git;protocol=https;branch=master"
 SRCREV = "c76573ac7dd08cf08fbd576768efb151fcbadb6c"
 
-S = "${WORKDIR}/git"
-
-CLEANBROKEN = "1" 
+CLEANBROKEN = "1"
 
 do_configuration[noexec] = "1"
 do_compile[noexec] = "1"

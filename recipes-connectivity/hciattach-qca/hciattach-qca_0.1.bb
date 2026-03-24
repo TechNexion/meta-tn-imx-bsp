@@ -10,8 +10,6 @@ SRC_URI = "file://hciattach-qca \
           file://serial-qcabtfw@.service \
           file://serial-qcabtfw@.timer \
 "
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 inherit features_check
@@ -28,8 +26,8 @@ do_install() {
 		default_baudrate=`echo "${SERIAL_BLUETOOTH}" | sed 's/\;.*//'`
 		install -d ${D}${systemd_unitdir}/system/
 		install -d ${D}${sysconfdir}/systemd/system/timers.target.wants/
-		install -m 0644 ${WORKDIR}/serial-qcabtfw@.service ${D}${systemd_unitdir}/system/
-		install -m 0644 ${WORKDIR}/serial-qcabtfw@.timer ${D}${systemd_unitdir}/system/
+		install -m 0644 ${S}/serial-qcabtfw@.service ${D}${systemd_unitdir}/system/
+		install -m 0644 ${S}/serial-qcabtfw@.timer ${D}${systemd_unitdir}/system/
 		sed -i -e s/\@BAUDRATE\@/$default_baudrate/g ${D}${systemd_unitdir}/system/serial-qcabtfw@.service
 
 		tmp="${SERIAL_BLUETOOTH}"
@@ -42,8 +40,8 @@ do_install() {
 				${D}${sysconfdir}/systemd/system/timers.target.wants/serial-qcabtfw@$ttydev.timer
 			else
 				# install custom service file for the non-default baudrate
-				install -m 0644 ${WORKDIR}/serial-qcabtfw@.service ${D}${systemd_unitdir}/system/serial-qcabtfw$baudrate@.service
-				install -m 0644 ${WORKDIR}/serial-qcabtfw@.timer ${D}${systemd_unitdir}/system/serial-qcabtfw$baudrate@.timer
+				install -m 0644 ${S}/serial-qcabtfw@.service ${D}${systemd_unitdir}/system/serial-qcabtfw$baudrate@.service
+				install -m 0644 ${S}/serial-qcabtfw@.timer ${D}${systemd_unitdir}/system/serial-qcabtfw$baudrate@.timer
 				sed -i -e s/\@BAUDRATE\@/$baudrate/g ${D}${systemd_unitdir}/system/serial-qcabtfw$baudrate@.service
 				# enable the service
 				ln -sf ${systemd_unitdir}/system/serial-qcabtfw$baudrate@.timer \

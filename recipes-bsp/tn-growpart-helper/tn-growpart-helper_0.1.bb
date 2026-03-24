@@ -12,9 +12,6 @@ SRC_URI += " \
     file://tn-growpart-helper_gnome.service \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
-
 inherit systemd allarch
 
 USE_WL = "${@bb.utils.contains("DISTRO_FEATURES", "wayland", "yes", "no", d)}"

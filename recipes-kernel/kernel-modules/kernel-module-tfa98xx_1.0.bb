@@ -2,7 +2,7 @@ SUMMARY = "External Linux kernel module for audio codec tfa98xx on voicehat"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=d2f18c7c8390c6dc7f1db6b14bbb1f0a"
 
-FILESEXTRAPATHS:prepend := "$THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 inherit module
 
@@ -15,13 +15,11 @@ SRC_URI = "git://github.com/TechNexion/tfa98xx.git;protocol=https;branch=${SRCBR
 SRC_URI[md5sum] = "8a422ce9779c00d91b5b4fac1cbbca5a"
 SRC_URI[sha256sum] = "e58912a3016eed5d316e81f0e0630b0d8bcf3ac9b93bcf0b7be8a7c8cf0971f5"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE += "KDIR='${STAGING_KERNEL_DIR}'"
 
 do_install:append() {
 	install -d -m 0755 ${D}${nonarch_base_libdir}/firmware/tfa98/9912/
-	install -m 0444 ${WORKDIR}/TFA9892N1A_stereo_32FS.cnt ${D}${nonarch_base_libdir}/firmware/tfa98/9912/
+	install -m 0444 ${S}/TFA9892N1A_stereo_32FS.cnt ${D}${nonarch_base_libdir}/firmware/tfa98/9912/
 	ln -sf ./tfa98/9912/TFA9892N1A_stereo_32FS.cnt ${D}${nonarch_base_libdir}/firmware/tfa98xx.cnt
 }
 
