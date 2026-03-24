@@ -26,9 +26,6 @@ SRCREV = "e946f66d9cb8d52b18f64e935e75d1179b97c477"
 SRC_URI:append = " file://splash.bmp"
 SRC_URI:append:rescue = " file://rescue-fragment-uboot.cfg"
 
-S = "${WORKDIR}/git"
-B = "${WORKDIR}/build"
-
 inherit fsl-u-boot-localversion
 
 LOCALVERSION ?= "-${SRCREV}"

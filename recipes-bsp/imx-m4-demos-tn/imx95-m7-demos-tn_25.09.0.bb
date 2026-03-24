@@ -9,8 +9,6 @@ M4_SRC = "git://github.com/TechNexion/imx-m4-demos-tn.git;protocol=https"
 SRC_URI = "${M4_SRC};branch=${SRCBRANCH}"
 SRCREV = "cb28959996e2b7496cf58aa7bacab33a201f6e7f"
 
-S = "${WORKDIR}/git"
-
 inherit deploy
 
 do_deploy() {

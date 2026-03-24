@@ -6,8 +6,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI += " file://setup-weston-init.sh \
              file://90-hdmi-hotplug.rules"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
 
 do_install:append() {
 	install -d ${D}${bindir}

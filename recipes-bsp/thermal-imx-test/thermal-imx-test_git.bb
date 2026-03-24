@@ -13,9 +13,6 @@ SRC_URI = "${THERMAL_IMX_TEST_SRC};branch=${SRCBRANCH} \
 "
 SRCREV = "bb17d9bcf05a0b3d4c3213af310bfa21cf74a2a6"
 
-S = "${WORKDIR}/git"
-
-
 do_install() {
     install -d "${D}/opt/${PN}"
     install -m 755 *.sh "${D}/opt/${PN}"

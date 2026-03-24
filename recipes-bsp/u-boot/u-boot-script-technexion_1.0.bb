@@ -15,8 +15,6 @@ COMPATIBLE_MACHINE = "(imx-nxp-bsp)"
 SRC_URI = "file://README \
 		   file://bootscript-tsl-arm64.txt \
 		  "
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
 
 inherit deploy
 

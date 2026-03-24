@@ -13,8 +13,6 @@ inherit cmake dos2unix pkgconfig deploy
 DEPENDS += "python3 systemd openssl"
 RDEPENDS:${PN} += "libcrypto"
 
-S = "${WORKDIR}/simw-top"
-
 SRC_URI = "https://github.com/TechNexion-customization/se050-tools/raw/master/SE05x-MW-v04.03.00.zip;md5sum=d8fa4eac5b9ca3701f7dafc8e463c260 \
 	file://SE050F2HQ1_scp_keys.txt;md5sum=0ceee41787e383da36fec3bdb9390a70 \
 	"
@@ -44,6 +42,6 @@ FILES:${PN}-dev = "${includedir} ${libdir}/cmake"
 do_install() {
 	install -d ${D}${datadir}/se05x
 	install -d ${D}/usr/bin
-	install -m 0644 ${WORKDIR}/SE050F2HQ1_scp_keys.txt ${D}${datadir}/se05x/
-	install -m 0555 ${WORKDIR}/build/bin/se05x_* ${D}/usr/bin/
+	install -m 0644 ${S}/SE050F2HQ1_scp_keys.txt ${D}${datadir}/se05x/
+	install -m 0555 ${S}/build/bin/se05x_* ${D}/usr/bin/
 }

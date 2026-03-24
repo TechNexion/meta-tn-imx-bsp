@@ -29,7 +29,7 @@ SRC_URI = "https://launchpad.net/cloud-utils/trunk/${PV}/+download/cloud-utils-$
 SRC_URI[md5sum] = "9b256ff2dbfabaaaf2298d0052eaa5ae"
 SRC_URI[sha256sum] = "132255cbda774834695e2912e09b9058d3281a94874be57e48f2f04f4b89ad77"
 
-S = "${WORKDIR}/cloud-utils-${PV}"
+S = "${UNPACKDIR}/cloud-utils-${PV}"
 
 do_install() {
     install -d ${D}${bindir}

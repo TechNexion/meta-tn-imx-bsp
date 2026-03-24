@@ -23,7 +23,5 @@ SRCREV = "87814f59c55002ec388d5a508d10300bf5b8d140"
 
 SRC_URI = "${TECHNEXION_GITHUB_MIRROR};branch=${SRCBRANCH}"
 
-S = "${WORKDIR}/git"
-
 inherit autotools
 

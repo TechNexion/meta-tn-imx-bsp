@@ -16,13 +16,11 @@ SRC_URI = " \
 
 SRCREV = "b4a74a7316ae0cb06bc1b656243640454e050e3c"
 
-S = "${WORKDIR}/git"
-
 inherit cmake
 
 do_install() {
 	install -d ${D}${sbindir}
-	install -m 0644 ${WORKDIR}/git/bin/main ${D}${sbindir}/lvgl-demo
+	install -m 0644 ${S}/bin/main ${D}${sbindir}/lvgl-demo
 }
 
 BBCLASSEXTEND = "native nativesdk"

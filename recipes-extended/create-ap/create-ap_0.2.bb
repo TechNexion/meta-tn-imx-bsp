@@ -9,8 +9,6 @@ PV	 = "0.2-git${SRCPV}"
 
 SRC_URI  = "git://github.com/oblique/create_ap.git;protocol=https;branch=master"
 
-S	 = "${WORKDIR}/git"
-
 do_configure() {
         :
 }

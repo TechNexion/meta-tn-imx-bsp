@@ -3,8 +3,6 @@ SRCREV = "136984cd1e8f30543a56342467353d6dabd52bf5"
 
 SRC_URI = "${TECHNEXION_GITHUB_MIRROR};branch=${SRCBRANCH}"
 
-S = "${WORKDIR}/git"
-
 FWDIR = "/lib/firmware/axonfabric"
 
 do_install() {
