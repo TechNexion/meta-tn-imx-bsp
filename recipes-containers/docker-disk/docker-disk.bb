@@ -152,7 +152,7 @@ do_compile () {
 	_image_name="docker-disk-$RANDOM"
 	_container_name="docker-disk-$RANDOM"
 	$DOCKER rmi ${_image_name} > /dev/null 2>&1 || true
-	$DOCKER build -t ${_image_name} -f ${S}/Dockerfile ${S}
+	$DOCKER build -t ${_image_name} -f ${UNPACKDIR}/Dockerfile ${S}
 	$DOCKER run --privileged --rm \
 		-e STORAGE_DRIVER=${TN_STORAGE_DRIVER} \
 		-e USER_ID=$(id -u) -e USER_GID=$(id -u) \
