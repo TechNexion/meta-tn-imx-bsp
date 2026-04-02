@@ -13,10 +13,10 @@ SRC_URI = "file://ntag-i2c-tool.cpp \
 INSANE_SKIP:${PN} = "ldflags"
 
 do_compile() {
-	${CXX} ntag-i2c-tool.cpp -o ntag-i2c-tool
+	${CXX} -I${UNPACKDIR} ${UNPACKDIR}/ntag-i2c-tool.cpp -o ${S}/ntag-i2c-tool
 }
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ntag-i2c-tool ${D}${bindir}
+	install -m 0755 ${S}/ntag-i2c-tool ${D}${bindir}
 }

@@ -16,10 +16,10 @@ SRC_URI = "file://enable_lanbypass_eth.service;md5sum=cb2e351f71fcd0faddd133c2eb
 
 do_install () {
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${S}/enable_lanbypass_eth.service ${D}${systemd_unitdir}/system/enable_lanbypass_eth.service
+    install -m 0644 ${UNPACKDIR}/enable_lanbypass_eth.service ${D}${systemd_unitdir}/system/enable_lanbypass_eth.service
     install -d ${D}${sbindir}
-    install -m 0755 ${S}/enable_lanbypass_eth.sh ${D}${sbindir}
-    install -m 0755 ${S}/disable_lanbypass_eth.sh ${D}${sbindir}
+    install -m 0755 ${UNPACKDIR}/enable_lanbypass_eth.sh ${D}${sbindir}
+    install -m 0755 ${UNPACKDIR}/disable_lanbypass_eth.sh ${D}${sbindir}
 }
 
 FILES:${PN} = "${sbindir}/enable_lanbypass_eth.sh \

@@ -20,7 +20,7 @@ inherit deploy
 
 do_compile() {
     mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
-        -n "TechNexion boot script" -d ${S}/bootscript-tsl-arm64.txt \
+        -n "TechNexion boot script" -d ${UNPACKDIR}/bootscript-tsl-arm64.txt \
         ${B}/boot.scr
 }
 

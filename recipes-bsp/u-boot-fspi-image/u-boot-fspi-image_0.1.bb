@@ -13,9 +13,9 @@ inherit deploy
 do_deploy() {
     install -d ${DEPLOYDIR}
     if [ "${MACHINE}" = "tek-imx8mp" ];then
-        install -m 0755 ${S}/tek-imx8mp_fspi_u-boot.bin ${DEPLOYDIR}/
+        install -m 0755 ${UNPACKDIR}/tek-imx8mp_fspi_u-boot.bin ${DEPLOYDIR}/
     elif [ "${MACHINE}" = "tep-imx8mp" ];then
-        install -m 0755 ${S}/tep-imx8mp_fspi_u-boot.bin ${DEPLOYDIR}/
+        install -m 0755 ${UNPACKDIR}/tep-imx8mp_fspi_u-boot.bin ${DEPLOYDIR}/
     fi
 }
 

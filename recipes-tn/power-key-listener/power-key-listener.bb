@@ -16,9 +16,9 @@ SRC_URI = "file://power_key_listener.service;md5sum=6fe9afeed4d2e8fb390a2963f7bf
 
 do_install () {
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${S}/power_key_listener.service ${D}${systemd_unitdir}/system/power_key_listener.service
+    install -m 0644 ${UNPACKDIR}/power_key_listener.service ${D}${systemd_unitdir}/system/power_key_listener.service
     install -d ${D}${sbindir}
-    install -m 0755 ${S}/power_key_listener.sh ${D}${sbindir}
+    install -m 0755 ${UNPACKDIR}/power_key_listener.sh ${D}${sbindir}
 }
 
 FILES:${PN} = "${sbindir}/power_key_listener.sh"

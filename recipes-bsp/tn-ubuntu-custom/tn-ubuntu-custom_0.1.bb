@@ -14,10 +14,10 @@ inherit systemd allarch
 
 do_install () {
     install -d ${D}${sysconfdir}/systemd/system
-    install -m 0644 ${S}/rc-local.service ${D}${sysconfdir}/systemd/system/rc-local.service
+    install -m 0644 ${UNPACKDIR}/rc-local.service ${D}${sysconfdir}/systemd/system/rc-local.service
 
     install -d ${D}${sysconfdir}
-    install -m 0755 ${S}/rc.local ${D}${sysconfdir}
+    install -m 0755 ${UNPACKDIR}/rc.local ${D}${sysconfdir}
 }
 
 FILES:${PN} = "${sysconfdir}/rc.local"

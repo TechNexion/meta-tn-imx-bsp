@@ -9,10 +9,10 @@ SRC_URI += " file://setup-weston-init.sh \
 
 do_install:append() {
 	install -d ${D}${bindir}
-	install -p -m 0755 ${S}/setup-weston-init.sh ${D}${bindir}
+	install -p -m 0755 ${UNPACKDIR}/setup-weston-init.sh ${D}${bindir}
 
 	install -d ${D}${sysconfdir}/udev/rules.d
-	install -p -m 0644 ${S}/90-hdmi-hotplug.rules ${D}${sysconfdir}/udev/rules.d
+	install -p -m 0644 ${UNPACKDIR}/90-hdmi-hotplug.rules ${D}${sysconfdir}/udev/rules.d
 
 	sed -i '/^ExecStart=\/usr\/bin\/weston*/i ExecStartPre=-\/usr\/bin\/setup-weston-init.sh' ${D}${systemd_system_unitdir}/weston.service
 

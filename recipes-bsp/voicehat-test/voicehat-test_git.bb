@@ -18,7 +18,7 @@ do_install() {
     install -m 755 *.sh "${D}/opt/${PN}"
 
 #   install -d ${D}${sysconfdir}/profile.d/
-#   install -m 0755 ${WORKDIR}/voicehat-test.sh ${D}${sysconfdir}/profile.d/
+#   install -m 0755 ${UNPACKDIR}/voicehat-test.sh ${D}${sysconfdir}/profile.d/
 }
 
 FILES:${PN} += "/opt/${PN}"
