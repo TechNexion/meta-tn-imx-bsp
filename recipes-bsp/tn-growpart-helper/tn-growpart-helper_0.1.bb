@@ -2,7 +2,7 @@ SUMMARY = "SystemD service to expand partition size for TechNexion products"
 SECTION = "devel"
 
 LICENSE = "GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://tn-standby.jpg;md5=bbe6e85d1751df4073252a3cdabc80f9"
+LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
 SRC_URI += " \
     file://tn-standby.jpg \
@@ -21,25 +21,27 @@ USE_GNOME = "${@bb.utils.contains("DISTRO", "imx-desktop-xwayland", "yes", "no",
 do_install () {
     # add the jpg to /usr/share/technexion/
     install -d ${D}${datadir}/technexion
-    install -m 0644 ${S}/tn-standby.jpg ${D}${datadir}/technexion
+    install -m 0644 ${UNPACKDIR}/tn-standby.jpg ${D}${datadir}/technexion
     if [ "${USE_WL}" = "yes" ]; then
         install -d ${D}${systemd_unitdir}/system
         if [ "${USE_GNOME}" = "yes" ]; then
-            install -m 0644 ${S}/tn-growpart-helper_gnome.service ${D}${systemd_unitdir}/system/tn-growpart-helper.service
+            install -m 0644 ${UNPACKDIR}/tn-growpart-helper_gnome.service ${D}${systemd_unitdir}/system/tn-growpart-helper.service
         else
-            install -m 0644 ${S}/tn-growpart-helper_wayland.service ${D}${systemd_unitdir}/system/tn-growpart-helper.service
+            install -m 0644 ${UNPACKDIR}/tn-growpart-helper_wayland.service ${D}${systemd_unitdir}/system/tn-growpart-helper.service
 
         fi
     elif  [ "${USE_X11}" = "yes" ]; then
         install -d ${D}${systemd_unitdir}/system
-        install -m 0644 ${S}/tn-growpart-helper_xwindow.service ${D}${systemd_unitdir}/system/tn-growpart-helper.service
+        install -m 0644 ${UNPACKDIR}/tn-growpart-helper_xwindow.service ${D}${systemd_unitdir}/system/tn-growpart-helper.service
     fi
     install -d ${D}${sbindir}
-    install -m 0755 ${S}/tn-growpart-helper ${D}${sbindir}
+    install -m 0755 ${UNPACKDIR}/tn-growpart-helper ${D}${sbindir}
 }
 
 FILES:${PN} = "${datadir}/technexion/tn-standby.jpg \
-               ${sbindir}/tn-growpart-helper"
+    ${sbindir}/tn-growpart-helper \
+    ${systemd_unitdir}/system/tn-growpart-helper.service \
+"
 
 
 SYSTEMD_SERVICE:${PN} = "tn-growpart-helper.service"

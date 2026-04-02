@@ -2,7 +2,7 @@ SUMMARY = "flexspi u-boot image"
 SECTION = "devel"
 
 LICENSE = "GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://tek-imx8mp_fspi_u-boot.bin;md5=ca6ed1f1f365d4eba59ab8de3d5e234f"
+LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
 SRC_URI += "file://tek-imx8mp_fspi_u-boot.bin \
 	file://tep-imx8mp_fspi_u-boot.bin \
