@@ -10,7 +10,7 @@ SRC_URI += " \
 
 do_install () {
     install -d ${D}${sbindir}
-    install -m 0755 ${S}/lanbypass_on.sh ${D}${sbindir}
+    install -m 0755 ${UNPACKDIR}/lanbypass_on.sh ${D}${sbindir}
 }
 
 FILES:${PN} = "${sbindir}/lanbypass_on.sh"
