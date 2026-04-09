@@ -1,0 +1,141 @@
+From ea55ea37a0ec8c3ab87ce81135c091b1441fd212 Mon Sep 17 00:00:00 2001
+From: Jack Lo <jack.lo@technexion.com>
+Date: Thu, 9 Apr 2026 13:02:05 +0800
+Subject: [PATCH] refactor: simplify build config and GN allowlist assignments
+
+Refactor exec_script_allowlist in various .gn files to use multi-line
+accumulative assignments (+=) for better clarity.
+
+Clean up siso.gni by removing redundant environment checks for
+Google corp machines and swarming bots, effectively disabling
+default Siso integration.
+
+Upstream-Status: Inappropriate
+
+---
+ .gn                      |  9 ++++-----
+ build/toolchain/siso.gni | 16 +---------------
+ third_party/angle/.gn    |  6 +++---
+ third_party/libyuv/.gn   |  4 ++--
+ third_party/webrtc/.gn   |  4 ++--
+ v8/.gn                   |  4 ++--
+ 6 files changed, 14 insertions(+), 29 deletions(-)
+
+diff --git a/.gn b/.gn
+index ae58a0b0a6..74dc525232 100644
+--- a/.gn
++++ b/.gn
+@@ -146,10 +146,9 @@ no_check_targets = [
+ #      this situation much easier to create. if the build always lists the
+ #      files and passes them to a script, it will always be correct.
+
+-exec_script_allowlist =
+-    build_dotfile_settings.exec_script_allowlist +
+-    angle_dotfile_settings.exec_script_allowlist +
+-    [
++exec_script_allowlist = build_dotfile_settings.exec_script_allowlist
++exec_script_allowlist += angle_dotfile_settings.exec_script_allowlist
++exec_script_allowlist += [
+       # Allowlist entries for //build should go into
+       # //build/dotfile_settings.gni instead, so that they can be shared
+       # with other repos. The entries in this list should be only for files
+@@ -167,4 +166,4 @@ exec_script_allowlist =
+
+       "//tools/grit/grit_rule.gni",
+       "//tools/gritsettings/BUILD.gn",
+-    ]
++    ]
+\ No newline at end of file
+diff --git a/build/toolchain/siso.gni b/build/toolchain/siso.gni
+index 7b5fe1969f..29b303c1fa 100644
+--- a/build/toolchain/siso.gni
++++ b/build/toolchain/siso.gni
+@@ -7,25 +7,11 @@ import("//build/config/gclient_args.gni")
+ use_siso_default = false
+
+ _is_google_corp_machine = false
+-if (path_exists("/usr/bin/gcert") ||  # linux
+-    path_exists("/usr/local/bin/gcert") ||  # mac
+-    path_exists("/c:/gnubby/bin/gcert.exe")) {
+-  _is_google_corp_machine = true
+-}
+
+ _is_bot = false
+-if (getenv("SWARMING_HEADLESS") != "" || getenv("SWARMING_BOT_ID") != "" ||
+-    getenv("SWARMING_TASK_ID") != "") {
+-  _is_bot = true
+-}
+
+-_is_ninja_used = path_exists(rebase_path(".ninja_deps", root_build_dir))
++_is_ninja_used = false
+
+-if (path_exists("//build/config/siso/.sisoenv") &&
+-    defined(build_with_chromium) && build_with_chromium &&
+-    (_is_google_corp_machine || _is_bot) && !_is_ninja_used) {
+-  use_siso_default = true
+-}
+
+ declare_args() {
+   # Placeholder to allow having use_siso in args.gn file.
+diff --git a/third_party/angle/.gn b/third_party/angle/.gn
+index aa86edf70a..23673b6a93 100644
+--- a/third_party/angle/.gn
++++ b/third_party/angle/.gn
+@@ -26,9 +26,9 @@ script_executable = "python3"
+ # These are the list of GN files that run exec_script. This allowlist exists
+ # to force additional review for new uses of exec_script, which is strongly
+ # discouraged except for gypi_to_gn calls.
+-exec_script_allowlist = angle_dotfile_settings.exec_script_allowlist +
+-                        build_dotfile_settings.exec_script_allowlist +
+-                        [
++exec_script_allowlist = angle_dotfile_settings.exec_script_allowlist
++exec_script_allowlist += build_dotfile_settings.exec_script_allowlist
++exec_script_allowlist += [
+                           "//build/config/sysroot.gni",
+                           "//build/config/win/BUILD.gn",
+                           "//build/config/win/visual_studio_version.gni",
+diff --git a/third_party/libyuv/.gn b/third_party/libyuv/.gn
+index b62075d356..106dd2f777 100644
+--- a/third_party/libyuv/.gn
++++ b/third_party/libyuv/.gn
+@@ -29,8 +29,8 @@ check_targets = [ "//libyuv/*" ]
+ # These are the list of GN files that run exec_script. This allowlist exists
+ # to force additional review for new uses of exec_script, which is strongly
+ # discouraged except for gypi_to_gn calls.
+-exec_script_allowlist = build_dotfile_settings.exec_script_allowlist +
+-                        [ "//build_overrides/build.gni" ]
++exec_script_allowlist = build_dotfile_settings.exec_script_allowlist
++exec_script_allowlist += [ "//build_overrides/build.gni" ]
+
+ default_args = {
+   mac_sdk_min = "10.12"
+diff --git a/third_party/webrtc/.gn b/third_party/webrtc/.gn
+index d29e7e3ced..4c08fa77d2 100644
+--- a/third_party/webrtc/.gn
++++ b/third_party/webrtc/.gn
+@@ -35,8 +35,8 @@ no_check_targets = [
+ # These are the list of GN files that run exec_script. This allowlist exists
+ # to force additional review for new uses of exec_script, which is strongly
+ # discouraged except for gypi_to_gn calls.
+-exec_script_allowlist = build_dotfile_settings.exec_script_allowlist +
+-                        [ "//build_overrides/build.gni" ]
++exec_script_allowlist = build_dotfile_settings.exec_script_allowlist
++exec_script_allowlist += [ "//build_overrides/build.gni" ]
+
+ export_compile_commands = [ "*" ]
+
+diff --git a/v8/.gn b/v8/.gn
+index d83c69db63..461be4b026 100644
+--- a/v8/.gn
++++ b/v8/.gn
+@@ -38,5 +38,5 @@ default_args = {
+ # These are the list of GN files that run exec_script. This whitelist exists
+ # to force additional review for new uses of exec_script, which is strongly
+ # discouraged except for gypi_to_gn calls.
+-exec_script_allowlist = build_dotfile_settings.exec_script_allowlist +
+-                        [ "//build_overrides/build.gni" ]
++exec_script_allowlist = build_dotfile_settings.exec_script_allowlist
++exec_script_allowlist += [ "//build_overrides/build.gni" ]
+--
+2.43.0
+
