@@ -4,7 +4,7 @@ SUMMARY = "u-boot bootscript for TechNexion specific image"
 DESCRIPTION = "Boot script for launching bootable disk images on TechNexion products"
 SECTION = "base"
 LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://README;md5=34187c3c5d1f19b2facd3f93dad26def"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/README;md5=34187c3c5d1f19b2facd3f93dad26def"
 
 DEPENDS = "u-boot-mkimage-native"
 

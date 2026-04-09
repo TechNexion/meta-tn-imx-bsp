@@ -2,7 +2,7 @@ SUMMARY = "u-boot uEnv.txt"
 DESCRIPTION = "u-boot uEnv.txt"
 SECTION = "base"
 LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://README;md5=84bf3d71eb40db8daf2ba7e156e31099"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/README;md5=84bf3d71eb40db8daf2ba7e156e31099"
 
 SRC_URI += " \
    file://README \
