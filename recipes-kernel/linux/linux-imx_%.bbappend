@@ -1,4 +1,4 @@
-FILESEXTRAPATHS:prepend:tn-camera := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend:tn-camera := "${THISDIR}/file:"
 
 SRC_URI:append:tn-camera = " file://tn-camera.cfg"
 SRCBRANCH:tn-camera = "tn-imx_6.18.2_1.0.0-next"
