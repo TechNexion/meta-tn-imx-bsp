@@ -162,15 +162,15 @@ python do_setuenv() {
 addtask setuenv after do_configure before do_compile
 
 do_compile:append:rescue() {
-	if [ -f "${UNPACKDIR}/uEnv.txt" ]; then
-		sed -e 's|^bootcmd_mmc.*||g' -i ${UNPACKDIR}/uEnv.txt
-		sed -e 's|run bootcmd_mmc;||g' -i ${UNPACKDIR}/uEnv.txt
+	if [ -f "${B}/uEnv.txt" ]; then
+		sed -e 's|^bootcmd_mmc.*||g' -i ${B}/uEnv.txt
+		sed -e 's|run bootcmd_mmc;||g' -i ${B}/uEnv.txt
 	fi
 }
 
 do_deploy() {
 	install -d ${DEPLOYDIR}
-	install ${UNPACKDIR}/uEnv.txt ${DEPLOYDIR}/uEnv.txt
+	install ${B}/uEnv.txt ${DEPLOYDIR}/uEnv.txt
 }
 
 addtask deploy after do_install before do_build
