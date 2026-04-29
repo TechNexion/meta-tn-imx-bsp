@@ -23,7 +23,7 @@ LINUX_IMX_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;no
 SRCBRANCH = "tn-imx_6.18.2_1.0.0-next"
 KBRANCH = "${SRCBRANCH}"
 LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('KBRANCH', True).split('_')[2:]).lower()}"
-SRCREV = "b74950a61353bb554a2f68b73850b878158b7d8a"
+SRCREV = "7c56185280c1d6d47b5e664f4ae19e80e686c874"
 
 # PV is defined in the base in linux-imx.inc file and uses the LINUX_VERSION definition
 # required by kernel-yocto.bbclass.
