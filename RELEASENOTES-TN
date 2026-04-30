@@ -1,10 +1,10 @@
-yocto-5.2 Walnascar 2026Q1 TechNexion BSP Release Notes
+yocto-5.3 Whinlatter 2026Q2 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2026q1
-Release Name: tn-walnascar_6.12.49-2.2.0
-Release Revision: 20251117
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp53-2026q2
+Release Name: tn-whinlatter_6.18.2-1.0.0
+Release Revision: 20260504
 
 Supported TechNexion products:
 ARM64:
@@ -14,6 +14,7 @@ EDM-IMX91 (DRAM 1 GB) with WB
 EDM-G-IMX8MP (DRAM 1/2/4/8 GB) with WB/WIZARD
 EDM-G-IMX8MM (DRAM 1/2/4/8 GB) with WB/WIZARD
 PICO-IMX93 (DRAM 2 GB) with SK-PICO-CARRIER
+PICO-IMX91 (DRAM 2 GB) with SK-PICO-CARRIER
 PICO-IMX8MM (DRAM 1/2/4 GB) with PI-8M/WIZARD
 AXON-IMX93 (DRAM 2 GB) with WB
 AXON-IMX91 (DRAM 2 GB) with WB
@@ -28,16 +29,15 @@ TC-0700/1010 (DRAM Solo:512MB DL:1GB Quad:2GB)
 TEP1-IMX7 (DRAM 512MB/1GB)
 
 Support list table:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp52-2026q1
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp53-2026q2
 
 New feature:
 
 Known issue:
-1. TEP-IMX7D - No PCIe function.
-2. PICO-IMX6UL/PICO-IMX7/EDM1-IMX6P/PICO-IMX93 - Wi-Fi concurrent mode doesn't work.
+1. TC0700 - Ethernet connection failed.
 
 BSP version:
-Tag name on github: tn-walnascar_6.12.49_2.2.0_20260105
-u-boot-tn-imx: acf05b014fee3f6b87f574f2f68bd1cd6e03476d
-linux-tn-imx: 55f4720198f6c05b568613127a21b157aa025b24
-meta-tn-imx-bsp: 7dd92efe4acb7a521424096d90b3460bb8a8986a
+Tag name on github: tn-whinlatter_6.18.2_1.0.0_20260504
+u-boot-tn-imx: e3ce2d8d91e859bcc8f66ef414b52aae865511e8
+linux-tn-imx: 7c56185280c1d6d47b5e664f4ae19e80e686c874
+meta-tn-imx-bsp: 9483625d30df5ed15ec89adc9bfd462f4b6eace7
