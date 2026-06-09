@@ -1,4 +1,4 @@
-PACKAGECONFIG:append = " examples"
+PACKAGECONFIG:append:class-target = " examples"
 
 do_install:append() {
     if ls ${D}${libdir}/pkgconfig/Qt6*.pc >/dev/null 2>&1; then
