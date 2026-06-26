@@ -1,0 +1,65 @@
+From a89d2f866898779ffc80dfcfc631b042b36ac009 Mon Sep 17 00:00:00 2001
+From: Nian Yang <nian.yang@technexion.com>
+Date: Fri, 26 Jun 2026 02:14:11 +0000
+Subject: [PATCH] pipeline: neo: keep all YUV sensor resolutions for
+ multi-camera
+
+The YUV format enumeration path collapsed multi-camera sensors to a single
+largest resolution. This made libcamera report only the maximum size even
+when the sensor driver correctly enumerated multiple discrete frame sizes.
+---
+ .../pipeline/nxp/neo/neo_pipeline.cpp         | 26 +++++++------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
+
+diff --git a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
+index a61786a5..35ab75c2 100644
+--- a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
++++ b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
+@@ -1660,10 +1660,11 @@ int PipelineHandlerNxpNeo::setupCameraGraphs()
+ 		V4L2SubdeviceFormat sensorFormat = {};
+ 		const std::map<Size, std::vector<unsigned int>> &
+ 			sizeToCodes = data->formatsSizeToCodes();
+-		ASSERT(sizeToCodes.size() == 1);
+-		sensorFormat.size = sizeToCodes.begin()->first;
+-		const std::vector<unsigned int> &codes = sizeToCodes.begin()->second;
+-		ASSERT(codes.size() == 1);
++		ASSERT(!sizeToCodes.empty());
++		const auto &sizeCodes = *sizeToCodes.rbegin();
++		sensorFormat.size = sizeCodes.first;
++		const std::vector<unsigned int> &codes = sizeCodes.second;
++		ASSERT(!codes.empty());
+ 		sensorFormat.code = codes.back();
+ 
+ 		ASSERT(data->defaultOrientation().has_value());
+@@ -2672,6 +2673,7 @@ int NxpNeoCameraData::configureYuv(CameraConfiguration *c)
+ 		if (ret)
+ 			return ret;
+ 	}
++	
+ 	/* \todo support multistream */
+ 	ISIPipe *pipe = pipes_.at(StreamTypeImage0);
+ 	StreamConfiguration &streamConfig = c->at(0);
+@@ -2890,20 +2892,10 @@ int NxpNeoCameraData::enumerateFormatsYuv()
+ 		std::sort(sizes.begin(), sizes.end());
+ 
+ 	/*
+-	 * For multi-camera, default configuration is set arbitrarily to the
+-	 * the highest size/bitdepth.
++	 * Keep all YUV sensor sizes exposed to libcamera.
++	 * Multi-camera graph preconfiguration will still choose a default size in
++	 * setupCameraGraphs(), but stream capabilities should not be reduced here.
+ 	 */
+-	if (multiCamera()) {
+-		ASSERT(sizeToCodes.size());
+-		const Size &sizeMax = sizeToCodes.rbegin()->first;
+-		const std::vector<unsigned int> &codes = sizeToCodes.rbegin()->second;
+-		ASSERT(codes.size());
+-		unsigned int codeBitDepthMax = codes.back();
+-		sizeToCodes.clear();
+-		sizeToCodes[sizeMax] = { codeBitDepthMax };
+-		codeToSizes.clear();
+-		codeToSizes[codeBitDepthMax] = { sizeMax };
+-	}
+ 
+ 	std::ostringstream oss;
+ 	oss << "Yuv formats size [ mbuscodes ] ";
