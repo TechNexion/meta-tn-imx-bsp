@@ -1,0 +1,1 @@
+SRC_URI = "gitsm://github.com/CANopenNode/CANopenLinux.git;branch=master;protocol=https"
