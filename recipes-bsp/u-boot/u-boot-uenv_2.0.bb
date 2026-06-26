@@ -8,6 +8,8 @@ SRC_URI += " \
    file://README \
 "
 
+S = "${UNPACKDIR}"
+
 inherit deploy
 
 # bitbake style python functions
