@@ -1,6 +1,6 @@
 # Copyright 2013-2016 Freescale Semiconductor
-# Copyright 2017-2025 NXP
-# Copyright 2025 TechNexion Ltd.
+# Copyright 2017-2026 NXP
+# Copyright 2026 TechNexion Ltd.
 # Copyright 2018 O.S. Systems Software LTDA.
 # Released under the MIT license (see COPYING.MIT for the terms)
 #
@@ -20,79 +20,40 @@ DEPENDS += "coreutils-native"
 
 SRC_URI = "${LINUX_IMX_SRC}"
 LINUX_IMX_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;nobranch=1;branch=${SRCBRANCH}"
-SRCBRANCH = "tn-imx_6.18.2_1.0.0-next"
+SRCBRANCH = "tn-imx_6.18.20_2.0.0-next"
 KBRANCH = "${SRCBRANCH}"
-LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('KBRANCH', True).split('_')[2:]).lower()}"
-SRCREV = "7c56185280c1d6d47b5e664f4ae19e80e686c874"
+SRCREV = "db7fe9e4fca6f8a87604aadc8e4a2f9c18a472b8"
 
 # PV is defined in the base in linux-imx.inc file and uses the LINUX_VERSION definition
 # required by kernel-yocto.bbclass.
 #
 # LINUX_VERSION define should match to the kernel version referenced by SRC_URI and
 # should be updated once patchlevel is merged.
-LINUX_VERSION = "6.18.2"
-# FIXME: Drop this line once LINUX_VERSION is stable
+LINUX_VERSION = "6.18.20"
+# FIXME: Drop this line once LINUX_VERSION is stable and set correctly
 KERNEL_VERSION_SANITY_SKIP = "1"
-
-KERNEL_CONFIG_COMMAND = "oe_runmake_call -C ${S} CC="${KERNEL_CC}" O=${B} olddefconfig"
-
-DEFAULT_PREFERENCE = "1"
-
-DO_CONFIG_V7_COPY = "no"
-DO_CONFIG_V7_COPY:mx6-nxp-bsp = "yes"
-DO_CONFIG_V7_COPY:mx7-nxp-bsp = "yes"
-DO_CONFIG_V7_COPY:mx8-nxp-bsp = "no"
-DO_CONFIG_V7_COPY:mx9-nxp-bsp = "no"
+LOCALVERSION = "${@'-%s' % '-'.join(d.getVar('KBRANCH', True).split('_')[2:]).lower()}"
 
 # Add setting for LF Mainline build
 IMX_KERNEL_CONFIG_AARCH32 = "tn_imx_defconfig"
 IMX_KERNEL_CONFIG_AARCH64 = "tn_imx_v8_defconfig"
 KBUILD_DEFCONFIG ?= ""
-KBUILD_DEFCONFIG:mx6-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH32}"
-KBUILD_DEFCONFIG:mx7-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH32}"
-KBUILD_DEFCONFIG:mx8-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH64}"
-KBUILD_DEFCONFIG:mx9-nxp-bsp = "${IMX_KERNEL_CONFIG_AARCH64}"
+KBUILD_DEFCONFIG:mx6-generic-bsp = "${IMX_KERNEL_CONFIG_AARCH32}"
+KBUILD_DEFCONFIG:mx7-generic-bsp = "${IMX_KERNEL_CONFIG_AARCH32}"
+KBUILD_DEFCONFIG:mx8-generic-bsp = "${IMX_KERNEL_CONFIG_AARCH64}"
+KBUILD_DEFCONFIG:mx9-generic-bsp = "${IMX_KERNEL_CONFIG_AARCH64}"
 
+DEFAULT_PREFERENCE = "1"
 
-# Use a verbatim copy of the defconfig from the linux-imx repo.
-# IMPORTANT: This task effectively disables kernel config fragments
-# since the config fragments applied in do_kernel_configme are replaced.
-addtask copy_defconfig after do_kernel_configme before do_kernel_localversion
-do_copy_defconfig () {
-    install -d ${B}
-    if [ ${DO_CONFIG_V7_COPY} = "yes" ]; then
-        # copy latest IMX_KERNEL_CONFIG_AARCH32 to use for mx6, mx6ul and mx7
-        mkdir -p ${B}
-        cp ${S}/arch/arm/configs/${IMX_KERNEL_CONFIG_AARCH32} ${B}/.config
-    else
-        # copy latest IMX_KERNEL_CONFIG_AARCH64 to use for mx8
-        mkdir -p ${B}
-        cp ${S}/arch/arm64/configs/${IMX_KERNEL_CONFIG_AARCH64} ${B}/.config
-    fi
+python __anonymous () {
+    import bb
+    # Fail fast if DELTA_KERNEL_DEFCONFIG is present in the datastore (even if empty)
+    if "DELTA_KERNEL_DEFCONFIG" in d.keys():
+        val = d.getVar("DELTA_KERNEL_DEFCONFIG", expand=False)
+        bb.error(f"Detected deprecated/unsupported variable 'DELTA_KERNEL_DEFCONFIG' (value: '{val}').")
+        bb.fatal("Please remove 'DELTA_KERNEL_DEFCONFIG' and use supported kernel configuration methods, "
+                 "e.g., configuration fragments via kernel-yocto or a maintained defconfig.")
 }
-
-DELTA_KERNEL_DEFCONFIG ?= ""
-#DELTA_KERNEL_DEFCONFIG:mx8-nxp-bsp = "imx.config"
-
-do_merge_delta_config[dirs] = "${B}"
-do_merge_delta_config[depends] += " \
-    flex-native:do_populate_sysroot \
-    bison-native:do_populate_sysroot \
-"
-do_merge_delta_config() {
-    for deltacfg in ${DELTA_KERNEL_DEFCONFIG}; do
-        if [ -f ${S}/arch/${ARCH}/configs/${deltacfg} ]; then
-            ${KERNEL_CONFIG_COMMAND}
-            oe_runmake_call -C ${S} CC="${KERNEL_CC}" O=${B} ${deltacfg}
-        elif [ -f "${UNPACKDIR}/${deltacfg}" ]; then
-            ${S}/scripts/kconfig/merge_config.sh -m .config ${UNPACKDIR}/${deltacfg}
-        elif [ -f "${deltacfg}" ]; then
-            ${S}/scripts/kconfig/merge_config.sh -m .config ${deltacfg}
-        fi
-    done
-    cp .config ${S}/defconfig
-}
-addtask merge_delta_config before do_kernel_localversion after do_copy_defconfig
 
 do_deploy:append() {
     if [ ${@bb.utils.filter('UBOOT_CONFIG', 'crrm', d)} ]; then
@@ -107,3 +68,15 @@ do_deploy:append() {
 }
 
 COMPATIBLE_MACHINE = "(imx-nxp-bsp)"
+
+CVE_STATUS_GROUPS = "CVE_STATUS_KERNEL"
+CVE_STATUS_KERNEL = " \
+    CVE-2026-31436 CVE-2026-31444 CVE-2026-31448 CVE-2026-31478 CVE-2026-43067 CVE-2026-31414 CVE-2026-31682 CVE-2026-43011 \
+    CVE-2026-43037 CVE-2026-43038 CVE-2026-43341 CVE-2026-31533 CVE-2026-31633 CVE-2026-31636 CVE-2026-31637 CVE-2026-31649 \
+    CVE-2026-31657 CVE-2026-31659 CVE-2026-31668 CVE-2026-31669 CVE-2026-31607 CVE-2026-31608 CVE-2026-31609 CVE-2026-31685 \
+    CVE-2026-43071 CVE-2026-43083 CVE-2026-43114 CVE-2026-43117 CVE-2026-31705 CVE-2026-31718 CVE-2026-31589 CVE-2026-43493 \
+    CVE-2026-43501 CVE-2026-45988 CVE-2026-46039 CVE-2026-46043 CVE-2026-46115 CVE-2026-46119 CVE-2026-46135 CVE-2026-46137 \
+    CVE-2026-46155 CVE-2026-46185 CVE-2026-46195 CVE-2026-31431 CVE-2026-31635 CVE-2026-43284 CVE-2026-43500 CVE-2026-46300 \
+    CVE-2026-46333 \
+"
+CVE_STATUS_KERNEL[status] = "cpe-stable-backport: Backported in NXP LTS Kernel 6.18.20"
