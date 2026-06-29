@@ -1,18 +1,21 @@
-From 61be232f64e9d5ca9f991d42bae4b0b5ae019cb6 Mon Sep 17 00:00:00 2001
+From 9c02c689c00810ee35a513660e844b60855d7acd Mon Sep 17 00:00:00 2001
 From: Nian Yang <nian.yang@technexion.com>
-Date: Fri, 26 Jun 2026 02:27:24 +0000
+Date: Fri, 26 Jun 2026 05:45:59 +0000
 Subject: [PATCH] pipeline: neo: safely reconfigure YUV frontend formats
 
 After exposing all YUV sensor resolutions, requests for smaller sizes could
 configure the ISI video node to the requested size while the shared frontend
 graph remained at the preconfigured maximum size. This caused stream start
 failures, or left the sensor entity reporting the old maximum format.
+
+Upstream-Status: Pending
+
 ---
- .../pipeline/nxp/neo/neo_pipeline.cpp         | 46 +++++++++++++++++--
- 1 file changed, 42 insertions(+), 4 deletions(-)
+ .../pipeline/nxp/neo/neo_pipeline.cpp         | 42 +++++++++++++++++--
+ 1 file changed, 38 insertions(+), 4 deletions(-)
 
 diff --git a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
-index 35ab75c2..65a2d98f 100644
+index cf9f0635..296e74b7 100644
 --- a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
 +++ b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
 @@ -299,6 +299,7 @@ private:
@@ -20,24 +23,13 @@ index 35ab75c2..65a2d98f 100644
  				    V4L2SubdeviceFormat &sdFormat);
  	int configureFrontEndLinks() const;
 +	bool canReconfigureFrontEndSafely();
- 
+
  	int configureRaw(CameraConfiguration *c);
  	int configureYuv(CameraConfiguration *c);
-@@ -1660,6 +1661,10 @@ int PipelineHandlerNxpNeo::setupCameraGraphs()
- 		V4L2SubdeviceFormat sensorFormat = {};
- 		const std::map<Size, std::vector<unsigned int>> &
- 			sizeToCodes = data->formatsSizeToCodes();
-+		// ASSERT(sizeToCodes.size() == 1);
-+		// sensorFormat.size = sizeToCodes.begin()->first;
-+		// const std::vector<unsigned int> &codes = sizeToCodes.begin()->second;
-+		// ASSERT(codes.size() == 1);
- 		ASSERT(!sizeToCodes.empty());
- 		const auto &sizeCodes = *sizeToCodes.rbegin();
- 		sensorFormat.size = sizeCodes.first;
-@@ -2481,6 +2486,27 @@ int NxpNeoCameraData::configureFrontEndLinks() const
+@@ -2481,6 +2482,27 @@ int NxpNeoCameraData::configureFrontEndLinks() const
  	return 0;
  }
- 
+
 +bool NxpNeoCameraData::canReconfigureFrontEndSafely()
 +{
 +	if (!multiCamera())
@@ -62,7 +54,7 @@ index 35ab75c2..65a2d98f 100644
  int NxpNeoCameraData::configureRaw(CameraConfiguration *c)
  {
  	NxpNeoCameraConfiguration *config =
-@@ -2666,14 +2692,26 @@ int NxpNeoCameraData::configureYuv(CameraConfiguration *c)
+@@ -2666,14 +2688,26 @@ int NxpNeoCameraData::configureYuv(CameraConfiguration *c)
  	 * configured without multi-camera consideration. The pipe subdevice
  	 * format comes from the front-end configuration.
  	 */
@@ -75,10 +67,11 @@ index 35ab75c2..65a2d98f 100644
 +						  config->combinedTransform());
  		if (ret)
  			return ret;
+-	}
 +	} else {
 +		const V4L2SubdeviceFormat &currentFormat =
 +			pipesSubDevFormats_[StreamTypeImage0];
-+
+
 +		if (sensorFormat.size != currentFormat.size ||
 +			sensorFormat.code != currentFormat.code) {
 +			LOG(NxpNeoPipe, Error)
@@ -88,8 +81,7 @@ index 35ab75c2..65a2d98f 100644
 +
 +			return -EINVAL;
 +		}
- 	}
--	
++	}
  	/* \todo support multistream */
  	ISIPipe *pipe = pipes_.at(StreamTypeImage0);
  	StreamConfiguration &streamConfig = c->at(0);

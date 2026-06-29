@@ -7,6 +7,9 @@ Subject: [PATCH] pipeline: neo: keep all YUV sensor resolutions for
 The YUV format enumeration path collapsed multi-camera sensors to a single
 largest resolution. This made libcamera report only the maximum size even
 when the sensor driver correctly enumerated multiple discrete frame sizes.
+
+Upstream-Status: Pending
+
 ---
  .../pipeline/nxp/neo/neo_pipeline.cpp         | 26 +++++++------------
  1 file changed, 9 insertions(+), 17 deletions(-)
@@ -29,19 +32,19 @@ index a61786a5..35ab75c2 100644
 +		const std::vector<unsigned int> &codes = sizeCodes.second;
 +		ASSERT(!codes.empty());
  		sensorFormat.code = codes.back();
- 
+
  		ASSERT(data->defaultOrientation().has_value());
 @@ -2672,6 +2673,7 @@ int NxpNeoCameraData::configureYuv(CameraConfiguration *c)
  		if (ret)
  			return ret;
  	}
-+	
++
  	/* \todo support multistream */
  	ISIPipe *pipe = pipes_.at(StreamTypeImage0);
  	StreamConfiguration &streamConfig = c->at(0);
 @@ -2890,20 +2892,10 @@ int NxpNeoCameraData::enumerateFormatsYuv()
  		std::sort(sizes.begin(), sizes.end());
- 
+
  	/*
 -	 * For multi-camera, default configuration is set arbitrarily to the
 -	 * the highest size/bitdepth.
@@ -60,6 +63,6 @@ index a61786a5..35ab75c2 100644
 -		codeToSizes.clear();
 -		codeToSizes[codeBitDepthMax] = { sizeMax };
 -	}
- 
+
  	std::ostringstream oss;
  	oss << "Yuv formats size [ mbuscodes ] ";

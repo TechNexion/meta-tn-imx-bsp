@@ -1,0 +1,230 @@
+From b84460ef9e89a38d10837913509bf83daa2f3f2c Mon Sep 17 00:00:00 2001
+From: Nian Yang <nian.yang@technexion.com>
+Date: Mon, 29 Jun 2026 10:46:46 +0800
+Subject: [PATCH] pipeline: neo: avoid resetting configured frontend graphs
+
+Make multi-camera frontend setup idempotent.
+Starting another camera or another process could re-apply routing and default
+graph formats to shared frontend entities, resetting formatter/crossbar stream
+formats that were already configured by an active camera.
+
+Upstream-Status: Pending
+
+---
+ .../pipeline/nxp/neo/neo_pipeline.cpp         | 143 +++++++++++++++++-
+ 1 file changed, 135 insertions(+), 8 deletions(-)
+
+diff --git a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
+index 296e74b7..dd3221ba 100644
+--- a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
++++ b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
+@@ -260,6 +260,7 @@ public:
+ 	void adjustTopLinesSize(Size *size) const;
+ 	int configureFrontEndFormat(V4L2SubdeviceFormat &sensorFormat,
+ 				    Transform transform);
++	bool frontEndGraphConfigured();
+
+ 	CameraSensor *sensor() const { return sensor_.get(); }
+ 	NeoDevice *neoDevice() const { return neo_.get(); }
+@@ -278,6 +279,7 @@ public:
+ 	const std::optional<Orientation> &defaultOrientation() const { return defaultOrientation_; }
+
+ 	bool rawStreamOnly_ = false;
++	bool started_ = false;
+
+ 	Stream streamFrame_;
+ 	Stream streamIr_;
+@@ -405,6 +407,27 @@ static constexpr unsigned int kNeoIspMaxQueuedRequests = 4;
+  */
+ static constexpr unsigned int kNeoIspMinBufferCount = 4;
+
++bool routingEqual(const V4L2Subdevice::Routing &lhs,
++		  const V4L2Subdevice::Routing &rhs)
++{
++	if (lhs.size() != rhs.size())
++		return false;
++
++	for (unsigned int i = 0; i < lhs.size(); ++i) {
++		const V4L2Subdevice::Route &l = lhs[i];
++		const V4L2Subdevice::Route &r = rhs[i];
++
++		if (l.sink.pad != r.sink.pad ||
++		    l.sink.stream != r.sink.stream ||
++		    l.source.pad != r.source.pad ||
++		    l.source.stream != r.source.stream ||
++		    l.flags != r.flags)
++			return false;
++	}
++
++	return true;
++}
++
+ } /* namespace */
+
+ class PipelineHandlerNxpNeo : public PipelineHandler
+@@ -1602,6 +1625,21 @@ int PipelineHandlerNxpNeo::setupRouting() const
+ 			return -EINVAL;
+ 		}
+
++		V4L2Subdevice::Routing currentRouting;
++		ret = sdev->getRouting(&currentRouting, V4L2Subdevice::ActiveFormat);
++		if (ret) {
++			LOG(NxpNeoPipe, Error)
++				<< "Error getting routing for entity " << name;
++			return -EINVAL;
++		}
++
++		if (routingEqual(currentRouting, routing)) {
++			LOG(NxpNeoPipe, Debug)
++				<< "Skip routing for entity " << name
++				<< ", already configured";
++			continue;
++		}
++
+ 		V4L2Subdevice::Routing _routing = routing;
+ 		ret = sdev->setRouting(&_routing, V4L2Subdevice::ActiveFormat);
+ 		if (ret) {
+@@ -1671,6 +1709,14 @@ int PipelineHandlerNxpNeo::setupCameraGraphs()
+ 		ASSERT(data->defaultOrientation().has_value());
+ 		Orientation orientation = data->defaultOrientation().value();
+ 		Transform transform = data->sensor()->computeTransform(&orientation);
++
++		if (data->frontEndGraphConfigured()) {
++			LOG(NxpNeoPipe, Debug)
++				<< "Skip graph setup for " << data->cameraName()
++				<< ", frontend graph is already configured";
++			continue;
++		}
++
+ 		ret = data->configureFrontEndFormat(sensorFormat, transform);
+
+ 		if (ret)
+@@ -1769,6 +1815,8 @@ int NxpNeoCameraData::start([[maybe_unused]] const ControlList *controls)
+ 	if (ret)
+ 		goto error;
+
++	started_ = true;
++
+ 	return 0;
+
+ error:
+@@ -1829,6 +1877,8 @@ void NxpNeoCameraData::stopDevice()
+
+ 	freeBuffers();
+
++	started_ = false;
++
+ 	if (controlsTimer_.get())
+ 		controlsTimer_->stop();
+
+@@ -2102,6 +2152,89 @@ int NxpNeoCameraData::configureFrontEndFormat(V4L2SubdeviceFormat &sensorFormat,
+ 	return ret;
+ }
+
++bool NxpNeoCameraData::frontEndGraphConfigured()
++{
++	const CameraMediaStream *cameraInfoStream =
++		cameraInfo_->stream(StreamTypeImage0);
++	ASSERT(cameraInfoStream);
++
++	const std::vector<CameraMediaStream::StreamLink> &streamLinks =
++		cameraInfoStream->streamLinks();
++
++	const MediaDevice *media = pipe()->isiDevice()->media();
++
++	for (const auto &streamLink : streamLinks) {
++		const MediaLink *mediaLink = streamLink.mediaLink_;
++		const MediaPad *sourceMediaPad = mediaLink->source();
++		const MediaPad *sinkMediaPad = mediaLink->sink();
++
++		/* Stop before the capture video node. */
++		if (sinkMediaPad->entity()->function() == MEDIA_ENT_T_V4L2_VIDEO)
++			break;
++
++		std::string sourceName = sourceMediaPad->entity()->name();
++		std::string sinkName = sinkMediaPad->entity()->name();
++
++		V4L2SubdeviceFormat sourceFormat = {};
++		V4L2SubdeviceFormat sinkFormat = {};
++
++		std::unique_ptr<V4L2Subdevice> source =
++			V4L2Subdevice::fromEntityName(media, sourceName);
++		if (!source || source->open())
++			return false;
++
++		int ret = source->getFormat({ sourceMediaPad->index(),
++					      streamLink.sourceStream_ },
++					    &sourceFormat);
++		if (ret)
++			return false;
++
++		std::unique_ptr<V4L2Subdevice> sink =
++			V4L2Subdevice::fromEntityName(media, sinkName);
++		if (!sink || sink->open())
++			return false;
++
++		ret = sink->getFormat({ sinkMediaPad->index(),
++					streamLink.sinkStream_ },
++				      &sinkFormat);
++		if (ret)
++			return false;
++
++		if (sourceFormat.size != sinkFormat.size ||
++		    sourceFormat.code != sinkFormat.code) {
++			LOG(NxpNeoPipe, Debug)
++				<< "Frontend graph not configured for "
++				<< cameraName()
++				<< ": " << sourceName << " "
++				<< sourceFormat.toString()
++				<< " -> " << sinkName << " "
++				<< sinkFormat.toString();
++
++			return false;
++		}
++
++		const std::map<Size, std::vector<unsigned int>> &sizeToCodes =
++			formatsSizeToCodes_;
++
++		auto it = sizeToCodes.find(sourceFormat.size);
++		if (it == sizeToCodes.end())
++			return false;
++
++		const std::vector<unsigned int> &codes = it->second;
++		if (std::find(codes.begin(), codes.end(), sourceFormat.code) ==
++		    codes.end()) {
++			LOG(NxpNeoPipe, Debug)
++				<< "Frontend graph has unsupported format for "
++				<< cameraName()
++				<< ": " << sourceFormat.toString();
++
++			return false;
++		}
++	}
++
++	return true;
++}
++
+ /**
+  * \brief Update the camera controls
+  *
+@@ -2487,18 +2620,12 @@ bool NxpNeoCameraData::canReconfigureFrontEndSafely()
+ 	if (!multiCamera())
+ 		return true;
+
+-	/*
+-	 * In multi-camera mode the frontend graph is shared by cameras behind
+-	 * the same frontend media device. Reconfiguring it is only safe while
+-	 * this is the only camera currently acquired by this pipeline handler.
+-	 */
+-	if (pipe()->useCount() <= 1)
++	if (!started_)
+ 		return true;
+
+ 	LOG(NxpNeoPipe, Warning)
+ 		<< "Cannot reconfigure frontend for " << cameraName()
+-		<< " while other cameras are acquired"
+-		<< " useCount " << pipe()->useCount();
++		<< " while its ISI pipe is active";
+
+ 	return false;
+ }
