@@ -1,0 +1,138 @@
+From f5b25cc9853e920d0a892acdb44b412c4aaffd55 Mon Sep 17 00:00:00 2001
+From: Nian Yang <nian.yang@technexion.com>
+Date: Mon, 29 Jun 2026 18:24:34 +0800
+Subject: [PATCH] pipeline: neo: limit YUV modes by ISI pipe budget
+
+The auto-detect path reserves ISI pipes using the maximum sensor size.
+For sensors exposing modes wider than the unchained ISI limit, this makes
+each camera consume two ISI pipes even when many cameras are connected and
+the intended use case only needs smaller modes.
+
+Compute a chained-pipe budget from the number of detected cameras and
+available ISI pipes. Cameras beyond that budget are limited to unchained
+widths, preventing high-width modes from being exposed and keeping one ISI
+pipe available per camera when all inputs are populated.
+
+Upstream-Status: Pending
+
+---
+ src/libcamera/pipeline/nxp/neo/isi_device.h   |  1 +
+ .../pipeline/nxp/neo/neo_pipeline.cpp         |  4 ++-
+ src/libcamera/pipeline/nxp/neo/neo_utils.cpp  | 30 +++++++++++++++++--
+ src/libcamera/pipeline/nxp/neo/neo_utils.h    |  2 ++
+ 4 files changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/src/libcamera/pipeline/nxp/neo/isi_device.h b/src/libcamera/pipeline/nxp/neo/isi_device.h
+index 159f36a5..cf9bd96e 100644
+--- a/src/libcamera/pipeline/nxp/neo/isi_device.h
++++ b/src/libcamera/pipeline/nxp/neo/isi_device.h
+@@ -106,6 +106,7 @@ public:
+ 	int reservePipeByIndex(Size &sizeMax, unsigned int index);
+ 	void releasePipe(unsigned int index);
+ 	ISIPipe *getPipeByIndex(unsigned int index);
++	unsigned int pipeCount() const { return pipeEntries_.size(); }
+
+ 	static std::string kDriverName() { return "mxc-isi"; }
+ 	static std::string kSDevCrossBarEntityName() { return "crossbar"; }
+diff --git a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
+index dd3221ba..a23605fb 100644
+--- a/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
++++ b/src/libcamera/pipeline/nxp/neo/neo_pipeline.cpp
+@@ -3004,6 +3004,8 @@ int NxpNeoCameraData::enumerateFormatsYuv()
+ 		cameraInfo_->cameraProperties().formatBpp;
+ 	std::optional<Size> sizeFilter =
+ 		cameraInfo_->cameraProperties().formatSize;
++	unsigned int widthMax =
++		cameraInfo_->formatWidthMax().value_or(ISIPipe::kChainedWidthMax);
+
+ 	for (unsigned int code : mbusCodes) {
+ 		if (std::find(sinkCodes.begin(), sinkCodes.end(), code) == sinkCodes.end())
+@@ -3017,7 +3019,7 @@ int NxpNeoCameraData::enumerateFormatsYuv()
+ 		cameraSizes(sensor_.get(), code, sizes);
+
+ 		for (const Size &size : sizes) {
+-			if (size.width > ISIPipe::kChainedWidthMax)
++			if (size.width > widthMax)
+ 				continue;
+
+ 			if (sizeFilter && size != sizeFilter.value())
+diff --git a/src/libcamera/pipeline/nxp/neo/neo_utils.cpp b/src/libcamera/pipeline/nxp/neo/neo_utils.cpp
+index 550d143a..c02f4812 100644
+--- a/src/libcamera/pipeline/nxp/neo/neo_utils.cpp
++++ b/src/libcamera/pipeline/nxp/neo/neo_utils.cpp
+@@ -324,8 +324,18 @@ int PipelineConfig::loadAutoDetect()
+ 	std::vector<MediaEntity *> sensorsEntities = locateSensors(media);
+ 	std::sort(sensorsEntities.begin(), sensorsEntities.end(), compareName);
+
+-	/* Discover the topology of every sensor */
+ 	ISIDevice *isiDevice = isiDevice_.get();
++	unsigned int cameraCount = sensorsEntities.size();
++	unsigned int pipeCount = isiDevice->pipeCount();
++	unsigned int chainedBudget = pipeCount > cameraCount ?
++					pipeCount - cameraCount : 0;
++
++	LOG(NxpNeoPipe, Debug)
++		<< "Auto detect " << cameraCount
++		<< " cameras, " << pipeCount
++		<< " ISI pipes, chained budget " << chainedBudget;
++
++	/* Discover the topology of every sensor */
+ 	for (MediaEntity *entity : sensorsEntities) {
+ 		LOG(NxpNeoPipe, Debug) << "Auto detect camera " << entity->name();
+
+@@ -352,6 +362,13 @@ int PipelineConfig::loadAutoDetect()
+ 		else
+ 			cameraInfo.properties_ = &modelPropertiesMap_[model];
+
++		bool allowChained = chainedBudget > 0;
++		unsigned int widthMax = allowChained ?
++					ISIPipe::kChainedWidthMax :
++					ISIPipe::kUnchainedWidthMax;
++
++		cameraInfo.formatWidthMax_ = widthMax;
++
+ 		/* Select max sensor resolution compatible with an ISI pipe. */
+ 		Size sizeMax;
+ 		std::set<Size> sizesSet;
+@@ -360,7 +377,7 @@ int PipelineConfig::loadAutoDetect()
+ 			std::vector<Size> sizes;
+ 			cameraSizes(sensor.get(), mbusCode, sizes);
+ 			for (const auto &size : sizes) {
+-				if (size.width <= ISIPipe::kChainedWidthMax)
++				if (size.width <= widthMax)
+ 					sizesSet.insert(size);
+ 			}
+ 		}
+@@ -369,6 +386,15 @@ int PipelineConfig::loadAutoDetect()
+ 		else
+ 			continue;
+
++		if (sizeMax.width > ISIPipe::kUnchainedWidthMax && chainedBudget)
++			chainedBudget--;
++
++		LOG(NxpNeoPipe, Debug)
++			<< "Reserve ISI pipe for " << entity->name()
++			<< " allocation size " << sizeMax.toString()
++			<< " width max " << widthMax
++			<< " chained budget left " << chainedBudget;
++
+ 		/* Map for each stream the pipe index and per-entity routing */
+ 		std::map<StreamType, unsigned int> pipeIndex;
+ 		std::map<StreamType, RoutingMap> routingMaps;
+diff --git a/src/libcamera/pipeline/nxp/neo/neo_utils.h b/src/libcamera/pipeline/nxp/neo/neo_utils.h
+index 67911f86..d2a939e8 100644
+--- a/src/libcamera/pipeline/nxp/neo/neo_utils.h
++++ b/src/libcamera/pipeline/nxp/neo/neo_utils.h
+@@ -85,10 +85,12 @@ public:
+ 	bool hasStream(StreamType streamType) const { return stream(streamType); }
+
+ 	const CameraProperties &cameraProperties() const { return *properties_; }
++	std::optional<unsigned int> formatWidthMax() const { return formatWidthMax_; }
+
+ private:
+ 	std::map<StreamType, CameraMediaStream> streams_;
+ 	CameraProperties *properties_ = nullptr;
++	std::optional<unsigned int> formatWidthMax_;
+
+ 	friend PipelineConfig;
+ };
