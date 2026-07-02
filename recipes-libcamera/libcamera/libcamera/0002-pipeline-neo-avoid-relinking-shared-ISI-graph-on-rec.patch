@@ -1,0 +1,76 @@
+From ac30f95024c6793942fec478312cdb624778578f Mon Sep 17 00:00:00 2001
+From: Nian Yang <nian.yang@technexion.com>
+Date: Wed, 1 Jul 2026 18:05:13 +0800
+Subject: [PATCH] pipeline: neo: avoid relinking shared ISI graph on
+ reconfigure
+
+Add a setupLinks argument to configureFrontEnd(), defaulting to true, and
+skip link setup when reconfiguring a shared graph camera from configure().
+This keeps the initial acquire-time graph setup unchanged while allowing
+later shared graph format updates to only touch the relevant subdevice
+formats.
+
+This is required for multi-camera use cases where cameras behind the same
+shared ISI graph are configured independently, for example when multiple
+libcamerasrc instances request different resolutions.
+
+Upstream-Status: Pending
+---
+ .../pipeline/nxp/neo/front_end_isi.cpp        | 27 ++++++++++++-------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp b/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp
+index 049aa8f4..bb49886f 100644
+--- a/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp
++++ b/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp
+@@ -68,7 +68,8 @@ public:
+ 	};
+ 	int init(const FrontEndHandler::MatchParams &matchParams,
+ 		 const InitParams &initParams);
+-	int configureFrontEnd(V4L2SubdeviceFormat &sdFormat, Transform transform);
++	int configureFrontEnd(V4L2SubdeviceFormat &sdFormat, Transform transform,
++			  bool setupLinks = true);
+ 	bool sharedGraph() { return sharedGraph_; }
+ 	int setSharedGraph();
+
+@@ -267,7 +268,13 @@ int FrontEndCameraIsi::configure(
+ 				<< "Reconfigure shared frontend graph to "
+ 				<< subdevFormat.toString();
+
+-			int ret = configureFrontEnd(subdevFormat, transform);
++			/*
++			 * Links and routings for shared graphs are configured once
++			 * from acquireDevice(). When another camera on the same
++			 * MAX96724 is already streaming, only update this camera
++			 * path format. Re-enabling media links may fail with EBUSY.
++			 */
++			int ret = configureFrontEnd(subdevFormat, transform, false);
+ 			if (ret)
+ 				return ret;
+
+@@ -476,16 +483,18 @@ cleanup:
+ }
+
+ int FrontEndCameraIsi::configureFrontEnd(V4L2SubdeviceFormat &sensorFormat,
+-					 Transform transform)
++					 Transform transform, bool setupLinks)
+ {
+ 	int ret;
+
+-	/* Setup the media links for each stream graph. */
+-	for (const auto &[stream, entity] : streamEntries_) {
+-		const StreamGraph &streamGraph = entity.streamGraph;
+-		ret = streamGraph.initLinks();
+-		if (ret)
+-			return ret;
++	if (setupLinks) {
++		/* Setup the media links for each stream graph. */
++		for (const auto &[stream, entity] : streamEntries_) {
++			const StreamGraph &streamGraph = entity.streamGraph;
++			ret = streamGraph.initLinks();
++			if (ret)
++				return ret;
++		}
+ 	}
+
+ 	/*
