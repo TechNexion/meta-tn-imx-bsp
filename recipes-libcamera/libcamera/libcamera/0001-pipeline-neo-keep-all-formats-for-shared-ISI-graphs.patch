@@ -1,0 +1,152 @@
+From e4f524f776727ee982261e838748f81ef9b82929 Mon Sep 17 00:00:00 2001
+From: Nian Yang <nian.yang@technexion.com>
+Date: Tue, 30 Jun 2026 18:08:40 +0800
+Subject: [PATCH] pipeline: neo: keep all formats for shared ISI graphs
+
+Do not collapse shared graph cameras to a single maximum resolution in
+setSharedGraph(). Store the default shared graph format separately and use it
+during setupSharedGraphs(), while preserving the full advertised sensor format
+list.
+
+Upstream-Status: Pending
+---
+ .../pipeline/nxp/neo/front_end_isi.cpp        | 82 +++++++++----------
+ 1 file changed, 41 insertions(+), 41 deletions(-)
+
+diff --git a/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp b/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp
+index 6ae0fac8..049aa8f4 100644
+--- a/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp
++++ b/src/libcamera/pipeline/nxp/neo/front_end_isi.cpp
+@@ -83,6 +83,8 @@ public:
+ 	std::map<MediaEntity *, V4L2Subdevice::Routing> routings_;
+ 	Formats formats_;
+ 	std::optional<Orientation> defaultOrientation_;
++	std::optional<V4L2SubdeviceFormat> sharedGraphDefaultFormat_;
++	std::optional<V4L2SubdeviceFormat> sharedGraphActiveFormat_;
+
+ private:
+ 	int enumerateFormatsRaw(const CameraProperties &properties);
+@@ -241,17 +243,37 @@ int FrontEndCameraIsi::configure(
+ 	const std::map<FEStream, V4L2DeviceFormat> *processedVideoFormats)
+ {
+ 	/*
+-	 * Cameras having shared graph have their front end configured at
+-	 * acquire() time that should not be reconfigured here. Conversely, the
+-	 * ISI pipe video devices can always be reconfigured, which is useful
+-	 * for the processed streams (smart cameras) where the stream output
+-	 * format can be updated at configure() time.
++	 * Shared graph cameras are preconfigured at acquire() time so all
++	 * cameras in the shared graph have a valid initial format. Still,
++	 * when this camera is configured for a different sensor size, update
++	 * the frontend graph here as long as the media device accepts it.
+ 	 */
+ 	if (!sharedGraph_) {
+ 		int ret = configureFrontEnd(subdevFormat, transform);
+ 		if (ret)
+ 			return ret;
+-	}
++	} else {
++		bool reconfigure = true;
++
++		if (sharedGraphActiveFormat_.has_value()) {
++			const V4L2SubdeviceFormat &active =
++				sharedGraphActiveFormat_.value();
++			reconfigure = active.code != subdevFormat.code ||
++				      active.size != subdevFormat.size;
++		}
++
++		if (reconfigure) {
++			LOG(NxpNeoFeIsi, Debug)
++				<< "Reconfigure shared frontend graph to "
++				<< subdevFormat.toString();
++
++			int ret = configureFrontEnd(subdevFormat, transform);
++			if (ret)
++				return ret;
++
++			sharedGraphActiveFormat_ = subdevFormat;
++		}
++ 	}
+
+ 	/* Use a local video formats map if none provided by the caller. */
+ 	std::map<FEStream, V4L2DeviceFormat> videoFormatsLocal;
+@@ -538,13 +560,9 @@ int FrontEndCameraIsi::configureFrontEnd(V4L2SubdeviceFormat &sensorFormat,
+ int FrontEndCameraIsi::setSharedGraph()
+ {
+ 	/*
+-	 * With a shared graph, no runtime format reconfiguration is possible so
+-	 * one format has to be selected as the default and unique format
+-	 * available for that camera.
+-	 * Default format is arbitrarily selected as the one with the highest
+-	 * size and bitdepth. However, the set of supported formats may have
+-	 * been filtered by the user through pipeline configuration file to
+-	 * select a specific resolution.
++	 * With a shared graph, a default frontend format must be configured
++	 * before streaming starts. Keep the full advertised format list intact,
++	 * and store the default graph format separately.
+ 	 */
+ 	std::map<Size, std::vector<unsigned int>> &sizeToCodes =
+ 		formats_.sizeMbusCodesMap;
+@@ -558,22 +576,10 @@ int FrontEndCameraIsi::setSharedGraph()
+ 	const Size &sizeMax = sizeToCodes.rbegin()->first;
+ 	const std::vector<unsigned int> &codes = sizeToCodes.rbegin()->second;
+ 	unsigned int codeBitDepthMax = codes.back();
+-	sizeToCodes.clear();
+-	sizeToCodes[sizeMax] = { codeBitDepthMax };
+-	codeToSizes.clear();
+-	codeToSizes[codeBitDepthMax] = { sizeMax };
+
+-	/*
+-	 * Trim the mbus code to pixel formats map to keep as a single entry
+-	 * the one corresponding to the selected code for the camera.
+-	 */
+-	auto it = formats_.mbusCodePixelFormatsMap.begin();
+-	while (it != formats_.mbusCodePixelFormatsMap.end()) {
+-		if (it->first != codeBitDepthMax)
+-			it = formats_.mbusCodePixelFormatsMap.erase(it);
+-		else
+-			++it;
+-	}
++ 	sharedGraphDefaultFormat_ = V4L2SubdeviceFormat{};
++ 	sharedGraphDefaultFormat_->size = sizeMax;
++ 	sharedGraphDefaultFormat_->code = codeBitDepthMax;
+
+ 	/*
+ 	 * Orientation can not be changed at runtime with a shared graph, as it
+@@ -1078,22 +1084,14 @@ int FrontEndHandlerIsi::setupSharedGraphs()
+ 			<< "Setup shared graph camera " << camera->name();
+
+ 		/* Configure the default format on that camera frontend graph. */
+-		V4L2SubdeviceFormat sensorFormat = {};
+-		const std::map<Size, std::vector<unsigned int>> &sizeToCodes =
+-			camera->formats_.sizeMbusCodesMap;
+-		if (sizeToCodes.size() != 1) {
+-			LOG(NxpNeoFeIsi, Error)
+-				<< "Single size expected with a shared graph";
+-			return -EINVAL;
+-		}
+-		sensorFormat.size = sizeToCodes.begin()->first;
+-		const std::vector<unsigned int> &codes = sizeToCodes.begin()->second;
+-		if (codes.size() != 1) {
++		if (!camera->sharedGraphDefaultFormat_.has_value()) {
+ 			LOG(NxpNeoFeIsi, Error)
+-				<< "Single code expected with a shared graph";
++				<< "Default format expected with a shared graph";
+ 			return -EINVAL;
+ 		}
+-		sensorFormat.code = codes.back();
++
++		V4L2SubdeviceFormat sensorFormat =
++			camera->sharedGraphDefaultFormat_.value();
+
+ 		if (!camera->defaultOrientation_.has_value()) {
+ 			LOG(NxpNeoFeIsi, Error)
+@@ -1105,6 +1103,8 @@ int FrontEndHandlerIsi::setupSharedGraphs()
+ 		ret = camera->configureFrontEnd(sensorFormat, transform);
+ 		if (ret)
+ 			return ret;
++
++		camera->sharedGraphActiveFormat_ = sensorFormat;
+ 	}
+
+ 	return ret;
