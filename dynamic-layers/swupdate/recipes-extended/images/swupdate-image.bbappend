@@ -15,7 +15,7 @@ IMAGE_INSTALL:append = " \
 
 DISTRO_FEATURES:remove = "irda alsa bluetooth wifi nfs 3g ptest bluez bluez5 vulkan optee pulseaudio multiarch \
                         acl argp ext2 pcmcia usbgadget xattr zeroconf pci jailhouse virtualization \
-                        vizionviewer vizionsdk-dev packagegroup-tn-tools tn-apt-list packagegroup-tn-wlan xen xen-tools apt dpkg"
+                        packagegroup-tn-tools packagegroup-tn-wlan xen xen-tools apt dpkg"
 
 IMAGE_FSTYPES:remove = "ext4 wic.md5sum wic.xz wic.bz2"
 IMAGE_FSTYPES = "cpio.gz.u-boot"
