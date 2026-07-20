@@ -13,7 +13,7 @@ LINUX_IMX_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;br
 SRCBRANCH = "tn-imx_6.18.20_2.0.0-next"
 LOCALVERSION = "-lts-${SRCBRANCH}"
 KBRANCH = "${SRCBRANCH}"
-SRCREV = "db7fe9e4fca6f8a87604aadc8e4a2f9c18a472b8"
+SRCREV = "5dc71dbf171c458a958392ea9c6e63ffffa8eb5f"
 
 
 do_configure[noexec] = "1"
