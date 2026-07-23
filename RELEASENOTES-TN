@@ -1,4 +1,4 @@
-yocto-5.3 Whinlatter 2026Q2 TechNexion BSP Release Notes
+yocto-6.0 Wrynose 2026Q3 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
@@ -40,4 +40,4 @@ BSP version:
 Tag name on github: tn-wrynose_6.18.20-2.0.0_20260723
 u-boot-tn-imx: 08ca9088e62d4f697bf70bad376eeea1a96c77b9
 linux-tn-imx: 5dc71dbf171c458a958392ea9c6e63ffffa8eb5f
-meta-tn-imx-bsp: fd3f1ce5565fc73cc613af1f5b9101500ba54bb5
+meta-tn-imx-bsp: 96b4ad81ba2c8386e40f50322f3e80a184bf15bc
