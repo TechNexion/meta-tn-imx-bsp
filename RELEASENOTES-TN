@@ -2,9 +2,9 @@ yocto-5.3 Whinlatter 2026Q2 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp53-2026q2
-Release Name: tn-whinlatter_6.18.2-1.0.0
-Release Revision: 20260504
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp60-2026q3
+Release Name: tn-wrynose_6.18.20-2.0.0
+Release Revision: 20260723
 
 Supported TechNexion products:
 ARM64:
@@ -29,7 +29,7 @@ TC-0700/1010 (DRAM Solo:512MB DL:1GB Quad:2GB)
 TEP1-IMX7 (DRAM 512MB/1GB)
 
 Support list table:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp53-2026q2
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp60-2026q3
 
 New feature:
 
@@ -37,7 +37,7 @@ Known issue:
 1. TC0700 - Ethernet connection failed.
 
 BSP version:
-Tag name on github: tn-whinlatter_6.18.2_1.0.0_20260504
-u-boot-tn-imx: e3ce2d8d91e859bcc8f66ef414b52aae865511e8
-linux-tn-imx: 7c56185280c1d6d47b5e664f4ae19e80e686c874
-meta-tn-imx-bsp: 9483625d30df5ed15ec89adc9bfd462f4b6eace7
+Tag name on github: tn-wrynose_6.18.20-2.0.0_20260723
+u-boot-tn-imx: 08ca9088e62d4f697bf70bad376eeea1a96c77b9
+linux-tn-imx: 5dc71dbf171c458a958392ea9c6e63ffffa8eb5f
+meta-tn-imx-bsp: fd3f1ce5565fc73cc613af1f5b9101500ba54bb5
