@@ -58,6 +58,7 @@ RDEPENDS:${PN} = " \
     udev \
     trace-cmd \
     libubootenv-bin \
+    tn-fw-env-config \
     tn-u-boot-fw-env \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'v4l-utils gtk+3-demo fbida', '', d)} \
 "
