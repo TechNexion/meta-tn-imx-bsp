@@ -93,5 +93,24 @@ do_deploy:append:mx95-generic-bsp() {
     install -m 0644 ${S}/CRT.*     ${DEPLOYDIR}
 }
 
+do_deploy:append() {
+    config="${KCONFIG_CONFIG_ROOTDIR}/.config"
+
+    env_offset=$(sed -n 's/^CONFIG_ENV_OFFSET=//p' "$config" | tr -d '"')
+    env_size=$(sed -n 's/^CONFIG_ENV_SIZE=//p' "$config" | tr -d '"')
+    env_offset_redund=$(sed -n 's/^CONFIG_ENV_OFFSET_REDUND=//p' "$config" | tr -d '"')
+
+    if [ -n "$env_offset" ] && [ -n "$env_size" ]; then
+        echo "/dev/mmcblk0 $env_offset $env_size" \
+            > ${S}/fw_env.config
+
+        if [ -n "$env_offset_redund" ]; then
+            echo "/dev/mmcblk0 $env_offset_redund $env_size" \
+                >> ${S}/fw_env.config
+        fi
+    fi
+    install -m 0644 ${S}/fw_env.config     ${DEPLOYDIR}
+}
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 COMPATIBLE_MACHINE = "(imx-nxp-bsp)"

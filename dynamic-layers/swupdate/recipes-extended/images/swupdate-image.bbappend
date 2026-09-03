@@ -7,6 +7,7 @@ IMAGE_INSTALL:append = " \
     swupdate-client \
     swupdate-tools-ipc \
     u-boot-fw-utils \
+    tn-fw-env-config \
     tn-u-boot-fw-env \
     udev-rules-imx \
     udev \
