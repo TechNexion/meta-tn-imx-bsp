@@ -7,22 +7,20 @@ inherit swupdate
 
 SRC_URI = "\
     file://sw-description \
-    file://swu_priv.pem \
-    file://passphrase \
 "
 
 SWU_TARGET_IMAGE ?= "imx-image-full"
 SWU_TARGET_BLOCK_DEVICE ?= "mmcblk2"
 
-SWUPDATE_SIGNING = "RSA"
-SWUPDATE_PRIVATE_KEY = "${UNPACKDIR}/swu_priv.pem"
-SWUPDATE_PASSWORD_FILE = "${UNPACKDIR}/passphrase"
+SWUPDATE_SIGNING ?= "RSA"
+SWUPDATE_PRIVATE_KEY ?= "${THISDIR}/update-image/swu_priv.pem"
+SWUPDATE_PASSWORD_FILE ?= "${THISDIR}/update-image/passphrase"
 
 # images to build before building swupdate image
-IMAGE_DEPENDS = ""
+IMAGE_DEPENDS ?= ""
 
 # images and files that will be included in the .swu image
-SWUPDATE_IMAGES = "Image-${MACHINE}.bin ${SWU_DEFAULT_KERNEL_DEVICETREE} ${SWU_TARGET_IMAGE}"
+SWUPDATE_IMAGES ?= "Image-${MACHINE}.bin ${SWU_DEFAULT_KERNEL_DEVICETREE} ${SWU_TARGET_IMAGE}"
 
 SWUPDATE_IMAGES_FSTYPES[imx-image-core] = ".rootfs.ext4.gz"
 SWUPDATE_IMAGES_FSTYPES[imx-image-multimedia] = ".rootfs.ext4.gz"
