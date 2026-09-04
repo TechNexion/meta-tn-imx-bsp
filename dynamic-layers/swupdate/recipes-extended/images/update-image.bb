@@ -12,7 +12,7 @@ SRC_URI = "\
 SWU_TARGET_IMAGE ?= "imx-image-full"
 SWU_TARGET_BLOCK_DEVICE ?= "mmcblk2"
 
-SWUPDATE_SIGNING ?= "RSA"
+SWUPDATE_SIGNING ?= "RSA-PSS"
 SWUPDATE_PRIVATE_KEY ?= "${THISDIR}/update-image/swu_priv.pem"
 SWUPDATE_PASSWORD_FILE ?= "${THISDIR}/update-image/passphrase"
 
