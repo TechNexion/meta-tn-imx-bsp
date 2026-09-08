@@ -1,6 +1,12 @@
 # remove unneeded technexion packagegroups
 IMAGE_INSTALL:remove = "packagegroup-tn-tools packagegroup-tn-voicehat packagegroup-tn-wlan packagegroup-tn-vizionsdk sysvinit"
 
+ROOTFS_POSTPROCESS_COMMAND:append = " remove_swu_unmanaged_network;"
+
+remove_swu_unmanaged_network() {
+    rm -f ${IMAGE_ROOTFS}/usr/lib/systemd/network/10-ethernet-unmanaged.network
+}
+
 IMAGE_INSTALL:append = " \
     ${@bb.utils.contains('SWUPDATE_INIT', 'tiny', 'virtual/initscripts-swupdate', 'initscripts systemd', d)} \
     swupdate-progress \
