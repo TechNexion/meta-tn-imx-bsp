@@ -1,0 +1,39 @@
+From e4f524f776727ee982261e838748f81ef9b82929 Mon Sep 17 00:00:00 2001
+From: Jack Lo <jack.lo@technexion.com>
+Date: Wed, 9 Sep 2026 13:10:00 +0800
+Subject: [PATCH] sysdep: use libc cfsetispeed and cfsetospeed
+
+Do not override cfsetispeed() and cfsetospeed() on glibc systems.
+
+The legacy implementation directly modifies c_cflag using CBAUD.
+This can result in an invalid baud rate with newer glibc versions,
+for example:
+
+    ispeed 9600 baud; ospeed 0 baud
+
+when 115200 baud was requested.
+
+Use the standard libc termios functions instead.
+
+Upstream-Status: Backport
+
+Signed-off-by: Jack Lo <jack.lo@technexion.com>
+---
+ src/sysdep.h | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/src/sysdep.h b/src/sysdep.h
+--- a/src/sysdep.h
++++ b/src/sysdep.h
+@@ -142,11 +142,3 @@
+ #endif
+ #endif
+
+-/* Redefine cfset{i,o}speed for Linux > 1.1.68 && libc < 4.5.21 */
+-#if defined (__GLIBC__) && defined(CBAUDEX)
+-#  undef cfsetispeed
+-#  undef cfsetospeed
+-#  define cfsetispeed(xtty, xspd) \
+-		((xtty)->c_cflag = ((xtty)->c_cflag & ~CBAUD) | (xspd))
+-#  define cfsetospeed(tty, spd)
+-#endif
