@@ -1,17 +1,18 @@
-yocto-6.0 Wrynose 2026Q3 TechNexion BSP Release Notes
+yocto-6.0 Wrynose 2026Q4 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp60-2026q3
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp60-2026q4
 Release Name: tn-wrynose_6.18.20-2.0.0
-Release Revision: 20260723
+Release Revision: 20261006
 
 Supported TechNexion products:
 ARM64:
-EDM-IMX95 (DRAM 4/8/16 GB) with EVM
+EDM-IMX95 (LPDDR5 4/8/16 GB) with EVM
+EDM-IMX95-R (LPDDR4 2/4 GB) with EVM
 EDM-IMX93 (DRAM 2 GB) with WB
 EDM-IMX91 (DRAM 1 GB) with WB
-EDM-G-IMX8MP (DRAM 1/2/4/8 GB) with WB/WIZARD
+EDM-G-IMX8MP (DRAM 1/2/4/6/8 GB) with WB/WIZARD
 EDM-G-IMX8MM (DRAM 1/2/4/8 GB) with WB/WIZARD
 PICO-IMX93 (DRAM 2 GB) with SK-PICO-CARRIER
 PICO-IMX91 (DRAM 2 GB) with SK-PICO-CARRIER
@@ -29,15 +30,15 @@ TC-0700/1010 (DRAM Solo:512MB DL:1GB Quad:2GB)
 TEP1-IMX7 (DRAM 512MB/1GB)
 
 Support list table:
-https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp60-2026q3
+https://developer.technexion.com/docs/embedded-software/linux/yocto/release-notes/release-notes-yp60-2026q4
 
 New feature:
 
 Known issue:
-1. TC0700 - Ethernet connection failed.
 
 BSP version:
-Tag name on github: tn-wrynose_6.18.20-2.0.0_20260723
-u-boot-tn-imx: 08ca9088e62d4f697bf70bad376eeea1a96c77b9
-linux-tn-imx: 5dc71dbf171c458a958392ea9c6e63ffffa8eb5f
-meta-tn-imx-bsp: 96b4ad81ba2c8386e40f50322f3e80a184bf15bc
+Tag name on github: tn-wrynose_6.18.20-2.0.0_20261006
+imx-oei: 28e75a7791c38a6e38ce2400511a9835eeb30d6f
+u-boot-tn-imx: 072fd1c4c40783b4efd79a2c6f5f8668211c297c
+linux-tn-imx: 7471bbecaa58e4ced1f44b41a57db8e27aaacb51
+meta-tn-imx-bsp: 98e8e6a57059ca9b0de35fe66d8df893ea62c904
