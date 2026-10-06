@@ -10,10 +10,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 SRC_URI = "${LINUX_IMX_SRC}"
 LINUX_IMX_SRC ?= "git://github.com/TechNexion/linux-tn-imx.git;protocol=https;branch=${SRCBRANCH}"
-SRCBRANCH = "tn-imx_6.18.20_2.0.0-next"
+SRCBRANCH = "tn-imx_6.18.37_2.1.0-next"
 LOCALVERSION = "-lts-${SRCBRANCH}"
 KBRANCH = "${SRCBRANCH}"
-SRCREV = "5dc71dbf171c458a958392ea9c6e63ffffa8eb5f"
+SRCREV = "3aa0bb46809d994656c787d0f9afce7f6bb5a957"
 
 
 do_configure[noexec] = "1"
