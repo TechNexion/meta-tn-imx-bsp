@@ -1,0 +1,24 @@
+From: BSP Maintainers <bsp@example.com>
+Subject: [PATCH] demos: wait for XDG shell header before compiling C++
+
+The OpenCV demo includes xdg-shell-client-protocol.h, but its object
+files do not depend on that generated header on the first build.
+Parallel make can compile main.cpp while wayland-scanner is writing
+it, resulting in missing XDG shell declarations.
+
+Add the header prerequisite to the C++ objects.
+
+Upstream-Status: Pending
+
+--- a/demos/imx-camera-rotation-opencv/Makefile
++++ b/demos/imx-camera-rotation-opencv/Makefile
+@@ -57,6 +57,9 @@
+ %.o: %.cpp
+ 	$(CXX) $(CXXFLAGS) -c $< -o $@ -MD -MP
+ 
++# C++ sources include the generated client protocol header.
++$(CPP_OBJECTS): $(OUTPUT_HEADER)
++
+ # Explicit rule for xdg-shell-client-protocol.o
+ $(OUTPUT_CODE:.c=.o): $(OUTPUT_CODE) $(OUTPUT_HEADER)
+ 	$(CC) $(CFLAGS) -c $(OUTPUT_CODE) -o $@ -MD -MP
