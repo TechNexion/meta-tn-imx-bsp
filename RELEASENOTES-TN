@@ -1,10 +1,10 @@
-yocto-5.0 Scarthgap 2026Q1 TechNexion BSP Release Notes
+yocto-5.0 Scarthgap 2026Q4 TechNexion BSP Release Notes
 
 ======================================
 Please refer to 'TechNexion developer portal' for detailed support list and demo images:
-https://developer.technexion.com/docs/release-notes-yp50-2026q1
+https://developer.technexion.com/docs/release-notes-yp50-2026q4
 Release Name: tn-scarthgap_6.6.52-2.2.2
-Release Revision: 20260123
+Release Revision: 20261127
 
 Supported TechNexion products:
 ARM64:
@@ -31,7 +31,7 @@ IMX93-EVK (LPDDR4) with tevs
 IMX95-EVK (LPDDR5) with tevs
 
 Support list table:
-https://developer.technexion.com/docs/release-notes-yp50-2026q1
+https://developer.technexion.com/docs/release-notes-yp50-2026q4
 
 New feature:
 
@@ -40,7 +40,7 @@ Known issue:
 Bug fixed:
 
 BSP version:
-Tag name on github: tn-scarthgap_6.6.52_2.2.2_20260123
-u-boot-tn-imx: cc1e05701ca55a80c9e919947a9a5ed03382ec5a
-linux-tn-imx: 0097bc9e46f86333fcc5852ce7dfac3bc32a04b1
-meta-tn-imx-bsp: d9bc41ed73702e294d83706c78bb1f573c646c7a
+Tag name on github: tn-scarthgap_6.6.52_2.2.2_20261127
+u-boot-tn-imx: ca26c894406b6951269478b9615fe5ff67974630
+linux-tn-imx: 6eaffa0aa610172df0877962c59fc954877906cd
+meta-tn-imx-bsp: eb6f7908ec361f78d7d2bfd5e6ea172a62a59585
